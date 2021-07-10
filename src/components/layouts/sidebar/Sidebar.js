@@ -33,19 +33,19 @@ const Sidebar = ({ isActive }) => {
             </NavLink>
           </li>
           <li className="slidebar-nav-item">
-            <NavLink to="/dashboard/test" className="slidebar-nav-link">
+            <NavLink to="/dashboard/pacientes" className="slidebar-nav-link">
               <div>
                 <Dashboard className="slide-icon" />
               </div>
-              <span>Test</span>
+              <span>Paciente</span>
             </NavLink>
           </li>
           <li className="slidebar-nav-item">
-            <NavLink to="/dashboard/test" className="slidebar-nav-link">
+            <NavLink to="/dashboard/usuarios" className="slidebar-nav-link">
               <div>
                 <Dashboard className="slide-icon" />
               </div>
-              <span>Test</span>
+              <span>Usuarios</span>
             </NavLink>
           </li>
           <li className="slidebar-nav-item">

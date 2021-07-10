@@ -12,14 +12,15 @@ import {
 } from "../../elements/Formularios";
 import { Error } from "@material-ui/icons";
 import ComponentInput from "../layouts/forms/ComponentInput";
+import axios from "axios";
 
 const PersonalView = () => {
   const [usuario, setUsuario] = useState({ campo: "", valido: null });
-  const [nombre, setNombre] = useState({ campo: "", valido: null });
-  const [password, setPassword] = useState({ campo: "", valido: null });
-  const [password2, setPassword2] = useState({ campo: "", valido: null });
-  const [correo, setCorreo] = useState({ campo: "", valido: null });
-  const [telefono, setTelefono] = useState({ campo: "", valido: null });
+  const [contraseña, setContraseña] = useState({ campo: "", valido: null });
+  const [email, setEmail] = useState({ campo: "", valido: null });
+  // const [usuario, setUsuario] = useState("");
+  // const [contraseña, setContraseña] = useState("");
+  // const [email, setEmail] = useState("");
   const [terminos, setTerminos] = useState(false);
   const [formValid, setFormValid] = useState(null);
   const expresiones = {
@@ -30,38 +31,36 @@ const PersonalView = () => {
     telefono: /^\d{7,14}$/, // 7 a 14 numeros.
   };
 
-  const validarPassword2 = () => {
-    if (password.campo.length > 0) {
-      if (password.campo !== password2.campo) {
-        setPassword2((prevState) => {
-          return { ...prevState, valido: "false" };
-        });
-      } else {
-        setPassword2((prevState) => {
-          return { ...prevState, valido: "true" };
-        });
-      }
-    }
-  };
+  // const validarPassword2 = () => {
+  //   if (password.campo.length > 0) {
+  //     if (password.campo !== password2.campo) {
+  //       setPassword2((prevState) => {
+  //         return { ...prevState, valido: "false" };
+  //       });
+  //     } else {
+  //       setPassword2((prevState) => {
+  //         return { ...prevState, valido: "true" };
+  //       });
+  //     }
+  //   }
+  // };
 
   const onSubmit = (event) => {
     event.preventDefault();
-    if (
-      usuario.valido === "true" &&
-      nombre.valido === "true" &&
-      password.valido === "true" &&
-      password2.valido === "true" &&
-      correo.valido === "true" &&
-      telefono.valido === "true" &&
-      terminos
-    ) {
+    const active = 1;
+    if (usuario.valido === "true" && contraseña.valido === "true" && terminos) {
+      axios
+        .post("http://localhost:5000/api/usuarios/create", {
+          usuario: usuario.campo,
+          contraseña: contraseña.campo,
+          email: email.campo,
+          active,
+        })
+        .then((response) => console.log(response));
       setFormValid(true);
       setUsuario({ campo: "", valido: null });
-      setNombre({ campo: "", valido: null });
-      setPassword({ campo: "", valido: null });
-      setPassword2({ campo: "", valido: null });
-      setCorreo({ campo: "", valido: null });
-      setTelefono({ campo: "", valido: null });
+      setContraseña({ campo: "", valido: null });
+      setEmail({ campo: "", valido: null });
     } else {
       setFormValid(false);
     }
@@ -73,8 +72,8 @@ const PersonalView = () => {
         <h1>Personal </h1>
         <Formulario onSubmit={onSubmit}>
           <ComponentInput
-            state={usuario}
-            setState={setUsuario}
+            state={usuario} //value
+            setState={setUsuario} //onChange
             title="Usuario"
             type="text"
             name="usuario"
@@ -83,56 +82,24 @@ const PersonalView = () => {
             expresion={expresiones.usuario}
           />
           <ComponentInput
-            state={nombre}
-            setState={setNombre}
-            title="Nombre"
-            type="text"
-            name="nombre"
-            placeholder="Jean Caiza"
-            error="error nombre "
-            expresion={expresiones.nombre}
-          />
-          <ComponentInput
-            state={password}
-            setState={setPassword}
-            title="Password"
+            state={contraseña} //value
+            setState={setContraseña} //onChange
+            title="Contraseña"
             type="password"
-            name="password"
-            placeholder="contraseña"
-            error="error contraseña "
+            name="contraseña"
+            placeholder="Contraseña"
+            error="Error de Contraseña"
             expresion={expresiones.password}
-            // function={validarPassword2}
           />
           <ComponentInput
-            state={password2}
-            setState={setPassword2}
-            title="Confirmar Password"
-            type="password"
-            name="password2"
-            placeholder="Confirmar Contraseña"
-            error="error contraseña2 "
-            expresion={expresiones.password}
-            function={validarPassword2}
-          />
-          <ComponentInput
-            state={correo}
-            setState={setCorreo}
-            title="Correo"
+            state={email} //value
+            setState={setEmail} //onChange
+            title="Email"
             type="email"
-            name="correo"
-            placeholder="john@hotmail.com"
-            error="Error al correo "
+            name="email"
+            placeholder="jean@hotmail.com"
+            error="Error de Email"
             expresion={expresiones.correo}
-          />
-          <ComponentInput
-            state={telefono}
-            setState={setTelefono}
-            title="Telefono"
-            type="text"
-            name="telefono"
-            placeholder="099899"
-            error="Error al telefono "
-            expresion={expresiones.telefono}
           />
           <ContenedorTerminos>
             <Label>
@@ -161,77 +128,6 @@ const PersonalView = () => {
             )}
           </ContenedorBotonCentrado>
         </Formulario>
-        {/* <form action="">
-          <div>
-            <label htmlFor="">nombres</label>
-            <input type="text" name="nombres" placeholder="Ej: Darío Daniel" />
-          </div>
-          <div>
-            <label htmlFor="">apellidos</label>
-            <input
-              type="text"
-              name="apellidos"
-              placeholder="Ej: Pacherrez Herrera"
-            />
-          </div>
-          <div>
-            <label htmlFor="">telefono</label>
-            <input type="text" name="telefono" placeholder="Ej: 09*******1" />
-          </div>
-          <div>
-            <label htmlFor="">dirección</label>
-            <input
-              type="text"
-              name="direccion"
-              placeholder="Ej: Av. Aurelios"
-            />
-          </div>
-          <div>
-            <label htmlFor="">ciudad</label>
-            <input type="text" name="ciudad" placeholder="Ej: Guayaquil" />
-          </div>
-          <div>
-            <label htmlFor="">email</label>
-            <input type="text" name="email" placeholder="Ej: Av. Aurelios" />
-          </div>
-          <div>
-            <label htmlFor="">fecha de nacimiento</label>
-            <input
-              type="text"
-              name="fecha_nac"
-              placeholder="Ej: Av. Aurelios"
-            />
-          </div>
-          <div>
-            <label htmlFor="">edad</label>
-            <input type="text" name="edad" placeholder="Ej: Av. Aurelios" />
-          </div>
-          <div>
-            <label htmlFor="">tipo documento</label>
-            <input type="text" name="tipo_doc" placeholder="Ej: Av. Aurelios" />
-          </div>
-          <div>
-            <label htmlFor="">numero de documento</label>
-            <input
-              type="text"
-              name="num_documento"
-              placeholder="Ej: Av. Aurelios"
-            />
-          </div>
-          <div>
-            <label htmlFor="">dirección</label>
-            <input
-              type="text"
-              name="direccion"
-              placeholder="Ej: Av. Aurelios"
-            />
-          </div>
-          <div>
-            <label htmlFor="">activo</label>
-            <input type="text" name="active" placeholder="Ej: Av. Aurelios" />
-          </div>
-          <button onClick={(props) => handleSubmit(props)}> Enviar</button>
-        </form> */}
       </div>
     </>
   );
