@@ -17,9 +17,6 @@ const ComponentInput = (props) => {
         props.setState({ ...props.state, valido: "false" });
       }
     }
-    if (props.function) {
-      props.function();
-    }
   };
   return (
     <div>

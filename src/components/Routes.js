@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
+import NuevoPacientes from "./views/NuevoPacientes";
 import PacientesView from "./views/PacientesView";
 import PageTest from "./views/PageTest";
 import PersonalView from "./views/PersonalView";
@@ -19,6 +20,11 @@ const Routes = () => {
         <Route exact path="/dashboard/test" component={PageTest} />
         <Route exact path="/dashboard/personal" component={PersonalView} />
         <Route exact path="/dashboard/pacientes" component={PacientesView} />
+        <Route
+          exact
+          path="/dashboard/pacientes/create"
+          component={NuevoPacientes}
+        />
         <Route exact path="/dashboard/usuarios" component={UsuariosView} />
 
         <Route path="/*" component={ErrorPage} />
