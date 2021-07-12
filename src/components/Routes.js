@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import ErrorPage from "./pages/ErrorPage";
@@ -9,23 +9,60 @@ import PacientesView from "./views/PacientesView";
 import PageTest from "./views/PageTest";
 import PersonalView from "./views/PersonalView";
 import UsuariosView from "./views/UsuariosView";
+import PublicRoute from "../utils/PublicRoute";
+import PrivateRoute from "../utils/PrivateRoute";
+import { getToken, removeUserSession, setUserSession } from "../utils/Common";
+import axios from "axios";
 
 const Routes = () => {
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      return;
+    }
+    axios
+      .get(`http://localhost:5000/api/usuarios/verifytoken?token=${token}`)
+      .then((response) => {
+        setUserSession(response.data.token, response.data.user);
+        setAuthLoading();
+      })
+      .catch((error) => {
+        removeUserSession();
+        setAuthLoading(false);
+      });
+  }, []);
+  if (authLoading && getToken()) {
+    return <div className="content"> Cheking Authentication...</div>;
+  }
   return (
     <>
       <Switch>
         <Route exact path="/" component={HomePage} />
-        <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/dashboard" component={Dashboard} />
-        <Route exact path="/dashboard/test" component={PageTest} />
-        <Route exact path="/dashboard/personal" component={PersonalView} />
-        <Route exact path="/dashboard/pacientes" component={PacientesView} />
-        <Route
+        <PublicRoute exact path="/login" component={LoginPage} />
+        <PrivateRoute exact path="/dashboard" component={Dashboard} />
+        <PrivateRoute exact path="/dashboard/test" component={PageTest} />
+        <PrivateRoute
+          exact
+          path="/dashboard/personal"
+          component={PersonalView}
+        />
+        <PrivateRoute
+          exact
+          path="/dashboard/pacientes"
+          component={PacientesView}
+        />
+        <PrivateRoute
           exact
           path="/dashboard/pacientes/create"
           component={NuevoPacientes}
         />
-        <Route exact path="/dashboard/usuarios" component={UsuariosView} />
+        <PrivateRoute
+          exact
+          path="/dashboard/usuarios"
+          component={UsuariosView}
+        />
 
         <Route path="/*" component={ErrorPage} />
       </Switch>
