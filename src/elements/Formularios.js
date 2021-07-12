@@ -125,7 +125,7 @@ const Boton = styled.button`
   color: #fff;
   font-weight: bold;
   border: none;
-  border-radius: 3px;
+  border-radius: 5px;
   cursor: pointer;
   transition: 0.1s ease all-scroll;
 
