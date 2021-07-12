@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import axios from "axios";
-
+import { DataGrid } from "@material-ui/data-grid";
+import { Link } from "react-router-dom";
 const PacientesView = () => {
   const [pacientes, setPacientes] = useState([]);
   const getPacientes = () => {
@@ -18,11 +19,26 @@ const PacientesView = () => {
       getPacientes();
     }
     return () => {
-      console.log("clean up");
       unmounted = true;
     };
   });
 
+  const columns = [
+    { field: "id", headerName: "ID", width: 90 },
+    { field: "nombres", headerName: "Nombres", width: 130 },
+    { field: "apellidos", headerName: "Apellidos", width: 130 },
+    { field: "telefono", headerName: "Telefono", width: 130 },
+    { field: "direccion", headerName: "Dirección", width: 130 },
+    { field: "ciudad", headerName: "Ciudad", width: 130 },
+    { field: "tipo_doc", headerName: "Tipo Documento", width: 130 },
+    { field: "num_documento", headerName: "Numero Documento", width: 130 },
+    { field: "fecha_nac", headerName: "Fecha de Nacimiento", width: 130 },
+    { field: "edad", headerName: "Edad", width: 130 },
+    { field: "estadoCivil", headerName: "Estado Civil", width: 130 },
+    { field: "genero", headerName: "Genero", width: 130 },
+    { field: "fecha_registro", headerName: "Fecha Registro", width: 130 },
+    { field: "email", headerName: "Email", width: 130 },
+  ];
   return (
     <>
       <Topbar />
@@ -31,19 +47,25 @@ const PacientesView = () => {
         <div>
           <nav>
             <ul>
-              <li>Home</li>
+              <li>
+                <Link to="/dashboard">Home</Link>
+              </li>
               <li>Pacientes</li>
-              <li>Home</li>
             </ul>
           </nav>
         </div>
-        <div>Agregar</div>
         <div>
-          <ul>
-            {pacientes.map((paciente) => (
-              <li key={paciente.id_Paciente}>{paciente.nombres}</li>
-            ))}
-          </ul>
+          <Link to="/dashboard/pacientes/create">
+            <button>Nuevo Paciente</button>
+          </Link>
+        </div>
+        <div style={{ height: 400, width: "100%" }}>
+          <DataGrid
+            rows={pacientes}
+            columns={columns}
+            pageSize={5}
+            checkboxSelection
+          />
         </div>
       </div>
     </>
