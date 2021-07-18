@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import ErrorPage from "./pages/ErrorPage";
-import HomePage from "./pages/HomePage";
+// import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import NuevoPacientes from "./views/NuevoPacientes";
 import PacientesView from "./views/PacientesView";
@@ -13,6 +13,7 @@ import PublicRoute from "../utils/PublicRoute";
 import PrivateRoute from "../utils/PrivateRoute";
 import { getToken, removeUserSession, setUserSession } from "../utils/Common";
 import axios from "axios";
+import PacientesEdit from "./views/PacientesEdit";
 
 const Routes = () => {
   const [authLoading, setAuthLoading] = useState(true);
@@ -39,7 +40,7 @@ const Routes = () => {
   return (
     <>
       <Switch>
-        <Route exact path="/" component={HomePage} />
+        <Route exact path="/" component={() => <Redirect to="/login" />} />
         <PublicRoute exact path="/login" component={LoginPage} />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute exact path="/dashboard/test" component={PageTest} />
@@ -55,8 +56,18 @@ const Routes = () => {
         />
         <PrivateRoute
           exact
+          path="/dashboard/pacientes/:pacienteId/edit"
+          component={PacientesEdit}
+        />
+        <PrivateRoute
+          exact
           path="/dashboard/pacientes/create"
           component={NuevoPacientes}
+        />
+        <PrivateRoute
+          exact
+          path="/dashboard/usuarios"
+          component={UsuariosView}
         />
         <PrivateRoute
           exact
