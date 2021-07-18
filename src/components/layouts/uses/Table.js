@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-
+import { URL } from "../../../utils/values";
 const Table = () => {
   const [pacientes, setPacientes] = useState([]);
   // const [listUpdate, setListUpdate] = useState(false);
   const getPacientes = () => {
     axios
-      .get("http://localhost:5000/api/pacientes")
+      .get(`${URL}/pacientes`)
       .then((response) => {
         setPacientes(response.data);
       })
@@ -19,11 +19,9 @@ const Table = () => {
   //   // setListUpdate(false);
   // }, []);
   const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:5000/api/pacientes/delete/${id}`)
-      .then((response) => {
-        console.log(response.data.message);
-      });
+    axios.delete(`${URL}/pacientes/delete/${id}`).then((response) => {
+      console.log(response.data.message);
+    });
     getPacientes();
     // setListUpdate(true);
   };
