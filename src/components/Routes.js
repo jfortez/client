@@ -72,7 +72,7 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/reporteria" component={ReportView} />
         <PrivateRoute exact path="/dashboard/inventario" component={InventarioView} />
         <PrivateRoute exact path="/dashboard/settings" component={ConfigView} />
-        <Route path="/*" component={ErrorPage} />
+        <Route exact path="/*" component={ErrorPage} />
       </Switch>
     </>
   );

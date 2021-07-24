@@ -24,7 +24,7 @@ const Topbar = () => {
         {/* RIGHT */}
         <ul className="navbar-nav nav-right">
           <li className="nav-item">
-            <Link exact to="/dashboard/account">
+            <Link to="/dashboard/account">
               <div>Account</div>
             </Link>
           </li>

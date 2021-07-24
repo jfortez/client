@@ -9,7 +9,8 @@ const LoginPage = (props) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     setError(null);
     setLoading(true);
     await axios
@@ -52,7 +53,7 @@ const LoginPage = (props) => {
             <h1>Login</h1>
           </div>
           <div className="card-body">
-            <form>
+            <form onSubmit={handleLogin}>
               <div className="form-group">
                 <input
                   type="text"
@@ -74,10 +75,9 @@ const LoginPage = (props) => {
               </div>
               {error && <div className="error">{error}</div>}
               <input
-                type="button"
+                type="submit"
                 value={loading ? "Loading..." : "Login"}
                 disabled={loading}
-                onClick={handleLogin}
                 className="btn btn-primary btn-lg"
               />
             </form>
