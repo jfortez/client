@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import "./Topbar.css";
 import { Menu } from "@material-ui/icons";
 import Sidebar from "../sidebar/Sidebar";
+import { Link } from "react-router-dom";
 
 const Topbar = () => {
   const [isActive, setActive] = useState(false);
   const handleToggle = () => {
-    const active = setActive(!isActive);
-    const a = sessionStorage.setItem("isActive", active);
-    console.log(a);
+    setActive(!isActive);
   };
 
   return (
@@ -25,7 +24,9 @@ const Topbar = () => {
         {/* RIGHT */}
         <ul className="navbar-nav nav-right">
           <li className="nav-item">
-            <div>Account</div>
+            <Link exact to="/dashboard/account">
+              <div>Account</div>
+            </Link>
           </li>
         </ul>
       </div>

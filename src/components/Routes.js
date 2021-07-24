@@ -14,6 +14,15 @@ import PrivateRoute from "../utils/PrivateRoute";
 import { getToken, removeUserSession, setUserSession } from "../utils/Common";
 import axios from "axios";
 import PacientesEdit from "./views/PacientesEdit";
+import AccountPage from "./pages/AccountPage";
+import ClienteView from "./views/ClienteView";
+import ProductosView from "./views/ProductosView";
+import ServiciosView from "./views/ServiciosView";
+import AgendaView from "./views/AgendaView";
+import CalendarioView from "./views/CalendarioView";
+import ConfigView from "./views/ConfigView";
+import ReportView from "./views/ReportView";
+import InventarioView from "./views/InventarioView";
 
 const Routes = () => {
   const [authLoading, setAuthLoading] = useState(true);
@@ -44,37 +53,25 @@ const Routes = () => {
         <PublicRoute exact path="/login" component={LoginPage} />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute exact path="/dashboard/test" component={PageTest} />
-        <PrivateRoute
-          exact
-          path="/dashboard/personal"
-          component={PersonalView}
-        />
-        <PrivateRoute
-          exact
-          path="/dashboard/pacientes"
-          component={PacientesView}
-        />
+        <PrivateRoute exact path="/dashboard/personal" component={PersonalView} />
+        <PrivateRoute exact path="/dashboard/pacientes" component={PacientesView} />
         <PrivateRoute
           exact
           path="/dashboard/pacientes/:pacienteId/edit"
           component={PacientesEdit}
         />
-        <PrivateRoute
-          exact
-          path="/dashboard/pacientes/create"
-          component={NuevoPacientes}
-        />
-        <PrivateRoute
-          exact
-          path="/dashboard/usuarios"
-          component={UsuariosView}
-        />
-        <PrivateRoute
-          exact
-          path="/dashboard/usuarios"
-          component={UsuariosView}
-        />
-
+        <PrivateRoute exact path="/dashboard/pacientes/create" component={NuevoPacientes} />
+        <PrivateRoute exact path="/dashboard/usuarios" component={UsuariosView} />
+        <PrivateRoute exact path="/dashboard/usuarios" component={UsuariosView} />
+        <PrivateRoute exact path="/dashboard/clientes" component={ClienteView} />
+        <PrivateRoute exact path="/dashboard/account" component={AccountPage} />
+        <PrivateRoute exact path="/dashboard/productos" component={ProductosView} />
+        <PrivateRoute exact path="/dashboard/servicios" component={ServiciosView} />
+        <PrivateRoute exact path="/dashboard/agenda" component={AgendaView} />
+        <PrivateRoute exact path="/dashboard/calendario" component={CalendarioView} />
+        <PrivateRoute exact path="/dashboard/reporteria" component={ReportView} />
+        <PrivateRoute exact path="/dashboard/inventario" component={InventarioView} />
+        <PrivateRoute exact path="/dashboard/settings" component={ConfigView} />
         <Route path="/*" component={ErrorPage} />
       </Switch>
     </>
