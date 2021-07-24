@@ -12,7 +12,7 @@ const Topbar = () => {
   };
 
   return (
-    <>
+    <div>
       <div className="navbar">
         {/* LEFT */}
         <ul className="navbar-nav">
@@ -30,7 +30,7 @@ const Topbar = () => {
         </ul>
       </div>
       <Sidebar isActive={isActive} />
-    </>
+    </div>
   );
 };
 

@@ -1,85 +1,42 @@
 import React from "react";
 import "./Sidebar.css";
 import { NavLink } from "react-router-dom";
-import { Dashboard } from "@material-ui/icons";
+import { ExitToApp } from "@material-ui/icons";
+import { Icon } from "@material-ui/core";
 import { removeUserSession } from "../../../utils/Common";
+import { SidebarData } from "./data";
 
-const Sidebar = ({ isActive }, props) => {
+const Sidebar = ({ isActive }) => {
   const handleLogout = () => {
     removeUserSession();
   };
   return (
-    <>
+    <div>
       <div className={`slidebar ${isActive ? "" : "slidebar-expand"}`}>
         <ul className="slidebar-nav">
+          {SidebarData.map((item, index) => {
+            return (
+              <li key={index} className={item.class}>
+                <NavLink exact to={item.url} className={item.urlClass}>
+                  <div>
+                    <Icon component={item.icon} className={item.iconClass} />
+                  </div>
+                  <span>{item.title}</span>
+                </NavLink>
+              </li>
+            );
+          })}
           <li className="slidebar-nav-item">
-            <NavLink exact to="/dashboard" className="slidebar-nav-link">
+            <NavLink exact to="/" onClick={handleLogout} className="slidebar-nav-link">
               <div>
-                <Dashboard className="slide-icon" />
-              </div>
-              <span>Dashboard</span>
-            </NavLink>
-          </li>
-          <li className="slidebar-nav-item">
-            <NavLink exact to="/dashboard/test" className="slidebar-nav-link">
-              <div>
-                <Dashboard className="slide-icon" />
-              </div>
-              <span>Test</span>
-            </NavLink>
-          </li>
-          <li className="slidebar-nav-item">
-            <NavLink
-              exact
-              to="/dashboard/personal"
-              className="slidebar-nav-link"
-            >
-              <div>
-                <Dashboard className="slide-icon" />
-              </div>
-              <span>Personal</span>
-            </NavLink>
-          </li>
-          <li className="slidebar-nav-item">
-            <NavLink
-              exact
-              to="/dashboard/pacientes"
-              className="slidebar-nav-link"
-            >
-              <div>
-                <Dashboard className="slide-icon" />
-              </div>
-              <span>Paciente</span>
-            </NavLink>
-          </li>
-          <li className="slidebar-nav-item">
-            <NavLink
-              exact
-              to="/dashboard/usuarios"
-              className="slidebar-nav-link"
-            >
-              <div>
-                <Dashboard className="slide-icon" />
-              </div>
-              <span>Usuarios</span>
-            </NavLink>
-          </li>
-          <li className="slidebar-nav-item">
-            <NavLink
-              exact
-              to="/"
-              onClick={handleLogout}
-              className="slidebar-nav-link"
-            >
-              <div>
-                <Dashboard className="slide-icon" />
+                <Icon component={ExitToApp} className="slide-icon" />
               </div>
               <span>Salir</span>
             </NavLink>
           </li>
         </ul>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -36,7 +36,7 @@
   text-decoration: none !important;
 }
 .slidebar-nav-link .slide-icon {
-  font-size: 2rem;
+  font-size: 2rem !important;
   color: #727475;
   position: absolute;
   left: 50%;
