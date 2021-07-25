@@ -1,12 +1,7 @@
 import React from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import "../views/DashboardView.css";
-import {
-  PlaylistAddCheck,
-  Autorenew,
-  DoneAll,
-  BugReport,
-} from "@material-ui/icons";
+import { PlaylistAddCheck, Autorenew, DoneAll, BugReport } from "@material-ui/icons";
 const Dashboard = () => {
   return (
     <>

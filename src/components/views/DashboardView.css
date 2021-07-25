@@ -24,6 +24,9 @@
   background: #f1f1f1;
   transition: margin-left 0.5s;
 }
+.sidebar-collapsed {
+  margin-left: 80px;
+}
 .counter {
   padding: 16px;
   text-align: center;
