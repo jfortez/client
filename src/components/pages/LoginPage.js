@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { setUserSession } from "../../utils/Common";
 import { URL } from "../../utils/values";
-
+import useValues from "../../provider/useValues";
 const LoginPage = (props) => {
   const [usuario, setUsuario] = useState("");
   const [contraseña, setContraseña] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const { login } = useValues();
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
@@ -21,18 +21,8 @@ const LoginPage = (props) => {
       .then((response) => {
         setError(null);
         setUserSession(response.data.token, response.data.user);
-        console.log("response>>> ", response);
         props.history.push("/dashboard");
-        // const loggedUser = response.data.result;
-        // if (usuario === "" || contraseña === "") {
-        //   console.log("Usuario y Contraseña Vacíos");
-        // } else {
-        //   if (loggedUser.length > 0) {
-        //     props.history.push("/dashboard");
-        //   } else {
-        //     console.log("usuario o contraseña Incorrectos");
-        //   }
-        // }
+        login(response.data.user);
       })
       .catch((err) => {
         setLoading(false);

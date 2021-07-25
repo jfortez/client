@@ -5,7 +5,7 @@ import Sidebar from "../sidebar/Sidebar";
 import { Link } from "react-router-dom";
 import useValues from "../../../provider/useValues";
 const Topbar = () => {
-  const { isCollapsed, collapseSidebar } = useValues();
+  const { collapseSidebar } = useValues();
   const handleToggle = () => {
     collapseSidebar();
   };
@@ -29,7 +29,6 @@ const Topbar = () => {
           </li>
         </ul>
       </div>
-      {isCollapsed ? console.log("is Collapsed") : console.log("no collapsed")}
       <Sidebar />
     </div>
   );

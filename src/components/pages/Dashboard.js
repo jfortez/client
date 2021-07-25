@@ -4,12 +4,15 @@ import "../views/DashboardView.css";
 import useValues from "../../provider/useValues";
 import { PlaylistAddCheck, Autorenew, DoneAll, BugReport } from "@material-ui/icons";
 const Dashboard = () => {
-  const { isCollapsed } = useValues();
-
+  const { isCollapsed, user } = useValues();
+  console.log(user);
   return (
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
+        <div className="row">
+          <h1>Bienvenido {user.usuario}</h1>
+        </div>
         <div className="row">
           <div className="col-3">
             <div className="counter bg-primary">
