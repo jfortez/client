@@ -1,11 +1,14 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import Routes from "./components/Routes";
 import "./App.css";
+import ValuesProvider from "./provider/ValuesProvider";
 function App() {
   return (
     <div className="App">
       <Router>
-        <Routes />
+        <ValuesProvider>
+          <Routes />
+        </ValuesProvider>
       </Router>
     </div>
   );

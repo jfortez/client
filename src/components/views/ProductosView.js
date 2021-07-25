@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
+import useValues from "../../provider/useValues";
 import productoService from "../../services/productos";
 import { Link } from "react-router-dom";
 const ProductosView = () => {
+  const { isCollapsed } = useValues();
   const [productos, setProductos] = useState([]);
   const getProductos = async () => {
     const productos = await productoService.getProductos();
@@ -16,7 +18,7 @@ const ProductosView = () => {
   return (
     <>
       <Topbar />
-      <div className="wrapper">
+      <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h3>Productos</h3>
         <div>
           <Link to="/dashboard/productos/createProduct">

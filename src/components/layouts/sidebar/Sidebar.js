@@ -5,14 +5,16 @@ import { ExitToApp } from "@material-ui/icons";
 import { Icon } from "@material-ui/core";
 import { removeUserSession } from "../../../utils/Common";
 import { SidebarData } from "./data";
+import useValues from "../../../provider/useValues";
 
-const Sidebar = ({ isActive }) => {
+const Sidebar = () => {
+  const { isCollapsed } = useValues();
   const handleLogout = () => {
     removeUserSession();
   };
   return (
     <div>
-      <div className={`slidebar ${isActive ? "" : "slidebar-expand"}`}>
+      <div className={`slidebar ${isCollapsed ? "" : "slidebar-expand"}`}>
         <ul className="slidebar-nav">
           {SidebarData.map((item, index) => {
             return (

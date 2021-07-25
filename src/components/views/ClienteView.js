@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import clienteService from "../../services/cliente";
+import useValues from "../../provider/useValues";
+
 const ClienteView = () => {
+  const { isCollapsed } = useValues();
   const [clientes, setClientes] = useState([]);
   const getClientes = async () => {
     const cliente = await clienteService.getClientes();
@@ -15,7 +18,7 @@ const ClienteView = () => {
   return (
     <>
       <Topbar />
-      <div className="wrapper">
+      <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h3>Clientes</h3>
         <div>
           <table>

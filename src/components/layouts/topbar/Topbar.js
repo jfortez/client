@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Topbar.css";
 import { Menu } from "@material-ui/icons";
 import Sidebar from "../sidebar/Sidebar";
 import { Link } from "react-router-dom";
-
+import useValues from "../../../provider/useValues";
 const Topbar = () => {
-  const [isActive, setActive] = useState(false);
+  const { isCollapsed, collapseSidebar } = useValues();
   const handleToggle = () => {
-    setActive(!isActive);
+    collapseSidebar();
   };
-
   return (
     <div>
       <div className="navbar">
@@ -30,7 +29,8 @@ const Topbar = () => {
           </li>
         </ul>
       </div>
-      <Sidebar isActive={isActive} />
+      {isCollapsed ? console.log("is Collapsed") : console.log("no collapsed")}
+      <Sidebar />
     </div>
   );
 };

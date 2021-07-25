@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
+import useValues from "../../provider/useValues";
 import {
   Formulario,
   ContenedorBotonCentrado,
@@ -12,6 +13,7 @@ import ComponentInput from "../layouts/forms/ComponentInput";
 import axios from "axios";
 
 const PersonalView = () => {
+  const { isCollapsed } = useValues();
   const [nombres, setNombres] = useState({ campo: "", valido: null });
   const [apellidos, setApellidos] = useState({ campo: "", valido: null });
   const [telefono, setTelefono] = useState({ campo: "", valido: null });
@@ -89,7 +91,7 @@ const PersonalView = () => {
   return (
     <>
       <Topbar />
-      <div className="wrapper">
+      <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h1>Personal </h1>
         <Formulario onSubmit={onSubmit}>
           <ComponentInput

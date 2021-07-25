@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import axios from "axios";
+import useValues from "../../provider/useValues";
 import { Error } from "@material-ui/icons";
 import {
   Formulario,
@@ -13,6 +14,7 @@ import {
 import ComponentInput from "../layouts/forms/ComponentInput";
 
 const NuevoPacientes = () => {
+  const { isCollapsed } = useValues();
   const [nombres, setNombres] = useState({ campo: "", valido: null });
   const [apellidos, setApellidos] = useState({ campo: "", valido: null });
   const [telefono, setTelefono] = useState({ campo: "", valido: null });
@@ -95,7 +97,7 @@ const NuevoPacientes = () => {
   return (
     <>
       <Topbar />
-      <div className="wrapper">
+      <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h1>Pacientes</h1>
         <Formulario onSubmit={onSubmit}>
           <ComponentInput
@@ -228,9 +230,7 @@ const NuevoPacientes = () => {
           )}
           <ContenedorBotonCentrado>
             <Boton type="submit">Enviar</Boton>
-            {formValid === true && (
-              <MensajeExito>Formulario enviado exitosamente!</MensajeExito>
-            )}
+            {formValid === true && <MensajeExito>Formulario enviado exitosamente!</MensajeExito>}
           </ContenedorBotonCentrado>
         </Formulario>
       </div>

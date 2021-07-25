@@ -1,12 +1,15 @@
 import React from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import "../views/DashboardView.css";
+import useValues from "../../provider/useValues";
 import { PlaylistAddCheck, Autorenew, DoneAll, BugReport } from "@material-ui/icons";
 const Dashboard = () => {
+  const { isCollapsed } = useValues();
+
   return (
     <>
       <Topbar />
-      <div className="wrapper">
+      <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <div className="row">
           <div className="col-3">
             <div className="counter bg-primary">

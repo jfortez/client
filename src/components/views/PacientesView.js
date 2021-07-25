@@ -2,11 +2,15 @@ import React from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import { Link } from "react-router-dom";
 import Table from "../layouts/uses/Table";
+import useValues from "../../provider/useValues";
+
 const PacientesView = () => {
+  const { isCollapsed } = useValues();
+
   return (
     <>
       <Topbar />
-      <div className="wrapper">
+      <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h1>Pacientes</h1>
         <div>
           <nav>
