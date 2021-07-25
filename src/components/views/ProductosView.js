@@ -10,7 +10,6 @@ const ProductosView = () => {
   const getProductos = async () => {
     const productos = await productoService.getProductos();
     setProductos(productos);
-    console.log(productos);
   };
   useEffect(() => {
     getProductos();

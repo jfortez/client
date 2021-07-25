@@ -10,7 +10,6 @@ const ClienteView = () => {
   const getClientes = async () => {
     const cliente = await clienteService.getClientes();
     setClientes(cliente);
-    console.log(cliente);
   };
   useEffect(() => {
     getClientes();

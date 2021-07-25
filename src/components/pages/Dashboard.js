@@ -5,13 +5,12 @@ import useValues from "../../provider/useValues";
 import { PlaylistAddCheck, Autorenew, DoneAll, BugReport } from "@material-ui/icons";
 const Dashboard = () => {
   const { isCollapsed, user } = useValues();
-  console.log(user);
   return (
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <div className="row">
-          <h1>Bienvenido {user.usuario}</h1>
+          <h3>Bienvenido {user.usuario}</h3>
         </div>
         <div className="row">
           <div className="col-3">

@@ -87,8 +87,8 @@
   padding: 10px;
 }
 *::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
+  width: 7px;
+  height: 55px;
   display: block;
 }
 *::-webkit-scrollbar-thumb {

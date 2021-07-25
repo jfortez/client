@@ -10,7 +10,6 @@ const Table = () => {
       .get(`${URL}/pacientes`)
       .then((response) => {
         setPacientes(response.data);
-        console.log(response.data);
       })
       .catch((error) => console.error(error));
   };

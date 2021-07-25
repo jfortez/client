@@ -15,7 +15,7 @@ const Sidebar = () => {
   return (
     <div>
       <div className={`slidebar ${isCollapsed ? "" : "slidebar-expand"}`}>
-        <ul className="slidebar-nav">
+        <ul className="slidebar-nav webkit">
           {SidebarData.map((item, index) => {
             return (
               <li key={index} className={item.class}>
