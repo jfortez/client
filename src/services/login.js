@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:5000/api/usuarios/signin";
+const baseUrl = "http://192.168.0.104:5000/api/usuarios/signin";
 
 const login = async (credentials) => {
   const response = await axios.post(baseUrl, credentials);

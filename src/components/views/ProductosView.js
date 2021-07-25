@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import productoService from "../../services/productos";
-
+import { Link } from "react-router-dom";
 const ProductosView = () => {
   const [productos, setProductos] = useState([]);
   const getProductos = async () => {
@@ -18,6 +18,14 @@ const ProductosView = () => {
       <Topbar />
       <div className="wrapper">
         <h3>Productos</h3>
+        <div>
+          <Link to="/dashboard/productos/createProduct">
+            <button>Nuevo Paciente</button>
+          </Link>
+          <Link to="/dashboard/productos/createCategory">
+            <button>Nuevo Categoría</button>
+          </Link>
+        </div>
         <div>
           <table>
             <thead>

@@ -14,6 +14,8 @@ import PrivateRoute from "../utils/PrivateRoute";
 import { getToken, removeUserSession, setUserSession } from "../utils/Common";
 import axios from "axios";
 import PacientesEdit from "./views/PacientesEdit";
+import ProductosCreate from "./views/ProductosCreate";
+import CategoryCreate from "./views/CategoryCreate";
 import AccountPage from "./pages/AccountPage";
 import ClienteView from "./views/ClienteView";
 import ProductosView from "./views/ProductosView";
@@ -33,7 +35,7 @@ const Routes = () => {
       return;
     }
     axios
-      .get(`http://localhost:5000/api/usuarios/verifytoken?token=${token}`)
+      .get(`http://192.168.0.104:5000/api/usuarios/verifytoken?token=${token}`)
       .then((response) => {
         setUserSession(response.data.token, response.data.user);
         setAuthLoading();
@@ -66,6 +68,8 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/clientes" component={ClienteView} />
         <PrivateRoute exact path="/dashboard/account" component={AccountPage} />
         <PrivateRoute exact path="/dashboard/productos" component={ProductosView} />
+        <PrivateRoute exact path="/dashboard/productos/createProduct" component={ProductosCreate} />
+        <PrivateRoute exact path="/dashboard/productos/createCategory" component={CategoryCreate} />
         <PrivateRoute exact path="/dashboard/servicios" component={ServiciosView} />
         <PrivateRoute exact path="/dashboard/agenda" component={AgendaView} />
         <PrivateRoute exact path="/dashboard/calendario" component={CalendarioView} />
