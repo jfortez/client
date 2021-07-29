@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Topbar.css";
-import { Menu } from "@material-ui/icons";
+import { Menu, ExitToApp, Settings, AccountCircle } from "@material-ui/icons";
 import Sidebar from "../sidebar/Sidebar";
 import { Link } from "react-router-dom";
+import img from "../../../img/pic.jpg";
+import { removeUserSession } from "../../../utils/Common";
 import useValues from "../../../provider/useValues";
 const Topbar = () => {
   const { collapseSidebar } = useValues();
+  const [isDropDown, setIsDropDown] = useState(false);
   const handleToggle = () => {
     collapseSidebar();
+  };
+  const handleDropDown = () => {
+    setIsDropDown(!isDropDown);
+  };
+  const handleLogout = () => {
+    removeUserSession();
   };
   return (
     <div>
@@ -21,11 +30,38 @@ const Topbar = () => {
           </li>
         </ul>
         {/* RIGHT */}
+        {/* {`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`} */}
         <ul className="navbar-nav nav-right">
-          <li className="nav-item">
-            <Link to="/dashboard/account">
-              <div>Account</div>
-            </Link>
+          <li className="nav-item avt-wrapper">
+            <div className="avt dropdown">
+              <img src={img} alt="a" className="dropdown-toggle" onClick={handleDropDown} />
+              <ul className={`dropdown-menu ${isDropDown ? "dropdown-expand" : null}`}>
+                <li className="dropdown-menu-item">
+                  <Link to="/dashboard/account" className="dropdown-menu-link">
+                    <div>
+                      <AccountCircle className="dropdown-icon" />
+                    </div>
+                    <span>Account</span>
+                  </Link>
+                </li>
+                <li className="dropdown-menu-item">
+                  <Link to="/dashboard/settings" className="dropdown-menu-link">
+                    <div>
+                      <Settings className="dropdown-icon" />
+                    </div>
+                    <span>Configuración</span>
+                  </Link>
+                </li>
+                <li className="dropdown-menu-item">
+                  <Link to="/" className="dropdown-menu-link" onClick={handleLogout}>
+                    <div>
+                      <ExitToApp className="dropdown-icon" />
+                    </div>
+                    <span>Logout</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </li>
         </ul>
       </div>
