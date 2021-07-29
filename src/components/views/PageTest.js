@@ -1,7 +1,6 @@
 import React from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-
 const PageTest = () => {
   const { isCollapsed } = useValues();
 
