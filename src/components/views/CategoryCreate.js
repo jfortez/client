@@ -26,6 +26,7 @@ const CategoryCreate = () => {
   };
   useEffect(() => {
     getCategorias();
+    setIsListed(false);
   }, [isListed]);
   const expresiones = {
     nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
@@ -38,12 +39,14 @@ const CategoryCreate = () => {
         nombre: nombre.campo,
         descripcion: descripcion.campo,
       });
+      setNombre({ campo: "" });
+      setDescripcion({ campo: "" });
+      setIsListed(true);
     } else {
       setFormValid(false);
     }
   };
   const handleDelete = async (id) => {
-    setIsListed(false);
     const deleteid = await categoriaServices.deleteCategoria(id);
     if (deleteid) {
       setIsListed(true);
