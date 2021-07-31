@@ -41,7 +41,7 @@ const PersonalView = () => {
         </div>
         <div>
           <Link to="/dashboard/personal/create">
-            <button>Añadir Personal</button>
+            <button>Nuevo Personal</button>
           </Link>
         </div>
         <div>

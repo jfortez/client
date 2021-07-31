@@ -6,5 +6,14 @@ const getClientes = async () => {
   return data;
 };
 
+const createCliente = async (objectData) => {
+  const { data } = await axios.post(`${baseUrl}/create`, objectData);
+  return data;
+};
+
+const deleteCliente = async (id) => {
+  const { data } = await axios.delete(`${baseUrl}/delete/${id}`);
+  return data;
+};
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getClientes };
+export default { getClientes, createCliente, deleteCliente };

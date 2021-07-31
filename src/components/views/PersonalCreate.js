@@ -215,7 +215,7 @@ const PersonalCreate = () => {
             </MensajeError>
           )}
           <ContenedorBotonCentrado>
-            <Boton type="submit">Enviar</Boton>
+            <Boton type="submit">Crear</Boton>
           </ContenedorBotonCentrado>
         </Formulario>
       </div>

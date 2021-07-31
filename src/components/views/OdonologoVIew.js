@@ -40,7 +40,7 @@ const OdontologoView = () => {
         </div>
         <div>
           <Link to="/dashboard/odontologos/create">
-            <button>Añadir Odontologo</button>
+            <button>Nuevo Odontologo</button>
           </Link>
         </div>
         <div>

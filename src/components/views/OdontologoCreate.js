@@ -32,7 +32,6 @@ const OdontologoCreate = () => {
   };
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("enviar");
     if (
       nombres.valido === "true" &&
       apellidos.valido === "true" &&
@@ -180,7 +179,7 @@ const OdontologoCreate = () => {
             </MensajeError>
           )}
           <ContenedorBotonCentrado>
-            <Boton type="submit">Enviar</Boton>
+            <Boton type="submit">Crear</Boton>
           </ContenedorBotonCentrado>
         </Formulario>
       </div>
