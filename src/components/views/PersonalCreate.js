@@ -87,7 +87,7 @@ const PersonalCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Personal </h1>
+        <h1>Nuevo Personal</h1>
         <div>
           <nav>
             <ul>

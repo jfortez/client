@@ -44,49 +44,51 @@ const PersonalView = () => {
             <button>Añadir Personal</button>
           </Link>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Nombres Completos</th>
-              <th>Cedula</th>
-              <th>Telefono</th>
-              <th>Dirección</th>
-              <th>Correo</th>
-              <th>Creado el</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {personal
-              ? personal.map((person) => {
-                  return (
-                    <tr key={person.id}>
-                      <td>
-                        {person.nombres} {person.apellidos}
-                      </td>
-                      <td>{person.cedula}</td>
-                      <td>{person.telefono}</td>
-                      <td>{person.direccion}</td>
-                      <td>{person.email}</td>
-                      <td>{new Date(person.fecha_registro).toLocaleDateString()}</td>
-                      <td>
-                        <button
-                          onClick={() => {
-                            handleDelete(person.id);
-                          }}
-                        >
-                          Eliminar
-                        </button>
-                      </td>
-                      <td>
-                        <button>Actualizar</button>
-                      </td>
-                    </tr>
-                  );
-                })
-              : null}
-          </tbody>
-        </table>
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>Nombres Completos</th>
+                <th>Cedula</th>
+                <th>Telefono</th>
+                <th>Dirección</th>
+                <th>Correo</th>
+                <th>Creado el</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {personal
+                ? personal.map((person) => {
+                    return (
+                      <tr key={person.id}>
+                        <td>
+                          {person.nombres} {person.apellidos}
+                        </td>
+                        <td>{person.cedula}</td>
+                        <td>{person.telefono}</td>
+                        <td>{person.direccion}</td>
+                        <td>{person.email}</td>
+                        <td>{new Date(person.fecha_registro).toLocaleDateString()}</td>
+                        <td>
+                          <button
+                            onClick={() => {
+                              handleDelete(person.id);
+                            }}
+                          >
+                            Eliminar
+                          </button>
+                        </td>
+                        <td>
+                          <button>Actualizar</button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                : null}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );
