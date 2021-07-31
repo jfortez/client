@@ -11,5 +11,9 @@ const createPersonal = async (objectData) => {
   return data;
 };
 
+const deletePersonal = async (id) => {
+  const { data } = await axios.delete(`${baseUrl}/delete/${id}`);
+  return data;
+};
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getPersonal, createPersonal };
+export default { getPersonal, createPersonal, deletePersonal };

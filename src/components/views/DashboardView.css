@@ -21,8 +21,10 @@
   padding: 25px;
   margin-left: 200px;
   padding-top: 65px;
+  height: 100vh;
   background: #f1f1f1;
   transition: margin-left 0.5s;
+  overflow-x: hidden;
 }
 .sidebar-collapsed {
   margin-left: 80px;
@@ -94,7 +96,7 @@
 *::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 10rem;
-  border: 1px solid var(--main-bg-color);
+  border: 1px solid #f1f1f1;
 }
 
 *::-webkit-scrollbar-track-piece:start {

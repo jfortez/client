@@ -4,7 +4,7 @@ import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import services from "../../services/personal";
 import { Link } from "react-router-dom";
-const PersonalView = (props) => {
+const PersonalView = () => {
   const { isCollapsed } = useValues();
   const [personal, setPersonal] = useState([]);
   const [isListed, setIsListed] = useState(false);
@@ -12,12 +12,15 @@ const PersonalView = (props) => {
     const list = await services.getPersonal();
     setPersonal(list);
   };
+  const handleDelete = async (id) => {
+    const deletedPersonal = await services.deletePersonal(id);
+    if (deletedPersonal) {
+      setIsListed(true);
+    }
+  };
   useEffect(() => {
     getPersonal();
     setIsListed(false);
-    return () => {
-      setPersonal(null);
-    };
   }, [isListed]);
   return (
     <>
@@ -31,7 +34,7 @@ const PersonalView = (props) => {
                 <Link to="/dashboard">Home</Link>
               </li>
               <li>
-                <Link to="/dashboard/personal">Personal</Link>
+                <b>Personal</b>
               </li>
             </ul>
           </nav>
@@ -50,6 +53,7 @@ const PersonalView = (props) => {
               <th>Dirección</th>
               <th>Correo</th>
               <th>Creado el</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -65,6 +69,18 @@ const PersonalView = (props) => {
                       <td>{person.direccion}</td>
                       <td>{person.email}</td>
                       <td>{new Date(person.fecha_registro).toLocaleDateString()}</td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            handleDelete(person.id);
+                          }}
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                      <td>
+                        <button>Actualizar</button>
+                      </td>
                     </tr>
                   );
                 })

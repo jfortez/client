@@ -14,7 +14,6 @@ const Table = () => {
       .catch((error) => console.error(error));
   };
   useEffect(() => {
-    console.log("pacientesEffect");
     getPacientes();
   }, [isListed]);
   const handleDelete = (id) => {

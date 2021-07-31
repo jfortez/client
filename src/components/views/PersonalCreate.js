@@ -97,6 +97,9 @@ const PersonalCreate = () => {
               <li>
                 <Link to="/dashboard/personal">Personal</Link>
               </li>
+              <li>
+                <b>Nuevo Personal</b>
+              </li>
             </ul>
           </nav>
         </div>
