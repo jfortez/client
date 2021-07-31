@@ -14,7 +14,6 @@ import { getToken, removeUserSession, setUserSession } from "../utils/Common";
 import axios from "axios";
 import ProductosCreate from "./views/ProductosCreate";
 import CategoryCreate from "./views/CategoryCreate";
-import AccountPage from "./pages/AccountPage";
 import ClienteView from "./views/ClienteView";
 import ProductosView from "./views/ProductosView";
 import ServiciosView from "./views/ServiciosView";
@@ -69,7 +68,6 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/clientes/create" component={ClienteCreate} />
         <PrivateRoute exact path="/dashboard/odontologos" component={OdontologoView} />
         <PrivateRoute exact path="/dashboard/odontologos/create" component={OdontologoCreate} />
-        <PrivateRoute exact path="/dashboard/account" component={AccountPage} />
         <PrivateRoute exact path="/dashboard/productos" component={ProductosView} />
         <PrivateRoute exact path="/dashboard/productos/createProduct" component={ProductosCreate} />
         <PrivateRoute exact path="/dashboard/productos/createCategory" component={CategoryCreate} />
@@ -79,6 +77,9 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/reporteria" component={ReportView} />
         <PrivateRoute exact path="/dashboard/inventario" component={InventarioView} />
         <PrivateRoute exact path="/dashboard/settings" component={ConfigView} />
+        <PrivateRoute exact path="/dashboard/settings/empresa" component={ConfigView} />
+        <PrivateRoute exact path="/dashboard/settings/account" component={ConfigView} />
+        <PrivateRoute exact path="/dashboard/settings/backup" component={ConfigView} />
         <Route exact path="/*" component={ErrorPage} />
       </Switch>
     </>

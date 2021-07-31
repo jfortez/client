@@ -88,7 +88,7 @@ const UsuarioCreate = () => {
               expresion={expresiones.password}
             />
             <GrupoInput>
-              <Label>Genero</Label>
+              <Label>Previlegios</Label>
               <Select
                 value={previlegios.campo}
                 onChange={(e) => setPrevilegios({ campo: e.target.value })}

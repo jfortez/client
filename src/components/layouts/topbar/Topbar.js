@@ -37,14 +37,6 @@ const Topbar = () => {
               <img src={img} alt="a" className="dropdown-toggle" onClick={handleDropDown} />
               <ul className={`dropdown-menu ${isDropDown ? "dropdown-expand" : null}`}>
                 <li className="dropdown-menu-item">
-                  <Link to="/dashboard/account" className="dropdown-menu-link">
-                    <div>
-                      <AccountCircle className="dropdown-icon" />
-                    </div>
-                    <span>Account</span>
-                  </Link>
-                </li>
-                <li className="dropdown-menu-item">
                   <Link to="/dashboard/settings" className="dropdown-menu-link">
                     <div>
                       <Settings className="dropdown-icon" />
