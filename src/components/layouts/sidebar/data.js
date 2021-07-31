@@ -12,6 +12,7 @@ import {
   SettingsApplications,
   ListAlt,
   ViewList,
+  PeopleAlt,
 } from "@material-ui/icons";
 export const SidebarData = [
   {
@@ -28,6 +29,14 @@ export const SidebarData = [
     url: "/dashboard/personal",
     urlClass: "slidebar-nav-link",
     icon: Person,
+    iconClass: "slide-icon",
+  },
+  {
+    title: "Odontologos",
+    class: "slidebar-nav-item",
+    url: "/dashboard/odontologos",
+    urlClass: "slidebar-nav-link",
+    icon: PeopleAlt,
     iconClass: "slide-icon",
   },
   {

@@ -8,9 +8,8 @@ const colores = {
 
 const Formulario = styled.form`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 20px;
-
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
   @media (max-width: 800px) {
     grid-template-columns: 1fr;
   }
@@ -33,7 +32,19 @@ const GrupoInput = styled.div`
   position: relative;
   z-index: 90;
 `;
-
+const Select = styled.select`
+  width: 100%;
+  background: #fff;
+  border-radius: 3px;
+  height: 45px;
+  line-height: 45px;
+  padding: 0 40px 0 10px;
+  transition: 0.3s ease all;
+  border: 3px solid transparent;
+`;
+const Option = styled.option`
+  background: #fff;
+`;
 const Input = styled.input`
   width: 100%;
   background: #fff;
@@ -111,7 +122,7 @@ const ContenedorBotonCentrado = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  grid-column: span 3;
+  grid-column: span 4;
   @media (max-width: 800px) {
     grid-column: span 1;
   }
@@ -168,4 +179,6 @@ export {
   Boton,
   MensajeExito,
   MensajeError,
+  Select,
+  Option,
 };

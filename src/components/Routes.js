@@ -25,6 +25,9 @@ import CalendarioView from "./views/CalendarioView";
 import ConfigView from "./views/ConfigView";
 import ReportView from "./views/ReportView";
 import InventarioView from "./views/InventarioView";
+import OdontologoView from "./views/OdonologoVIew";
+import OdontologoCreate from "./views/OdontologoCreate";
+import PersonalCreate from "./views/PersonalCreate";
 
 const Routes = () => {
   const [authLoading, setAuthLoading] = useState(true);
@@ -56,6 +59,7 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute exact path="/dashboard/test" component={PageTest} />
         <PrivateRoute exact path="/dashboard/personal" component={PersonalView} />
+        <PrivateRoute exact path="/dashboard/personal/create" component={PersonalCreate} />
         <PrivateRoute exact path="/dashboard/pacientes" component={PacientesView} />
         <PrivateRoute
           exact
@@ -64,8 +68,9 @@ const Routes = () => {
         />
         <PrivateRoute exact path="/dashboard/pacientes/create" component={NuevoPacientes} />
         <PrivateRoute exact path="/dashboard/usuarios" component={UsuariosView} />
-        <PrivateRoute exact path="/dashboard/usuarios" component={UsuariosView} />
         <PrivateRoute exact path="/dashboard/clientes" component={ClienteView} />
+        <PrivateRoute exact path="/dashboard/odontologos" component={OdontologoView} />
+        <PrivateRoute exact path="/dashboard/odontologos/create" component={OdontologoCreate} />
         <PrivateRoute exact path="/dashboard/account" component={AccountPage} />
         <PrivateRoute exact path="/dashboard/productos" component={ProductosView} />
         <PrivateRoute exact path="/dashboard/productos/createProduct" component={ProductosCreate} />
