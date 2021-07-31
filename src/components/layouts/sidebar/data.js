@@ -56,14 +56,7 @@ export const SidebarData = [
     icon: SentimentSatisfiedAlt,
     iconClass: "slide-icon",
   },
-  {
-    title: "Usuarios",
-    class: "slidebar-nav-item",
-    url: "/dashboard/usuarios",
-    urlClass: "slidebar-nav-link",
-    icon: AccountBox,
-    iconClass: "slide-icon",
-  },
+
   {
     title: "Productos",
     class: "slidebar-nav-item",
@@ -96,6 +89,14 @@ export const SidebarData = [
   //   icon: Today,
   //   iconClass: "slide-icon",
   // },
+  {
+    title: "Usuarios",
+    class: "slidebar-nav-item",
+    url: "/dashboard/usuarios",
+    urlClass: "slidebar-nav-link",
+    icon: AccountBox,
+    iconClass: "slide-icon",
+  },
   {
     title: "Reportería",
     class: "slidebar-nav-item",

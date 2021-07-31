@@ -28,6 +28,7 @@ import OdontologoCreate from "./views/OdontologoCreate";
 import PersonalCreate from "./views/PersonalCreate";
 import ClienteCreate from "./views/ClienteCreate";
 import PacientesCreate from "./views/PacientesCreate";
+import UsuarioCreate from "./views/UsuarioCreate";
 
 const Routes = () => {
   const [authLoading, setAuthLoading] = useState(true);
@@ -63,6 +64,7 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/pacientes" component={PacientesView} />
         <PrivateRoute exact path="/dashboard/pacientes/create" component={PacientesCreate} />
         <PrivateRoute exact path="/dashboard/usuarios" component={UsuariosView} />
+        <PrivateRoute exact path="/dashboard/usuarios/create" component={UsuarioCreate} />
         <PrivateRoute exact path="/dashboard/clientes" component={ClienteView} />
         <PrivateRoute exact path="/dashboard/clientes/create" component={ClienteCreate} />
         <PrivateRoute exact path="/dashboard/odontologos" component={OdontologoView} />
