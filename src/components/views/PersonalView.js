@@ -18,6 +18,9 @@ const PersonalView = () => {
       setIsListed(true);
     }
   };
+  const handleUpdate = () => {
+    console.log("actualizar paciente");
+  };
   useEffect(() => {
     getPersonal();
     setIsListed(false);
@@ -71,16 +74,8 @@ const PersonalView = () => {
                         <td>{person.email}</td>
                         <td>{new Date(person.fecha_registro).toLocaleDateString()}</td>
                         <td>
-                          <button
-                            onClick={() => {
-                              handleDelete(person.id);
-                            }}
-                          >
-                            Eliminar
-                          </button>
-                        </td>
-                        <td>
-                          <button>Actualizar</button>
+                          <button onClick={() => handleDelete(person.id)}>Eliminar</button>
+                          <button onClick={() => handleUpdate()}>Actualizar</button>
                         </td>
                       </tr>
                     );

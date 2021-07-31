@@ -17,6 +17,9 @@ const OdontologoView = () => {
       setIsListed(true);
     }
   };
+  const handleUpdate = () => {
+    console.log("actualizar paciente");
+  };
   useEffect(() => {
     getOdontologos();
     setIsListed(false);
@@ -70,16 +73,8 @@ const OdontologoView = () => {
                         <td>{item.email}</td>
                         <td>{new Date(item.fecha_registro).toLocaleDateString()}</td>
                         <td>
-                          <button
-                            onClick={() => {
-                              handleDelete(item.id);
-                            }}
-                          >
-                            Eliminar
-                          </button>
-                        </td>
-                        <td>
-                          <button>Actualizar</button>
+                          <button onClick={() => handleDelete(item.id)}>Eliminar</button>
+                          <button onClick={() => handleUpdate()}>Actualizar</button>
                         </td>
                       </tr>
                     );

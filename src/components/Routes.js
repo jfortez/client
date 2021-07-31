@@ -4,7 +4,6 @@ import Dashboard from "./pages/Dashboard";
 import ErrorPage from "./pages/ErrorPage";
 // import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import NuevoPacientes from "./views/NuevoPacientes";
 import PacientesView from "./views/PacientesView";
 import PageTest from "./views/PageTest";
 import PersonalView from "./views/PersonalView";
@@ -13,7 +12,6 @@ import PublicRoute from "../utils/PublicRoute";
 import PrivateRoute from "../utils/PrivateRoute";
 import { getToken, removeUserSession, setUserSession } from "../utils/Common";
 import axios from "axios";
-import PacientesEdit from "./views/PacientesEdit";
 import ProductosCreate from "./views/ProductosCreate";
 import CategoryCreate from "./views/CategoryCreate";
 import AccountPage from "./pages/AccountPage";
@@ -29,6 +27,7 @@ import OdontologoView from "./views/OdonologoVIew";
 import OdontologoCreate from "./views/OdontologoCreate";
 import PersonalCreate from "./views/PersonalCreate";
 import ClienteCreate from "./views/ClienteCreate";
+import PacientesCreate from "./views/PacientesCreate";
 
 const Routes = () => {
   const [authLoading, setAuthLoading] = useState(true);
@@ -62,12 +61,7 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/personal" component={PersonalView} />
         <PrivateRoute exact path="/dashboard/personal/create" component={PersonalCreate} />
         <PrivateRoute exact path="/dashboard/pacientes" component={PacientesView} />
-        <PrivateRoute
-          exact
-          path="/dashboard/pacientes/:pacienteId/edit"
-          component={PacientesEdit}
-        />
-        <PrivateRoute exact path="/dashboard/pacientes/create" component={NuevoPacientes} />
+        <PrivateRoute exact path="/dashboard/pacientes/create" component={PacientesCreate} />
         <PrivateRoute exact path="/dashboard/usuarios" component={UsuariosView} />
         <PrivateRoute exact path="/dashboard/clientes" component={ClienteView} />
         <PrivateRoute exact path="/dashboard/clientes/create" component={ClienteCreate} />

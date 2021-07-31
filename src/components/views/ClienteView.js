@@ -19,6 +19,9 @@ const ClienteView = () => {
       setIsListed(true);
     }
   };
+  const handleUpdate = () => {
+    console.log("actualizar paciente");
+  };
   useEffect(() => {
     getClientes();
     setIsListed(false);
@@ -72,16 +75,8 @@ const ClienteView = () => {
                     <td>{cliente.direccion}</td>
                     <td>{new Date(cliente.fecha_registro).toLocaleDateString()}</td>
                     <td>
-                      <button
-                        onClick={() => {
-                          handleDelete(cliente.id);
-                        }}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                    <td>
-                      <button>Actualizar</button>
+                      <button onClick={() => handleDelete(cliente.id)}>Eliminar</button>
+                      <button onClick={() => handleUpdate()}>Actualizar</button>
                     </td>
                   </tr>
                 );
