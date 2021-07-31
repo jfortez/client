@@ -2,29 +2,52 @@ import React, { useState, useEffect } from "react";
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import productoService from "../../services/productos";
+import services from "../../services/productos";
 import { Link } from "react-router-dom";
 const ProductosView = () => {
   const { isCollapsed } = useValues();
   const [productos, setProductos] = useState([]);
+  const [isListed, setIsListed] = useState(false);
   const getProductos = async () => {
-    const productos = await productoService.getProductos();
+    const productos = await services.getProductos();
     setProductos(productos);
+  };
+  const handleDelete = async (id) => {
+    const item = await services.deleteProductos(id);
+    if (item) {
+      setIsListed(true);
+    }
+  };
+  const handleUpdate = () => {
+    console.log("actualizar paciente");
   };
   useEffect(() => {
     getProductos();
-  }, []);
+    setIsListed(false);
+  }, [isListed]);
   return (
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h3>Productos</h3>
+        <h1>Productos</h1>
+        <div>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/dashboard">Home</Link>
+              </li>
+              <li>
+                <b>Productos</b>
+              </li>
+            </ul>
+          </nav>
+        </div>
         <div>
           <Link to="/dashboard/productos/createProduct">
-            <button>Nuevo Paciente</button>
+            <button>Nuevo Producto</button>
           </Link>
           <Link to="/dashboard/productos/createCategory">
-            <button>Nuevo Categoría</button>
+            <button>Nueva Categoría</button>
           </Link>
         </div>
         <div>
@@ -37,7 +60,7 @@ const ProductosView = () => {
                 <th>Descripción</th>
                 <th>Cantidad</th>
                 <th>Precio</th>
-                <th>Categoría</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -51,7 +74,10 @@ const ProductosView = () => {
                         <td>{producto.descripcion}</td>
                         <td>{producto.cantidad}</td>
                         <td>{producto.precio}</td>
-                        <td>{producto.id_categoria}</td>
+                        <td>
+                          <button onClick={() => handleDelete(producto.id)}>Eliminar</button>
+                          <button onClick={() => handleUpdate()}>Actualizar</button>
+                        </td>
                       </tr>
                     );
                   })

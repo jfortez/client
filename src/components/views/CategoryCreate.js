@@ -12,6 +12,7 @@ import {
 } from "../../elements/Formularios";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import categoriaServices from "../../services/categoria";
+import { Link } from "react-router-dom";
 
 const CategoryCreate = () => {
   const { isCollapsed } = useValues();
@@ -60,7 +61,22 @@ const CategoryCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h3>Create Category</h3>
+        <h1>Nueva Categoría</h1>
+        <div>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/dashboard">Home</Link>
+              </li>
+              <li>
+                <Link to="/dashboard/productos">Productos</Link>
+              </li>
+              <li>
+                <b>Nueva Categoría</b>
+              </li>
+            </ul>
+          </nav>
+        </div>
         <div>
           <Formulario onSubmit={handleSubmit}>
             <ComponentInput
@@ -116,8 +132,6 @@ const CategoryCreate = () => {
                           <td>{categoria.descripcion}</td>
                           <td>
                             <button onClick={() => handleDelete(categoria.id)}>Eliminar</button>
-                          </td>
-                          <td>
                             <button onClick={handleUpdate}>Actualizar</button>
                           </td>
                         </tr>
