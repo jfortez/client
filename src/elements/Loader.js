@@ -15,4 +15,4 @@ const Loader = (isLoading) => {
     </tr>
   );
 };
-export { override, Loader };
+export { Loader };

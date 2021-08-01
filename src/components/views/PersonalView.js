@@ -5,17 +5,13 @@ import useValues from "../../provider/useValues";
 import services from "../../services/personal";
 import { Link } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
-
+import Axios from "axios";
 const PersonalView = () => {
   const { isCollapsed } = useValues();
   const [personal, setPersonal] = useState([]);
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const getPersonal = async () => {
-    const list = await services.getPersonal();
-    setPersonal(list);
-    setIsLoading(false);
-  };
+
   const handleDelete = async (id) => {
     const deletedPersonal = await services.deletePersonal(id);
     if (deletedPersonal) {
@@ -26,8 +22,37 @@ const PersonalView = () => {
     console.log("actualizar paciente");
   };
   useEffect(() => {
+    let source = Axios.CancelToken.source();
+    let unmounted = false;
+    const getPersonal = async () => {
+      try {
+        const response = await Axios.get("http://192.168.0.104:5000/api/personal", {
+          cancelToken: source.token,
+        });
+        console.log("AxiosCancel: got response");
+        if (!unmounted) {
+          setPersonal(response.data);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (!unmounted) {
+          if (Axios.isCancel(error)) {
+            console.log("AxiosCancel: caught cancel", error.message);
+          } else {
+            console.log("throw error", error.message);
+          }
+        }
+      }
+      // const list = await services.getPersonal();
+      // setPersonal(list);
+    };
     getPersonal();
     setIsListed(false);
+    return () => {
+      console.log("unmounting");
+      unmounted = true;
+      source.cancel("Cancelling in Cleanup");
+    };
   }, [isListed]);
   return (
     <>
