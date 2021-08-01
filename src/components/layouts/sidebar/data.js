@@ -22,6 +22,7 @@ export const SidebarData = [
     urlClass: "slidebar-nav-link",
     icon: Dashboard,
     iconClass: "slide-icon",
+    exact: true,
   },
   {
     title: "Personal",
@@ -31,6 +32,7 @@ export const SidebarData = [
     urlClass: "slidebar-nav-link",
     icon: Person,
     iconClass: "slide-icon",
+    exact: false,
   },
   {
     title: "Odontologos",
@@ -39,6 +41,7 @@ export const SidebarData = [
     urlClass: "slidebar-nav-link",
     icon: PeopleAlt,
     iconClass: "slide-icon",
+    exact: false,
   },
   {
     title: "Clientes",
@@ -47,6 +50,7 @@ export const SidebarData = [
     urlClass: "slidebar-nav-link",
     icon: EmojiPeople,
     iconClass: "slide-icon",
+    exact: false,
   },
   {
     title: "Pacientes",
@@ -55,6 +59,7 @@ export const SidebarData = [
     urlClass: "slidebar-nav-link",
     icon: SentimentSatisfiedAlt,
     iconClass: "slide-icon",
+    exact: false,
   },
 
   {
@@ -64,6 +69,7 @@ export const SidebarData = [
     urlClass: "slidebar-nav-link",
     icon: Storefront,
     iconClass: "slide-icon",
+    exact: false,
   },
   // {
   //   title: "Servicios",
@@ -80,6 +86,7 @@ export const SidebarData = [
     urlClass: "slidebar-nav-link",
     icon: EventAvailable,
     iconClass: "slide-icon",
+    exact: false,
   },
   // {
   //   title: "Calendario",
@@ -96,6 +103,7 @@ export const SidebarData = [
     urlClass: "slidebar-nav-link",
     icon: AccountBox,
     iconClass: "slide-icon",
+    exact: false,
   },
   {
     title: "Reportería",
@@ -104,6 +112,7 @@ export const SidebarData = [
     urlClass: "slidebar-nav-link",
     icon: ListAlt,
     iconClass: "slide-icon",
+    exact: false,
   },
   {
     title: "Inventarios",
@@ -112,6 +121,7 @@ export const SidebarData = [
     urlClass: "slidebar-nav-link",
     icon: ViewList,
     iconClass: "slide-icon",
+    exact: false,
   },
   // {
   //   title: "Test",

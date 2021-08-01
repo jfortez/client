@@ -14,7 +14,7 @@ const Sidebar = () => {
           {SidebarData.map((item, index) => {
             return (
               <li key={index} className={item.class}>
-                <NavLink exact to={item.url} className={item.urlClass}>
+                <NavLink exact={item.exact} to={item.url} className={item.urlClass}>
                   <div>
                     <Icon component={item.icon} className={item.iconClass} />
                   </div>
