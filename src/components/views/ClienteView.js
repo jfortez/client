@@ -4,14 +4,17 @@ import Topbar from "../layouts/topbar/Topbar";
 import services from "../../services/cliente";
 import useValues from "../../provider/useValues";
 import { Link } from "react-router-dom";
+import { Loader } from "../../elements/Loader";
 
 const ClienteView = () => {
   const { isCollapsed } = useValues();
   const [clientes, setClientes] = useState([]);
   const [isListed, setIsListed] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const getClientes = async () => {
     const cliente = await services.getClientes();
     setClientes(cliente);
+    setIsLoading(false);
   };
   const handleDelete = async (id) => {
     const cliente = await services.deleteCliente(id);
@@ -62,25 +65,29 @@ const ClienteView = () => {
               </tr>
             </thead>
             <tbody>
-              {clientes.map((cliente) => {
-                return (
-                  <tr key={cliente.id}>
-                    <td>{cliente.id}</td>
-                    <td>{cliente.ruc}</td>
-                    <td>
-                      {cliente.nombres} {cliente.apellidos}
-                    </td>
-                    <td>{cliente.email}</td>
-                    <td>{cliente.telefono}</td>
-                    <td>{cliente.direccion}</td>
-                    <td>{new Date(cliente.fecha_registro).toLocaleDateString()}</td>
-                    <td>
-                      <button onClick={() => handleDelete(cliente.id)}>Eliminar</button>
-                      <button onClick={() => handleUpdate()}>Actualizar</button>
-                    </td>
-                  </tr>
-                );
-              })}
+              {isLoading ? (
+                <Loader loading={isLoading} />
+              ) : (
+                clientes.map((cliente) => {
+                  return (
+                    <tr key={cliente.id}>
+                      <td>{cliente.id}</td>
+                      <td>{cliente.ruc}</td>
+                      <td>
+                        {cliente.nombres} {cliente.apellidos}
+                      </td>
+                      <td>{cliente.email}</td>
+                      <td>{cliente.telefono}</td>
+                      <td>{cliente.direccion}</td>
+                      <td>{new Date(cliente.fecha_registro).toLocaleDateString()}</td>
+                      <td>
+                        <button onClick={() => handleDelete(cliente.id)}>Eliminar</button>
+                        <button onClick={() => handleUpdate()}>Actualizar</button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

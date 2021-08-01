@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Topbar.css";
-import { Menu, ExitToApp, Settings, AccountCircle } from "@material-ui/icons";
+import { Menu, ExitToApp, Settings } from "@material-ui/icons";
 import Sidebar from "../sidebar/Sidebar";
 import { Link } from "react-router-dom";
 import img from "../../../img/pic.jpg";

@@ -4,13 +4,17 @@ import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import services from "../../services/productos";
 import { Link } from "react-router-dom";
+import { Loader } from "../../elements/Loader";
+
 const ProductosView = () => {
   const { isCollapsed } = useValues();
   const [productos, setProductos] = useState([]);
   const [isListed, setIsListed] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const getProductos = async () => {
     const productos = await services.getProductos();
     setProductos(productos);
+    setIsLoading(false);
   };
   const handleDelete = async (id) => {
     const item = await services.deleteProductos(id);
@@ -64,24 +68,26 @@ const ProductosView = () => {
               </tr>
             </thead>
             <tbody>
-              {productos
-                ? productos.map((producto) => {
-                    return (
-                      <tr key={producto.id}>
-                        <td>{producto.id}</td>
-                        <td>{producto.cod_producto}</td>
-                        <td>{producto.nombre}</td>
-                        <td>{producto.descripcion}</td>
-                        <td>{producto.cantidad}</td>
-                        <td>{producto.precio}</td>
-                        <td>
-                          <button onClick={() => handleDelete(producto.id)}>Eliminar</button>
-                          <button onClick={() => handleUpdate()}>Actualizar</button>
-                        </td>
-                      </tr>
-                    );
-                  })
-                : null}
+              {isLoading ? (
+                <Loader loading={isLoading} />
+              ) : productos ? (
+                productos.map((producto) => {
+                  return (
+                    <tr key={producto.id}>
+                      <td>{producto.id}</td>
+                      <td>{producto.cod_producto}</td>
+                      <td>{producto.nombre}</td>
+                      <td>{producto.descripcion}</td>
+                      <td>{producto.cantidad}</td>
+                      <td>{producto.precio}</td>
+                      <td>
+                        <button onClick={() => handleDelete(producto.id)}>Eliminar</button>
+                        <button onClick={() => handleUpdate()}>Actualizar</button>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : null}
             </tbody>
           </table>
         </div>

@@ -13,6 +13,7 @@ import {
 import ComponentInput from "../layouts/forms/ComponentInput";
 import categoriaServices from "../../services/categoria";
 import { Link } from "react-router-dom";
+import { Loader } from "../../elements/Loader";
 
 const CategoryCreate = () => {
   const { isCollapsed } = useValues();
@@ -21,9 +22,11 @@ const CategoryCreate = () => {
   const [descripcion, setDescripcion] = useState({ campo: "", valido: null });
   const [categorias, setCategorias] = useState([]);
   const [formValid, setFormValid] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const getCategorias = async () => {
     const categorias = await categoriaServices.getCategorias();
     setCategorias(categorias);
+    setIsLoading(false);
   };
   useEffect(() => {
     getCategorias();
@@ -52,7 +55,6 @@ const CategoryCreate = () => {
     if (deleteid) {
       setIsListed(true);
     }
-    console.log(deleteid);
   };
   const handleUpdate = () => {
     console.log("update");
@@ -123,21 +125,23 @@ const CategoryCreate = () => {
                 </tr>
               </thead>
               <tbody>
-                {categorias
-                  ? categorias.map((categoria) => {
-                      return (
-                        <tr key={categoria.id}>
-                          <td>{categoria.id}</td>
-                          <td>{categoria.nombre}</td>
-                          <td>{categoria.descripcion}</td>
-                          <td>
-                            <button onClick={() => handleDelete(categoria.id)}>Eliminar</button>
-                            <button onClick={handleUpdate}>Actualizar</button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : null}
+                {isLoading ? (
+                  <Loader loading={isLoading} />
+                ) : categorias ? (
+                  categorias.map((categoria) => {
+                    return (
+                      <tr key={categoria.id}>
+                        <td>{categoria.id}</td>
+                        <td>{categoria.nombre}</td>
+                        <td>{categoria.descripcion}</td>
+                        <td>
+                          <button onClick={() => handleDelete(categoria.id)}>Eliminar</button>
+                          <button onClick={handleUpdate}>Actualizar</button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : null}
               </tbody>
             </table>
           </div>

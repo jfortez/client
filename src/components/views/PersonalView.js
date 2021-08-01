@@ -4,13 +4,17 @@ import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import services from "../../services/personal";
 import { Link } from "react-router-dom";
+import { Loader } from "../../elements/Loader";
+
 const PersonalView = () => {
   const { isCollapsed } = useValues();
   const [personal, setPersonal] = useState([]);
   const [isListed, setIsListed] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const getPersonal = async () => {
     const list = await services.getPersonal();
     setPersonal(list);
+    setIsLoading(false);
   };
   const handleDelete = async (id) => {
     const deletedPersonal = await services.deletePersonal(id);
@@ -61,26 +65,28 @@ const PersonalView = () => {
               </tr>
             </thead>
             <tbody>
-              {personal
-                ? personal.map((person) => {
-                    return (
-                      <tr key={person.id}>
-                        <td>
-                          {person.nombres} {person.apellidos}
-                        </td>
-                        <td>{person.cedula}</td>
-                        <td>{person.telefono}</td>
-                        <td>{person.direccion}</td>
-                        <td>{person.email}</td>
-                        <td>{new Date(person.fecha_registro).toLocaleDateString()}</td>
-                        <td>
-                          <button onClick={() => handleDelete(person.id)}>Eliminar</button>
-                          <button onClick={() => handleUpdate()}>Actualizar</button>
-                        </td>
-                      </tr>
-                    );
-                  })
-                : null}
+              {isLoading ? (
+                <Loader loading={isLoading} />
+              ) : personal ? (
+                personal.map((person) => {
+                  return (
+                    <tr key={person.id}>
+                      <td>
+                        {person.nombres} {person.apellidos}
+                      </td>
+                      <td>{person.cedula}</td>
+                      <td>{person.telefono}</td>
+                      <td>{person.direccion}</td>
+                      <td>{person.email}</td>
+                      <td>{new Date(person.fecha_registro).toLocaleDateString()}</td>
+                      <td>
+                        <button onClick={() => handleDelete(person.id)}>Eliminar</button>
+                        <button onClick={() => handleUpdate()}>Actualizar</button>
+                      </td>
+                    </tr>
+                  );
+                })
+              ) : null}
             </tbody>
           </table>
         </div>
