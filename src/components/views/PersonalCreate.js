@@ -38,7 +38,7 @@ const PersonalCreate = () => {
     fecha: /^\d{4}-\d{2}-\d{2}$/,
   };
   const listCargos = async () => {
-    const cargos = await cargoServices.getCargo();
+    const cargos = await cargoServices.optionCargo();
     setCargo(cargos);
   };
   useEffect(() => {

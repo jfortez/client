@@ -10,11 +10,6 @@ const PacientesView = () => {
   const [pacientes, setPacientes] = useState([]);
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const getPacientes = async () => {
-    const pacientes = await services.getPacientes();
-    setPacientes(pacientes);
-    setIsLoading(false);
-  };
   const handleDelete = async (id) => {
     const item = await services.deletePacientes(id);
     if (item) {
@@ -25,8 +20,32 @@ const PacientesView = () => {
     console.log("actualizar paciente");
   };
   useEffect(() => {
+    let source = services.Axios.CancelToken.source();
+    let unmounted = false;
+    const getPacientes = async () => {
+      try {
+        const pacientes = await services.getPacientes(source);
+
+        if (!unmounted) {
+          setPacientes(pacientes);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (!unmounted) {
+          if (services.Axios.isCancel(error)) {
+            console.log("AxiosCancel: caught cancel", error.message);
+          } else {
+            console.log("throw error", error.message);
+          }
+        }
+      }
+    };
     getPacientes();
     setIsListed(false);
+    return () => {
+      unmounted = true;
+      source.cancel("Cancelling in Cleanup");
+    };
   }, [isListed]);
   return (
     <>

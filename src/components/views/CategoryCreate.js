@@ -11,7 +11,7 @@ import {
   MensajeError,
 } from "../../elements/Formularios";
 import ComponentInput from "../layouts/forms/ComponentInput";
-import categoriaServices from "../../services/categoria";
+import services from "../../services/categoria";
 import { Link } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
 
@@ -23,14 +23,33 @@ const CategoryCreate = () => {
   const [categorias, setCategorias] = useState([]);
   const [formValid, setFormValid] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const getCategorias = async () => {
-    const categorias = await categoriaServices.getCategorias();
-    setCategorias(categorias);
-    setIsLoading(false);
-  };
+
   useEffect(() => {
+    let source = services.Axios.CancelToken.source();
+    let unmounted = false;
+    const getCategorias = async () => {
+      try {
+        const categorias = await services.getCategorias(source);
+        if (!unmounted) {
+          setCategorias(categorias);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (!unmounted) {
+          if (services.Axios.isCancel(error)) {
+            console.log("AxiosCancel: caught cancel", error.message);
+          } else {
+            console.log("throw error", error.message);
+          }
+        }
+      }
+    };
     getCategorias();
     setIsListed(false);
+    return () => {
+      unmounted = true;
+      source.cancel("Cancelling in Cleanup");
+    };
   }, [isListed]);
   const expresiones = {
     nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
@@ -39,7 +58,7 @@ const CategoryCreate = () => {
     e.preventDefault();
     if (nombre.valido === "true" && descripcion.valido === "true") {
       setFormValid(true);
-      await categoriaServices.insertCategorias({
+      await services.insertCategorias({
         nombre: nombre.campo,
         descripcion: descripcion.campo,
       });
@@ -51,7 +70,7 @@ const CategoryCreate = () => {
     }
   };
   const handleDelete = async (id) => {
-    const deleteid = await categoriaServices.deleteCategoria(id);
+    const deleteid = await services.deleteCategoria(id);
     if (deleteid) {
       setIsListed(true);
     }

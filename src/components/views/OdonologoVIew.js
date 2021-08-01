@@ -10,11 +10,7 @@ const OdontologoView = () => {
   const [odontologos, setOdontologos] = useState([]);
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const getOdontologos = async () => {
-    const list = await services.getOdontologos();
-    setOdontologos(list);
-    setIsLoading(false);
-  };
+
   const handleDelete = async (id) => {
     const item = await services.deleteOdontologo(id);
     if (item) {
@@ -25,8 +21,31 @@ const OdontologoView = () => {
     console.log("actualizar paciente");
   };
   useEffect(() => {
+    let source = services.Axios.CancelToken.source();
+    let unmounted = false;
+    const getOdontologos = async () => {
+      try {
+        const list = await services.getOdontologos(source);
+        if (!unmounted) {
+          setOdontologos(list);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (!unmounted) {
+          if (services.Axios.isCancel(error)) {
+            console.log("AxiosCancel: caught cancel", error.message);
+          } else {
+            console.log("throw error", error.message);
+          }
+        }
+      }
+    };
     getOdontologos();
     setIsListed(false);
+    return () => {
+      unmounted = true;
+      source.cancel("Cancelling in Cleanup");
+    };
   }, [isListed]);
   return (
     <>

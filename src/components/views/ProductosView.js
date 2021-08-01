@@ -11,11 +11,6 @@ const ProductosView = () => {
   const [productos, setProductos] = useState([]);
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const getProductos = async () => {
-    const productos = await services.getProductos();
-    setProductos(productos);
-    setIsLoading(false);
-  };
   const handleDelete = async (id) => {
     const item = await services.deleteProductos(id);
     if (item) {
@@ -26,8 +21,31 @@ const ProductosView = () => {
     console.log("actualizar paciente");
   };
   useEffect(() => {
+    let source = services.Axios.CancelToken.source();
+    let unmounted = false;
+    const getProductos = async () => {
+      try {
+        const productos = await services.getProductos(source);
+        if (!unmounted) {
+          setProductos(productos);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (!unmounted) {
+          if (services.Axios.isCancel(error)) {
+            console.log("AxiosCancel: caught cancel", error.message);
+          } else {
+            console.log("throw error", error.message);
+          }
+        }
+      }
+    };
     getProductos();
     setIsListed(false);
+    return () => {
+      unmounted = true;
+      source.cancel("Cancelling in Cleanup");
+    };
   }, [isListed]);
   return (
     <>

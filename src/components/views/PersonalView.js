@@ -43,7 +43,6 @@ const PersonalView = () => {
     getPersonal();
     setIsListed(false);
     return () => {
-      console.log("unmounting");
       unmounted = true;
       source.cancel("Cancelling in Cleanup");
     };

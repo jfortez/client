@@ -37,8 +37,7 @@ const ProductCreate = () => {
     fecha: /^\d{4}-\d{2}-\d{2}$/,
   };
   const listCategorias = async () => {
-    const categorias = await categoriaServices.getCategorias();
-    console.log(categorias);
+    const categorias = await categoriaServices.optionCategorias();
     setCategorias(categorias);
   };
   useEffect(() => {
