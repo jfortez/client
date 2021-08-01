@@ -11,6 +11,7 @@ const PacientesView = () => {
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const handleDelete = async (id) => {
+    setIsLoading(true);
     const item = await services.deletePacientes(id);
     if (item) {
       setIsListed(true);

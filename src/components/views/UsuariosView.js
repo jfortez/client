@@ -7,13 +7,16 @@ import services from "../../services/usuarios";
 import { Loader } from "../../elements/Loader";
 
 const UsuariosView = () => {
-  const { isCollapsed } = useValues();
+  const { isCollapsed, user } = useValues();
+  const userLogged = user;
   const [usuarios, setUsuarios] = useState([]);
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const handleDelete = async (id) => {
-    const deletedPersonal = await services.deletePersonal(id);
-    if (deletedPersonal) {
+    setIsLoading(true);
+    const deleteUser = await services.deleteUsuarios(id);
+    console.log(deleteUser);
+    if (deleteUser) {
       setIsListed(true);
     }
   };
@@ -73,6 +76,7 @@ const UsuariosView = () => {
           <table>
             <thead>
               <tr>
+                <th>ID</th>
                 <th>Usuario</th>
                 <th>Contraseña</th>
                 <th>Previlegios</th>
@@ -87,6 +91,7 @@ const UsuariosView = () => {
                 usuarios.map((user) => {
                   return (
                     <tr key={user.id}>
+                      <td>{user.id}</td>
                       <td>{user.usuario}</td>
                       <td>{user.contraseña}</td>
                       <td>{user.previlegios}</td>

@@ -12,6 +12,7 @@ const ProductosView = () => {
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const handleDelete = async (id) => {
+    setIsLoading(true);
     const item = await services.deleteProductos(id);
     if (item) {
       setIsListed(true);

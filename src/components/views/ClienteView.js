@@ -12,6 +12,7 @@ const ClienteView = () => {
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const handleDelete = async (id) => {
+    setIsLoading(true);
     const cliente = await services.deleteCliente(id);
     if (cliente) {
       setIsListed(true);

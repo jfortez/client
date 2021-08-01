@@ -70,6 +70,7 @@ const CategoryCreate = () => {
     }
   };
   const handleDelete = async (id) => {
+    setIsLoading(true);
     const deleteid = await services.deleteCategoria(id);
     if (deleteid) {
       setIsListed(true);

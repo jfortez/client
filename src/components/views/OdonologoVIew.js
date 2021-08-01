@@ -12,6 +12,7 @@ const OdontologoView = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleDelete = async (id) => {
+    setIsLoading(true);
     const item = await services.deleteOdontologo(id);
     if (item) {
       setIsListed(true);

@@ -12,6 +12,7 @@ const PersonalView = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleDelete = async (id) => {
+    setIsLoading(true);
     const deletedPersonal = await services.deletePersonal(id);
     if (deletedPersonal) {
       setIsListed(true);
