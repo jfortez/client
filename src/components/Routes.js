@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import ErrorPage from "./pages/ErrorPage";
@@ -10,8 +10,7 @@ import PersonalView from "./views/PersonalView";
 import UsuariosView from "./views/UsuariosView";
 import PublicRoute from "../utils/PublicRoute";
 import PrivateRoute from "../utils/PrivateRoute";
-import { getToken, removeUserSession, setUserSession } from "../utils/Common";
-import axios from "axios";
+import { getToken } from "../utils/Common";
 import ProductosCreate from "./views/ProductosCreate";
 import CategoryCreate from "./views/CategoryCreate";
 import ClienteView from "./views/ClienteView";
@@ -28,29 +27,14 @@ import PersonalCreate from "./views/PersonalCreate";
 import ClienteCreate from "./views/ClienteCreate";
 import PacientesCreate from "./views/PacientesCreate";
 import UsuarioCreate from "./views/UsuarioCreate";
-
+import useValues from "../provider/useValues";
 const Routes = () => {
-  const [authLoading, setAuthLoading] = useState(true);
+  const { authLoading } = useValues();
 
-  useEffect(() => {
-    const token = getToken();
-    if (!token) {
-      return;
-    }
-    axios
-      .get(`http://192.168.0.104:5000/api/usuarios/verifytoken?token=${token}`)
-      .then((response) => {
-        setUserSession(response.data.token, response.data.user);
-        setAuthLoading();
-      })
-      .catch((error) => {
-        removeUserSession();
-        setAuthLoading(false);
-      });
-  }, []);
   if (authLoading && getToken()) {
     return <div className="content"> Cheking Authentication...</div>;
   }
+
   return (
     <>
       <Switch>

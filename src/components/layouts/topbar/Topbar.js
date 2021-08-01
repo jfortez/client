@@ -7,7 +7,7 @@ import img from "../../../img/pic.jpg";
 import { removeUserSession } from "../../../utils/Common";
 import useValues from "../../../provider/useValues";
 const Topbar = () => {
-  const { collapseSidebar } = useValues();
+  const { collapseSidebar, logout } = useValues();
   const [isDropDown, setIsDropDown] = useState(false);
   const handleToggle = () => {
     collapseSidebar();
@@ -17,6 +17,7 @@ const Topbar = () => {
   };
   const handleLogout = () => {
     removeUserSession();
+    logout();
   };
   return (
     <div>

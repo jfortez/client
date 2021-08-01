@@ -82,6 +82,7 @@ const UsuariosView = () => {
                 <th>Previlegios</th>
                 <th>Creado el</th>
                 <th>Estado</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -98,8 +99,12 @@ const UsuariosView = () => {
                       <td>{new Date(user.fecha_registro).toLocaleDateString()}</td>
                       <td>{user.active === 1 ? "Activo" : "Inactivo"}</td>
                       <td>
-                        <button onClick={() => handleDelete(user.id)}>Eliminar</button>
-                        <button onClick={() => handleUpdate()}>Actualizar</button>
+                        {userLogged.id === user.id ? null : (
+                          <button onClick={() => handleDelete(user.id)}>Eliminar</button>
+                        )}
+                        {userLogged.id === user.id ? null : (
+                          <button onClick={() => handleUpdate()}>Actualizar</button>
+                        )}
                       </td>
                     </tr>
                   );

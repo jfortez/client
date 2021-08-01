@@ -10,7 +10,7 @@ const Dashboard = () => {
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <div className="row">
-          <h3>Bienvenido {user.usuario}</h3>
+          <h3>Bienvenido {user?.usuario}</h3>
         </div>
         <div className="row">
           <div className="col-3">
