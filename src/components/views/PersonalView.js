@@ -5,7 +5,6 @@ import useValues from "../../provider/useValues";
 import services from "../../services/personal";
 import { Link } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
-import Axios from "axios";
 const PersonalView = () => {
   const { isCollapsed } = useValues();
   const [personal, setPersonal] = useState([]);
@@ -22,29 +21,24 @@ const PersonalView = () => {
     console.log("actualizar paciente");
   };
   useEffect(() => {
-    let source = Axios.CancelToken.source();
+    let source = services.Axios.CancelToken.source();
     let unmounted = false;
     const getPersonal = async () => {
       try {
-        const response = await Axios.get("http://192.168.0.104:5000/api/personal", {
-          cancelToken: source.token,
-        });
-        console.log("AxiosCancel: got response");
+        const list = await services.getPersonal(source);
         if (!unmounted) {
-          setPersonal(response.data);
+          setPersonal(list);
           setIsLoading(false);
         }
       } catch (error) {
         if (!unmounted) {
-          if (Axios.isCancel(error)) {
+          if (services.Axios.isCancel(error)) {
             console.log("AxiosCancel: caught cancel", error.message);
           } else {
             console.log("throw error", error.message);
           }
         }
       }
-      // const list = await services.getPersonal();
-      // setPersonal(list);
     };
     getPersonal();
     setIsListed(false);
