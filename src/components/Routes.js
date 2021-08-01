@@ -30,7 +30,6 @@ import UsuarioCreate from "./views/UsuarioCreate";
 import useValues from "../provider/useValues";
 const Routes = () => {
   const { authLoading } = useValues();
-
   if (authLoading && getToken()) {
     return <div className="content"> Cheking Authentication...</div>;
   }

@@ -4,7 +4,7 @@ import services from "../../services/login";
 import { useHistory } from "react-router-dom";
 import useValues from "../../provider/useValues";
 const LoginPage = () => {
-  const { login } = useValues();
+  const { login, setAuthLoading } = useValues();
   const history = useHistory();
   const [signin, setSignIn] = useState({ usuario: "", contraseña: "" });
   const [error, setError] = useState(null);
@@ -22,6 +22,7 @@ const LoginPage = () => {
       setError(null);
       setUserSession(logged.token, logged.user);
       login(logged.user);
+      setAuthLoading(false);
       history.push("/dashboard");
     } else {
       setLoading(false);

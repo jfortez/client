@@ -20,10 +20,10 @@ export default function ValuesProvider({ children }) {
       if (verify) {
         setUserSession(verify.token, verify.user);
         setUser(verify.user);
-        setAuthLoading();
+        setAuthLoading(false);
       } else {
         removeUserSession();
-        setAuthLoading(false);
+        setAuthLoading(true);
         console.log("token no verificado");
       }
     };
@@ -43,6 +43,7 @@ export default function ValuesProvider({ children }) {
     login,
     logout,
     authLoading,
+    setAuthLoading,
   };
   return <ValuesContext.Provider value={valueProvider}>{children}</ValuesContext.Provider>;
 }
