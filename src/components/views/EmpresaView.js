@@ -49,7 +49,7 @@ const EmpresaView = () => {
     }
   };
   const getEmpresa = async () => {
-    const empresa = await services.getEmpresa();
+    const empresa = await services.optionEmpresa();
     const { id, ruc, nombre, direccion, direccion2, ciudad, telefono } = empresa[0];
     setId(id);
     setRuc({ campo: ruc, valido: "true" });

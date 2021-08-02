@@ -8,6 +8,11 @@ const getOdontologos = async (src) => {
   return data;
 };
 
+const getOdontologoByCedula = async (cedula) => {
+  const { data } = await Axios.get(`${baseUrl}/by/cedula`, cedula);
+  return data;
+};
+
 const createOdontologo = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
@@ -18,4 +23,4 @@ const deleteOdontologo = async (id) => {
   return data;
 };
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getOdontologos, createOdontologo, deleteOdontologo, Axios };
+export default { getOdontologos, createOdontologo, deleteOdontologo, getOdontologoByCedula, Axios };

@@ -7,11 +7,14 @@ const getEmpresa = async (src) => {
   });
   return data;
 };
-
+const optionEmpresa = async () => {
+  const { data } = await Axios.get(baseUrl);
+  return data;
+};
 const saveEmpresa = async (objectData, id) => {
   const { data } = await Axios.post(`${baseUrl}/update/${id}`, objectData);
   return data;
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getEmpresa, saveEmpresa, Axios };
+export default { getEmpresa, saveEmpresa, Axios, optionEmpresa };
