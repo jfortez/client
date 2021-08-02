@@ -95,23 +95,29 @@ const UsuarioCreate = () => {
           </nav>
 
           {dataByCedula ? <h3>Información Personal</h3> : null}
-          {dataByCedula
-            ? dataByCedula.map((data) => {
-                return (
-                  <ul key={data.id}>
-                    <li>
-                      <b>Nombres Completos:</b> {data.nombres} {data.apellidos}
-                    </li>
-                    <li>
-                      <b>Cedula:</b> {data.cedula}
-                    </li>
-                    <li>
-                      <b>¿Tiene Usuario?</b> {data.id_Usuario ? "si" : "no"}
-                    </li>
-                  </ul>
-                );
-              })
-            : null}
+          {dataByCedula ? (
+            dataByCedula.map((data) => {
+              return (
+                <ul key={data.id}>
+                  <li>
+                    <b>Nombres Completos:</b> {data.nombres} {data.apellidos}
+                  </li>
+                  <li>
+                    <b>Cedula:</b> {data.cedula}
+                  </li>
+                  <li>
+                    <b>¿Tiene Usuario?</b> {data.id_Usuario ? "si" : "no"}
+                  </li>
+                </ul>
+              );
+            })
+          ) : ci.campo.length > 8 ? (
+            <h5>
+              No existe un elemento bajo el Ruc ingresado, ¿Desea Crear uno?,{" "}
+              <Link to="/dashboard/personal/create">Crear Personal</Link> ó{" "}
+              <Link to="/dashboard/odontologos/create">Crear Odontólogo</Link>
+            </h5>
+          ) : null}
           <Formulario onSubmit={onSubmit}>
             <ComponentInput
               state={ci} //value
