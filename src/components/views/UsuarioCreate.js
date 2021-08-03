@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import services from "../../services/usuarios";
 import {
   Formulario,
   ContenedorBotonCentrado,
@@ -16,7 +15,9 @@ import { Error } from "@material-ui/icons";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import { Link } from "react-router-dom";
 import personalServices from "../../services/personal";
-// import odontologoServices from "../../services/odontologos";
+import personas from "../../services/personas";
+import odontologoServices from "../../services/odontologos";
+
 const UsuarioCreate = () => {
   const { isCollapsed } = useValues();
   const [ci, setCi] = useState({ campo: "", valido: null });
@@ -48,8 +49,8 @@ const UsuarioCreate = () => {
         contraseña: contraseña.campo,
         previlegios: previlegios.campo,
       };
-      // await services.createUsuarios(newUsuario);
-      await personalServices.setIdUsuario(newUsuario); //da id_Usuario al Personal
+      // await personalServices.setIdUsuario(newUsuario); //da id_Usuario al Personal
+      await odontologoServices.setIdUsuario(newUsuario); //da id_Usuario al Personal
       setFormValid(true);
       setUsuario({ campo: "", valido: null });
       setCi({ campo: "", valido: null });
@@ -62,11 +63,16 @@ const UsuarioCreate = () => {
   useEffect(() => {
     const getDataByCedula = async () => {
       if (ci.campo.length > 0) {
-        const personalBusqueda = await personalServices.getCiValidas();
+        const personalBusqueda = await personas.getCedulas();
         const cedula = personalBusqueda.filter((ced) => ced.cedula === ci.campo);
         if (cedula[0]) {
-          const cedulaBuscado = await personalServices.getPersonalByCedula({ cedula: ci.campo }); //retorna solametne 1 objeto
-          setDataByCedula(cedulaBuscado);
+          if (cedula[0].id_Personal) {
+            const cedulaBuscado = await personas.getPersonalByCedula({ cedula: ci.campo }); //retorna solametne 1 objeto
+            setDataByCedula(cedulaBuscado);
+          } else {
+            const cedulaBuscado = await personas.getOdontologosByCedula({ cedula: ci.campo }); //retorna solametne 1 objeto
+            setDataByCedula(cedulaBuscado);
+          }
         }
       } else {
         setDataByCedula(null);
@@ -111,7 +117,7 @@ const UsuarioCreate = () => {
                 </ul>
               );
             })
-          ) : ci.campo.length > 8 ? (
+          ) : ci.campo.length > 9 ? (
             <h5>
               No existe un elemento bajo el Ruc ingresado, ¿Desea Crear uno?,{" "}
               <Link to="/dashboard/personal/create">Crear Personal</Link> ó{" "}

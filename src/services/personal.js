@@ -8,16 +8,6 @@ const getPersonal = async (src) => {
   return data;
 };
 
-const getCiValidas = async () => {
-  const { data } = await Axios.get(`${baseUrl}/cedula`);
-  return data;
-};
-
-const getPersonalByCedula = async (cedula) => {
-  const { data } = await Axios.post(`${baseUrl}/by/cedula`, cedula);
-  return data;
-};
-
 const createPersonal = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
@@ -41,8 +31,8 @@ export default {
   getPersonal,
   createPersonal,
   deletePersonal,
-  getPersonalByCedula,
-  getCiValidas,
+  // getPersonalByCedula,
+  // getCiValidas,
   updatePersonal,
   setIdUsuario,
   Axios,

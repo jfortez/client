@@ -99,7 +99,7 @@ const PersonalView = () => {
                       <td>{person.email}</td>
                       <td>{new Date(person.fecha_registro).toLocaleDateString()}</td>
                       <td>
-                        <button onClick={() => handleDelete(person.id)}>Eliminar</button>
+                        <button onClick={() => handleDelete(person.id_Personal)}>Eliminar</button>
                         <button onClick={() => handleUpdate()}>Actualizar</button>
                       </td>
                     </tr>

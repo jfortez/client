@@ -99,7 +99,7 @@ const OdontologoView = () => {
                       <td>{item.email}</td>
                       <td>{new Date(item.fecha_registro).toLocaleDateString()}</td>
                       <td>
-                        <button onClick={() => handleDelete(item.id)}>Eliminar</button>
+                        <button onClick={() => handleDelete(item.id_Odontologo)}>Eliminar</button>
                         <button onClick={() => handleUpdate()}>Actualizar</button>
                       </td>
                     </tr>
