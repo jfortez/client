@@ -14,10 +14,25 @@ const UsuariosView = () => {
   const [isLoading, setIsLoading] = useState(true);
   const handleDelete = async (id) => {
     setIsLoading(true);
-    const deleteUser = await services.deleteUsuarios(id);
-    console.log(deleteUser);
-    if (deleteUser) {
-      setIsListed(true);
+    const usersInUse = await services.getUsersInUse();
+    let idValue = 0;
+    const finInPersonal = usersInUse.personal;
+    const findInOdontologo = usersInUse.odontologos;
+    const valPer = finInPersonal.filter((ced) => ced.id_Usuario === id);
+    const valOd = findInOdontologo.filter((ced) => ced.id_Usuario === id);
+    if (valPer.length > 0) {
+      idValue = valPer[0].id_Usuario;
+      const deleteUser = await services.deletePerUsuario(idValue);
+      if (deleteUser) {
+        setIsListed(true);
+      }
+    }
+    if (valOd.length > 0) {
+      idValue = valOd[0].id_Usuario;
+      const deleteUser = await services.deleteOdUsuario(idValue);
+      if (deleteUser) {
+        setIsListed(true);
+      }
     }
   };
   const handleUpdate = () => {

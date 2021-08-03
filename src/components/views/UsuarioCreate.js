@@ -49,8 +49,13 @@ const UsuarioCreate = () => {
         contraseña: contraseña.campo,
         previlegios: previlegios.campo,
       };
-      // await personalServices.setIdUsuario(newUsuario); //da id_Usuario al Personal
-      await odontologoServices.setIdUsuario(newUsuario); //da id_Usuario al Personal
+      if (dataByCedula !== null) {
+        if (dataByCedula[0].id_Personal) {
+          await personalServices.setIdUsuario(newUsuario); //da id_Usuario al Personal
+        } else {
+          await odontologoServices.setIdUsuario(newUsuario); //da id_Usuario al Odontologo
+        }
+      }
       setFormValid(true);
       setUsuario({ campo: "", valido: null });
       setCi({ campo: "", valido: null });
