@@ -7,6 +7,10 @@ const getProductos = async (src) => {
   });
   return data;
 };
+const getProductoByCod = async (cod) => {
+  const { data } = await Axios.post(`${baseUrl}/cod`, cod);
+  return data;
+};
 const createProductos = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
@@ -17,4 +21,4 @@ const deleteProductos = async (id) => {
   return data;
 };
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getProductos, createProductos, deleteProductos, Axios };
+export default { getProductos, createProductos, deleteProductos, getProductoByCod, Axios };

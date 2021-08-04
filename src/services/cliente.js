@@ -8,6 +8,11 @@ const getClientes = async (src) => {
   return data;
 };
 
+const getRUC = async (ruc) => {
+  const { data } = await Axios.post(`${baseUrl}/ruc`, ruc);
+  return data;
+};
+
 const createCliente = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
@@ -18,4 +23,4 @@ const deleteCliente = async (id) => {
   return data;
 };
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getClientes, createCliente, deleteCliente, Axios };
+export default { getClientes, createCliente, deleteCliente, Axios, getRUC };

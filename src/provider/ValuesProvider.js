@@ -6,6 +6,9 @@ export default function ValuesProvider({ children }) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [user, setUser] = useState([]);
   const [authLoading, setAuthLoading] = useState(true);
+  const [datosVentas, setDatosVentas] = useState({ cliente: [], producto: [] });
+  const [types, setTypes] = useState({ ruc: "", cod_producto: "", cantidad: 1 });
+
   //logearse
   const login = (usr) => {
     setUser(usr);
@@ -44,6 +47,10 @@ export default function ValuesProvider({ children }) {
     logout,
     authLoading,
     setAuthLoading,
+    datosVentas,
+    setDatosVentas,
+    types,
+    setTypes,
   };
   return <ValuesContext.Provider value={valueProvider}>{children}</ValuesContext.Provider>;
 }
