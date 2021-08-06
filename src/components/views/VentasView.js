@@ -1,175 +1,89 @@
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import clienteServices from "../../services/cliente";
-import productoServices from "../../services/productos";
-import { useState } from "react";
+import RucInput from "../layouts/ventaComponents.js/rucInput";
+import CodInput from "../layouts/ventaComponents.js/CodInput";
+import CantidadInput from "../layouts/ventaComponents.js/CantidadInput";
+import VentaDetalle from "../layouts/ventaComponents.js/VentaDetalle";
+import { useEffect, useState } from "react";
+import valuesServices from "../../services/values";
+import ventaValues from "../../services/venta";
 const VentasView = () => {
-  const { isCollapsed, datosVentas, setDatosVentas, types, setTypes } = useValues();
-  const [productosVenta, setProductosVenta] = useState([]);
-  const [noDuplicados, setNoDuplicados] = useState([]);
-  const getClienteByRUC = async (event) => {
-    event.preventDefault();
-    const clienteData = await clienteServices.getRUC({ ruc: types.ruc });
-    setDatosVentas({ ...datosVentas, cliente: clienteData });
+  const [values, setValues] = useState([]);
+  const {
+    isCollapsed,
+    setDatosVentas,
+    types,
+    setTypes,
+    detalleVenta,
+    setDetalleVenta,
+    datosVentas,
+    user,
+  } = useValues();
+  const limpiar = () => {
+    setTypes({ ...types, ruc: "", cod_producto: "", cantidad: 1 });
+    setDatosVentas({ cliente: [], producto: [] });
+    setDetalleVenta([]);
   };
-  const getProductosByCod = async (event) => {
-    event.preventDefault();
-    const productoData = await productoServices.getProductoByCod({
-      cod_producto: types.cod_producto,
-    });
-    setDatosVentas({ ...datosVentas, producto: productoData });
-  };
-  const insertProducto = () => {
-    let cantidad = 1;
-    if (datosVentas.producto.length > 0) {
-      setProductosVenta([...productosVenta, datosVentas.producto]);
-      const duplicado = productosVenta.filter(
-        (unico) => unico[0].cod_producto === types.cod_producto
-      );
-      if (duplicado.length > 0) {
-        cantidad = cantidad + duplicado.length;
-        const test = noDuplicados.map((item) => {
-          if (item[0].cod_producto === types.cod_producto) {
-            item[0].cantidad = cantidad;
-          }
-          return item;
-        });
-        console.log(test);
-      } else {
-        setNoDuplicados([...noDuplicados, datosVentas.producto]);
-      }
-      setDatosVentas({ ...datosVentas, producto: [] });
-      setTypes({ ...types, cod_producto: "" });
-    } else {
-      console.log("debe ingresar un producto a buscar");
+  useEffect(() => {
+    const getValues = async () => {
+      const numValues = await valuesServices.getValues();
+      setValues(numValues[0]);
+    };
+    getValues();
+  }, []);
+  const fecha = new Date();
+  const nuevaVenta = () => {
+    const totCantidad = detalleVenta.reduce((acc, acv) => {
+      return acc + acv.cantidad;
+    }, 0);
+    const valorTotal = detalleVenta.reduce((acc, acv) => {
+      return acc + acv.total;
+    }, 0);
+    const venta = {
+      num_venta: values.num_venta,
+      fecha,
+      cantidad: totCantidad,
+      subtotal: valorTotal,
+      total: valorTotal,
+      id_Cliente: datosVentas.cliente[0].id,
+      id_Usuario: user.id,
+    };
+    console.log(venta);
+    if (venta) {
+      newVenta(venta);
+      setTypes({ ...types, ruc: "", cod_producto: "", cantidad: 1 });
+      setDatosVentas({ cliente: [], producto: [] });
+      setDetalleVenta([]);
+      updateValues();
     }
   };
-  const limpiar = () => {
-    setTypes({ ...types, ruc: "", cod_producto: "" });
-    setDatosVentas({ cliente: [], producto: [] });
+  const updateValues = async () => {
+    const newValue = { num_venta: values.num_venta + 1 };
+    await valuesServices.updateValues(newValue);
+    setValues({ ...values, num_venta: values.num_venta + 1 });
   };
-  const fecha = new Date().toLocaleDateString();
+  const newVenta = async (nuevaVenta) => {
+    const nuevo = await ventaValues.newVenta(nuevaVenta);
+    console.log(nuevo);
+  };
   return (
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h1>Ventas</h1>
         <p>
-          <strong>Fecha:</strong> {fecha}
+          <strong>Fecha:</strong> {fecha.toLocaleDateString()}
         </p>
         <p>
-          <strong>Venta No:</strong>
+          <strong>Venta No: {values.num_venta}</strong>
         </p>
         <button onClick={limpiar}>Limpiar</button>
-        <form onSubmit={getClienteByRUC}>
-          <div>
-            <h4>Cliente</h4>
-            <label htmlFor="ruc">RUC:</label>
-            <input
-              type="text"
-              name="ruc"
-              id="ruc"
-              value={types.ruc}
-              onChange={(e) => setTypes({ ...types, ruc: e.target.value })}
-            />
-            <button>Buscar</button>
-            {!datosVentas.cliente.message ? (
-              datosVentas.cliente.map((data) => {
-                return (
-                  <ul key={data.id}>
-                    <li>
-                      <b>Nombres:</b>
-                      {data.nombres} {data.apellidos}
-                    </li>
-                    <li>
-                      <b>Dirección:</b> {data.direccion}
-                    </li>
-                  </ul>
-                );
-              })
-            ) : (
-              <p>Cliente no existe</p>
-            )}
-          </div>
-        </form>
-        <form onSubmit={getProductosByCod}>
-          <div>
-            <h4>Producto</h4>
-            <label htmlFor="cod_producto">Codigo de Producto:</label>
-            <input
-              type="text"
-              name="cod_producto"
-              id="cod_producto"
-              value={types.cod_producto}
-              onChange={(e) => setTypes({ ...types, cod_producto: e.target.value })}
-            />
-            <button>Buscar</button>
-            {!datosVentas.producto.message ? (
-              datosVentas.producto.map((data) => {
-                return (
-                  <ul key={data.id}>
-                    <li>
-                      <b>Nombre del producto: </b>
-                      {data.nombre}
-                    </li>
-                    <li>
-                      <b>Cantidad Existente: </b>
-                      {data.cantidad}
-                    </li>
-                    <li>
-                      <b>Precio Unitario: </b>
-                      {data.precio}
-                    </li>
-                  </ul>
-                );
-              })
-            ) : (
-              <p>Producto no existe</p>
-            )}
-          </div>
-        </form>
-        <div>
-          <br />
-          <label htmlFor="cantidad">Cantidad</label>
-          <input
-            type="number"
-            name="cantidad"
-            id="cantidad"
-            value={types.cantidad}
-            onChange={(e) => setTypes({ ...types, cantidad: e.target.value })}
-          />
-          <br />
-          <button onClick={insertProducto}>Añadir Producto</button>
-        </div>
-        <div>
-          <table>
-            <thead>
-              <tr>
-                <th>Codigo</th>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {noDuplicados
-                ? noDuplicados.map((item, index) => {
-                    return (
-                      <tr key={index}>
-                        <td>{item[0].cod_producto}</td>
-                        <td>{item[0].nombre}</td>
-                        <td>{item[0].cantidad}</td>
-                        <td>{item[0].precio}</td>
-                        <td>Total</td>
-                      </tr>
-                    );
-                  })
-                : null}
-            </tbody>
-          </table>
-        </div>
+        <RucInput />
+        <CodInput />
+        <CantidadInput />
+        <VentaDetalle />
+        <button onClick={nuevaVenta}>Venta</button>
       </div>
     </>
   );
