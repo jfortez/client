@@ -1,8 +1,6 @@
 import { useEffect } from "react";
-import useValues from "../../../provider/useValues";
 
-const VentaDetalle = () => {
-  const { productosVenta, detalleVenta, setDetalleVenta } = useValues();
+const VentaDetalle = ({ productosVenta, detalleVenta, setDetalleVenta }) => {
   useEffect(() => {
     const notaVenta = productosVenta.reduce((acc, acv) => {
       const elementoYaExiste = acc.find((elemento) => elemento.cod_producto === acv.cod_producto);
@@ -18,7 +16,6 @@ const VentaDetalle = () => {
           return elemento;
         });
       }
-
       return [...acc, acv];
     }, []);
     setDetalleVenta(notaVenta);

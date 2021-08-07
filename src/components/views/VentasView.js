@@ -8,6 +8,7 @@ import VentaDetalle from "../layouts/ventaComponents.js/VentaDetalle";
 import { useEffect, useState } from "react";
 import valuesServices from "../../services/values";
 import ventaValues from "../../services/venta";
+import productoServices from "../../services/productos";
 const VentasView = () => {
   const [values, setValues] = useState([]);
   const {
@@ -19,10 +20,13 @@ const VentasView = () => {
     setDetalleVenta,
     datosVentas,
     user,
+    setProductosVenta,
+    productosVenta,
   } = useValues();
   const limpiar = () => {
     setTypes({ ...types, ruc: "", cod_producto: "", cantidad: 1 });
     setDatosVentas({ cliente: [], producto: [] });
+    setProductosVenta([]);
     setDetalleVenta([]);
   };
   useEffect(() => {
@@ -49,11 +53,13 @@ const VentasView = () => {
       id_Cliente: datosVentas.cliente[0].id,
       id_Usuario: user.id,
     };
-    console.log(venta);
     if (venta) {
       newVenta(venta);
+      //aquí iria la función que modificaría la cantidad del producto dejando la cantidad restante tras la venta realizada
+      updateProducto();
       setTypes({ ...types, ruc: "", cod_producto: "", cantidad: 1 });
       setDatosVentas({ cliente: [], producto: [] });
+      setProductosVenta([]);
       setDetalleVenta([]);
       updateValues();
     }
@@ -63,9 +69,36 @@ const VentasView = () => {
     await valuesServices.updateValues(newValue);
     setValues({ ...values, num_venta: values.num_venta + 1 });
   };
-  const newVenta = async (nuevaVenta) => {
-    const nuevo = await ventaValues.newVenta(nuevaVenta);
-    console.log(nuevo);
+  const newVenta = async (nVenta) => {
+    const ventaId = await ventaValues.newVenta(nVenta);
+    newDetalleVenta(ventaId);
+  };
+  const newDetalleVenta = async (ventaId) => {
+    let ventaDetalle = [];
+    for (let i = 0; i < detalleVenta.length; i++) {
+      const { id, cantidad, precio, total } = detalleVenta[i];
+      const id_Venta = ventaId;
+      const id_Producto = id;
+      const arr = [id_Venta, id_Producto, precio, cantidad, total];
+      ventaDetalle.push(arr);
+    }
+    await ventaValues.newVentaDetalle({ ventaDetalle });
+  };
+  const updateProducto = async () => {
+    let vDetalle = [];
+    const productos = await productoServices.listProducts();
+    for (const prd in productos) {
+      let total;
+      for (const dtv in detalleVenta) {
+        if (productos[prd].id === detalleVenta[dtv].id) {
+          total = productos[prd].cantidad - detalleVenta[dtv].cantidad;
+          const { id } = productos[prd];
+          const rs = [id, total];
+          vDetalle.push(rs);
+        }
+      }
+    }
+    await productoServices.test({ vDetalle });
   };
   return (
     <>
@@ -79,10 +112,31 @@ const VentasView = () => {
           <strong>Venta No: {values.num_venta}</strong>
         </p>
         <button onClick={limpiar}>Limpiar</button>
-        <RucInput />
-        <CodInput />
-        <CantidadInput />
-        <VentaDetalle />
+        <RucInput
+          types={types}
+          setTypes={setTypes}
+          setDatosVentas={setDatosVentas}
+          datosVentas={datosVentas}
+        />
+        <CodInput
+          types={types}
+          setTypes={setTypes}
+          setDatosVentas={setDatosVentas}
+          datosVentas={datosVentas}
+        />
+        <CantidadInput
+          types={types}
+          setTypes={setTypes}
+          setDatosVentas={setDatosVentas}
+          datosVentas={datosVentas}
+          setProductosVenta={setProductosVenta}
+          productosVenta={productosVenta}
+        />
+        <VentaDetalle
+          productosVenta={productosVenta}
+          detalleVenta={detalleVenta}
+          setDetalleVenta={setDetalleVenta}
+        />
         <button onClick={nuevaVenta}>Venta</button>
       </div>
     </>

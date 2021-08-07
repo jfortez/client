@@ -1,8 +1,11 @@
-import useValues from "../../../provider/useValues";
-
-const CantidadInput = () => {
-  const { types, setTypes, setDatosVentas, datosVentas, setProductosVenta, productosVenta } =
-    useValues();
+const CantidadInput = ({
+  types,
+  setTypes,
+  setDatosVentas,
+  datosVentas,
+  setProductosVenta,
+  productosVenta,
+}) => {
   const insertProducto = () => {
     let cantidad = parseInt(types.cantidad);
     //obtenemos el producto que añadimos

@@ -1,8 +1,6 @@
-import useValues from "../../../provider/useValues";
 import clienteServices from "../../../services/cliente";
 
-const RucInput = () => {
-  const { types, setTypes, setDatosVentas, datosVentas } = useValues();
+const RucInput = ({ types, setTypes, setDatosVentas, datosVentas }) => {
   const getClienteByRUC = async (event) => {
     event.preventDefault();
     const clienteData = await clienteServices.getRUC({ ruc: types.ruc });

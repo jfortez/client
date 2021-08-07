@@ -1,8 +1,6 @@
-import useValues from "../../../provider/useValues";
 import productoServices from "../../../services/productos";
 
-const CodInput = () => {
-  const { types, setTypes, setDatosVentas, datosVentas } = useValues();
+const CodInput = ({ types, setTypes, setDatosVentas, datosVentas }) => {
   const getProductosByCod = async (event) => {
     event.preventDefault();
     const productoData = await productoServices.getProductoByCod({
