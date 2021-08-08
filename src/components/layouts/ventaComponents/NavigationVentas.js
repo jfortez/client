@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+// import { useLocation, useParams } from "react-router-dom";
 
 const Location = () => {
   return (
@@ -14,17 +14,12 @@ const Location = () => {
   );
 };
 const NavigationVentas = () => {
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
+  // const { id } = useParams();
   return (
     <div>
       <ul>
-        {pathname === "/dashboard/ventas" ? (
-          <Location />
-        ) : pathname === "/dashboard/ventas/reporte" ? (
-          <li>
-            <Link to="/dashboard/ventas">Nueva Venta</Link>
-          </li>
-        ) : null}
+        <Location />
       </ul>
     </div>
   );
