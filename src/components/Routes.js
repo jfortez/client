@@ -29,6 +29,7 @@ import PacientesCreate from "./views/PacientesCreate";
 import UsuarioCreate from "./views/UsuarioCreate";
 import useValues from "../provider/useValues";
 import VentasView from "./views/VentasView";
+import VentasReporte from "./views/VentasReporte";
 const Routes = () => {
   const { authLoading } = useValues();
   if (authLoading && getToken()) {
@@ -43,6 +44,7 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute exact path="/dashboard/test" component={PageTest} />
         <PrivateRoute exact path="/dashboard/ventas" component={VentasView} />
+        <PrivateRoute exact path="/dashboard/ventas/reporte" component={VentasReporte} />
         <PrivateRoute exact path="/dashboard/personal" component={PersonalView} />
         <PrivateRoute exact path="/dashboard/personal/create" component={PersonalCreate} />
         <PrivateRoute exact path="/dashboard/pacientes" component={PacientesView} />

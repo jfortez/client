@@ -1,14 +1,15 @@
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import RucInput from "../layouts/ventaComponents.js/rucInput";
-import CodInput from "../layouts/ventaComponents.js/CodInput";
-import CantidadInput from "../layouts/ventaComponents.js/CantidadInput";
-import VentaDetalle from "../layouts/ventaComponents.js/VentaDetalle";
+import RucInput from "../layouts/ventaComponents/rucInput";
+import CodInput from "../layouts/ventaComponents/CodInput";
+import CantidadInput from "../layouts/ventaComponents/CantidadInput";
+import VentaDetalle from "../layouts/ventaComponents/VentaDetalle";
 import { useEffect, useState } from "react";
 import valuesServices from "../../services/values";
 import ventaValues from "../../services/venta";
 import productoServices from "../../services/productos";
+import NavigationVentas from "../layouts/ventaComponents/NavigationVentas";
 const VentasView = () => {
   const [values, setValues] = useState([]);
   const {
@@ -104,6 +105,7 @@ const VentasView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
+        <NavigationVentas />
         <h1>Ventas</h1>
         <p>
           <strong>Fecha:</strong> {fecha.toLocaleDateString()}
