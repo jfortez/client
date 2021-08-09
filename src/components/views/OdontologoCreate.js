@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   Formulario,
   ContenedorBotonCentrado,
@@ -14,6 +14,8 @@ import services from "../../services/odontologos";
 
 const OdontologoCreate = () => {
   const { isCollapsed } = useValues();
+  const [elementId, setElementId] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
   const [nombres, setNombres] = useState({ campo: "", valido: null });
   const [apellidos, setApellidos] = useState({ campo: "", valido: null });
   const [cedula, setCedula] = useState({ campo: "", valido: null });
@@ -29,6 +31,52 @@ const OdontologoCreate = () => {
     telefono: /^\d{7,14}$/, // 7 a 14 numeros.
     numero: /^\d{5,14}$/, // 7 a 14 numeros.
     fecha: /^\d{4}-\d{2}-\d{2}$/,
+  };
+  const { id } = useParams();
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (pathname === `/dashboard/odontologos/${id}/edit`) {
+      setIsEditing(true);
+      const getOdontologoById = async () => {
+        const odontologo = await services.getOdontologosById(id);
+        const {
+          id_Odontologo,
+          nombres,
+          apellidos,
+          cedula,
+          telefono,
+          direccion,
+          ciudad,
+          fecha_nacimiento,
+          email,
+        } = odontologo[0];
+        setElementId(id_Odontologo);
+        setNombres({ campo: nombres, valido: null });
+        setApellidos({ campo: apellidos, valido: null });
+        setCedula({ campo: cedula, valido: null });
+        setTelefono({ campo: telefono, valido: null });
+        setDireccion({ campo: direccion, valido: null });
+        setCiudad({ campo: ciudad, valido: null });
+        setFecha_nacimiento({ campo: fecha_nacimiento, valido: null });
+        setEmail({ campo: email, valido: null });
+      };
+      getOdontologoById();
+    }
+  }, [id, pathname]);
+  const handleUpdate = async (evt) => {
+    evt.preventDefault();
+    const updateData = {
+      cedula: cedula.campo,
+      nombres: nombres.campo,
+      apellidos: apellidos.campo,
+      telefono: telefono.campo,
+      direccion: direccion.campo,
+      ciudad: ciudad.campo,
+      fecha_nacimiento: fecha_nacimiento.campo,
+      email: email.campo,
+      // active: active.campo,
+    };
+    await services.updateOdontologo(updateData, elementId);
   };
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -70,7 +118,7 @@ const OdontologoCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Nuevo Odontologo</h1>
+        {isEditing ? <h1>Editar Odontologo</h1> : <h1>Nuevo Odontologo</h1>}
         <div>
           <nav>
             <ul>
@@ -80,13 +128,11 @@ const OdontologoCreate = () => {
               <li>
                 <Link to="/dashboard/odontologos">Odontologos</Link>
               </li>
-              <li>
-                <b>Nuevo Odontologo</b>
-              </li>
+              <li>{isEditing ? <b>Editar Odontologo</b> : <b>Nuevo Odontologo</b>}</li>
             </ul>
           </nav>
         </div>
-        <Formulario onSubmit={onSubmit}>
+        <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
           <ComponentInput
             state={nombres} //value
             setState={setNombres} //onChange
@@ -179,7 +225,11 @@ const OdontologoCreate = () => {
             </MensajeError>
           )}
           <ContenedorBotonCentrado>
-            <Boton type="submit">Crear</Boton>
+            {isEditing ? (
+              <Boton type="submit">Actualizar</Boton>
+            ) : (
+              <Boton type="submit">Crear</Boton>
+            )}
           </ContenedorBotonCentrado>
         </Formulario>
       </div>

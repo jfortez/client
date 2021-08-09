@@ -3,11 +3,12 @@ import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import services from "../../services/productos";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
 
 const ProductosView = () => {
   const { isCollapsed } = useValues();
+  const history = useHistory();
   const [productos, setProductos] = useState([]);
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,8 +19,8 @@ const ProductosView = () => {
       setIsListed(true);
     }
   };
-  const handleUpdate = () => {
-    console.log("actualizar paciente");
+  const handleUpdate = (id) => {
+    history.push(`/dashboard/productos/${id}/edit`);
   };
   useEffect(() => {
     let source = services.Axios.CancelToken.source();
@@ -101,7 +102,7 @@ const ProductosView = () => {
                       <td>{producto.precio}</td>
                       <td>
                         <button onClick={() => handleDelete(producto.id)}>Eliminar</button>
-                        <button onClick={() => handleUpdate()}>Actualizar</button>
+                        <button onClick={() => handleUpdate(producto.id)}>Actualizar</button>
                       </td>
                     </tr>
                   );

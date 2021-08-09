@@ -1,5 +1,6 @@
 import Axios from "axios";
-const baseUrl = "http://192.168.0.104:5000/api/odontologos";
+import Url from "../utils/Url";
+const baseUrl = `${Url}/odontologos`;
 
 const getOdontologos = async (src) => {
   const { data } = await Axios.get(baseUrl, {
@@ -7,7 +8,14 @@ const getOdontologos = async (src) => {
   });
   return data;
 };
-
+const getOdontologosById = async (id) => {
+  const { data } = await Axios.get(`${baseUrl}/${id}`);
+  return data;
+};
+const listOdontologoByCed = async (ced) => {
+  const { data } = await Axios.post(`${baseUrl}/cedula`, ced);
+  return data;
+};
 const createOdontologo = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
@@ -20,6 +28,19 @@ const setIdUsuario = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/setUser`, objectData);
   return data;
 };
+const updateOdontologo = async (objectData, id) => {
+  const { data } = await Axios.post(`${baseUrl}/update/${id}`, objectData);
+  return data;
+};
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getOdontologos, createOdontologo, deleteOdontologo, setIdUsuario, Axios };
+export default {
+  getOdontologos,
+  createOdontologo,
+  deleteOdontologo,
+  setIdUsuario,
+  listOdontologoByCed,
+  getOdontologosById,
+  updateOdontologo,
+  Axios,
+};

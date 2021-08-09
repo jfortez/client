@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import services from "../../services/cliente";
@@ -10,10 +10,12 @@ import {
 } from "../../elements/Formularios";
 import { Error } from "@material-ui/icons";
 import ComponentInput from "../layouts/forms/ComponentInput";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 const ClienteCreate = () => {
   const { isCollapsed } = useValues();
+  const [elementId, setElementId] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
   const [ruc, setRuc] = useState({ campo: "", valido: null });
   const [nombres, setNombres] = useState({ campo: "", valido: null });
   const [apellidos, setApellidos] = useState({ campo: "", valido: null });
@@ -27,6 +29,41 @@ const ClienteCreate = () => {
     correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
     telefono: /^\d{7,14}$/, // 7 a 14 numeros.
     numero: /^\d{5,15}$/, // 7 a 14 numeros.
+  };
+  const { id } = useParams();
+  const idCliente = id;
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (pathname === `/dashboard/clientes/${idCliente}/edit`) {
+      setIsEditing(true);
+      const getClienteById = async () => {
+        const cliente = await services.getClienteById(idCliente);
+        const { id, ruc, nombres, apellidos, telefono, direccion, ciudad, email } = cliente[0];
+        setElementId(id);
+        setRuc({ campo: ruc, valido: null });
+        setNombres({ campo: nombres, valido: null });
+        setApellidos({ campo: apellidos, valido: null });
+        setTelefono({ campo: telefono, valido: null });
+        setDireccion({ campo: direccion, valido: null });
+        setCiudad({ campo: ciudad, valido: null });
+        setEmail({ campo: email, valido: null });
+      };
+      getClienteById();
+    }
+  }, [idCliente, pathname]);
+  const handleUpdate = async (evt) => {
+    evt.preventDefault();
+    const updateCliente = {
+      ruc: ruc.campo,
+      nombres: nombres.campo,
+      apellidos: apellidos.campo,
+      email: email.campo,
+      telefono: telefono.campo,
+      direccion: direccion.campo,
+      ciudad: ciudad.campo,
+      // active: active.campo,
+    };
+    await services.updateCliente(updateCliente, elementId);
   };
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -65,7 +102,7 @@ const ClienteCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Nuevo Cliente</h1>
+        {isEditing ? <h1>Editar Cliente</h1> : <h1>Nuevo Cliente</h1>}
         <div>
           <nav>
             <ul>
@@ -75,12 +112,10 @@ const ClienteCreate = () => {
               <li>
                 <Link to="/dashboard/clientes">Clientes</Link>
               </li>
-              <li>
-                <b>Nuevo Cliente</b>
-              </li>
+              <li>{isEditing ? <b>Editar Cliente</b> : <b>Nuevo Cliente</b>}</li>
             </ul>
           </nav>
-          <Formulario onSubmit={onSubmit}>
+          <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
             <ComponentInput
               state={ruc} //value
               setState={setRuc} //onChange
@@ -163,7 +198,11 @@ const ClienteCreate = () => {
               </MensajeError>
             )}
             <ContenedorBotonCentrado>
-              <Boton type="submit">Crear</Boton>
+              {isEditing ? (
+                <Boton type="submit">Actualizar</Boton>
+              ) : (
+                <Boton type="submit">Crear</Boton>
+              )}
             </ContenedorBotonCentrado>
           </Formulario>
         </div>

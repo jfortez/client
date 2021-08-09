@@ -2,7 +2,7 @@ import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import services from "../../services/productos";
 import categoriaServices from "../../services/categoria";
 import {
@@ -19,6 +19,8 @@ import { Error } from "@material-ui/icons";
 import ComponentInput from "../layouts/forms/ComponentInput";
 const ProductCreate = () => {
   const { isCollapsed } = useValues();
+  const [elementId, setElementId] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
   const [categorias, setCategorias] = useState([]);
   const [cod_Producto, setCod_Producto] = useState({ campo: "", valido: null });
   const [nombre, setNombre] = useState({ campo: "", valido: null });
@@ -36,6 +38,28 @@ const ProductCreate = () => {
     codigo: /^\d{5,50}$/, // 7 a 14 numeros.
     fecha: /^\d{4}-\d{2}-\d{2}$/,
   };
+  const { id } = useParams();
+  const productoId = id;
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (pathname === `/dashboard/productos/${productoId}/edit`) {
+      setIsEditing(true);
+      const getPersonalById = async () => {
+        const productos = await services.getProductosById(productoId);
+        const { id, cod_producto, nombre, descripcion, cantidad, costo, precio, id_categoria } =
+          productos[0];
+        setElementId(id);
+        setCod_Producto({ campo: cod_producto, valido: null });
+        setNombre({ campo: nombre, valido: null });
+        setDescripcion({ campo: descripcion, valido: null });
+        setCantidad({ campo: cantidad, valido: null });
+        setCosto({ campo: costo, valido: null });
+        setPrecio({ campo: precio, valido: null });
+        setIdCategoria({ campo: id_categoria, valido: null });
+      };
+      getPersonalById();
+    }
+  }, [productoId, pathname]);
   const listCategorias = async () => {
     const categorias = await categoriaServices.optionCategorias();
     setCategorias(categorias);
@@ -43,7 +67,20 @@ const ProductCreate = () => {
   useEffect(() => {
     listCategorias();
   }, []);
-
+  const handleUpdate = async (evt) => {
+    evt.preventDefault();
+    const updtProducto = {
+      cod_producto: cod_Producto.campo,
+      nombre: nombre.campo,
+      descripcion: descripcion.campo,
+      cantidad: cantidad.campo,
+      costo: costo.campo,
+      precio: precio.campo,
+      id_categoria: idCategoria.campo,
+      // active: active.campo,
+    };
+    await services.updateProductos(updtProducto, elementId);
+  };
   const onSubmit = async (event) => {
     event.preventDefault();
     if (
@@ -81,7 +118,8 @@ const ProductCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Nuevo Producto</h1>
+        {isEditing ? <h1>Editar Producto</h1> : <h1>Nuevo Producto</h1>}
+
         <div>
           <nav>
             <ul>
@@ -91,13 +129,11 @@ const ProductCreate = () => {
               <li>
                 <Link to="/dashboard/productos">Productos</Link>
               </li>
-              <li>
-                <b>Nuevo Producto</b>
-              </li>
+              <li>{isEditing ? <b>Editar Producto</b> : <b>Nuevo Producto</b>}</li>
             </ul>
           </nav>
         </div>
-        <Formulario onSubmit={onSubmit}>
+        <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
           <ComponentInput
             state={cod_Producto} //value
             setState={setCod_Producto} //onChange
@@ -192,7 +228,11 @@ const ProductCreate = () => {
             </MensajeError>
           )}
           <ContenedorBotonCentrado>
-            <Boton type="submit">Crear</Boton>
+            {isEditing ? (
+              <Boton type="submit">Actualizar</Boton>
+            ) : (
+              <Boton type="submit">Crear</Boton>
+            )}
           </ContenedorBotonCentrado>
         </Formulario>
       </div>

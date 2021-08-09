@@ -1,5 +1,6 @@
 import Axios from "axios";
-const baseUrl = "http://192.168.0.104:5000/api/categorias";
+import Url from "../utils/Url";
+const baseUrl = `${Url}/categorias`;
 
 const getCategorias = async (src) => {
   const { data } = await Axios.get(baseUrl, {

@@ -1,10 +1,16 @@
 import Axios from "axios";
-const baseUrl = "http://192.168.0.104:5000/api/personal";
+import Url from "../utils/Url";
+const baseUrl = `${Url}/personal`;
 
 const getPersonal = async (src) => {
   const { data } = await Axios.get(baseUrl, {
     cancelToken: src.token,
   });
+  return data;
+};
+
+const getPersonalById = async (id) => {
+  const { data } = await Axios.get(`${baseUrl}/${id}`);
   return data;
 };
 
@@ -22,8 +28,8 @@ const deletePersonal = async (id) => {
   return data;
 };
 
-const updatePersonal = async (id) => {
-  const { data } = await Axios.delete(`${baseUrl}/update/${id}`);
+const updatePersonal = async (objectData, id) => {
+  const { data } = await Axios.post(`${baseUrl}/update/${id}`, objectData);
   return data;
 };
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -31,8 +37,7 @@ export default {
   getPersonal,
   createPersonal,
   deletePersonal,
-  // getPersonalByCedula,
-  // getCiValidas,
+  getPersonalById,
   updatePersonal,
   setIdUsuario,
   Axios,

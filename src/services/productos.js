@@ -1,5 +1,6 @@
 import Axios from "axios";
-const baseUrl = "http://192.168.0.104:5000/api/productos";
+import Url from "../utils/Url";
+const baseUrl = `${Url}/productos`;
 
 const getProductos = async (src) => {
   const { data } = await Axios.get(baseUrl, {
@@ -11,12 +12,20 @@ const listProducts = async () => {
   const { data } = await Axios.get(baseUrl);
   return data;
 };
+const getProductosById = async (id) => {
+  const { data } = await Axios.get(`${baseUrl}/${id}`);
+  return data;
+};
 const test = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/test`, objectData);
   return data;
 };
 const getProductoByCod = async (cod) => {
   const { data } = await Axios.post(`${baseUrl}/cod`, cod);
+  return data;
+};
+const updateProductos = async (objectData, id) => {
+  const { data } = await Axios.post(`${baseUrl}/update/${id}`, objectData);
   return data;
 };
 const createProductos = async (objectData) => {
@@ -35,6 +44,8 @@ export default {
   deleteProductos,
   getProductoByCod,
   listProducts,
+  getProductosById,
+  updateProductos,
   Axios,
   test,
 };

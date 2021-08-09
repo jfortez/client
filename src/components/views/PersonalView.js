@@ -3,10 +3,11 @@ import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import services from "../../services/personal";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
 const PersonalView = () => {
   const { isCollapsed } = useValues();
+  const history = useHistory();
   const [personal, setPersonal] = useState([]);
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,9 +19,10 @@ const PersonalView = () => {
       setIsListed(true);
     }
   };
-  const handleUpdate = () => {
-    console.log("actualizar paciente");
+  const handleUpdate = (id) => {
+    history.push(`/dashboard/personal/${id}/edit`);
   };
+
   useEffect(() => {
     let source = services.Axios.CancelToken.source();
     let unmounted = false;
@@ -100,7 +102,7 @@ const PersonalView = () => {
                       <td>{new Date(person.fecha_registro).toLocaleDateString()}</td>
                       <td>
                         <button onClick={() => handleDelete(person.id_Personal)}>Eliminar</button>
-                        <button onClick={() => handleUpdate()}>Actualizar</button>
+                        <button onClick={() => handleUpdate(person.id_Personal)}>Actualizar</button>
                       </td>
                     </tr>
                   );

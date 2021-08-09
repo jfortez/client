@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Topbar from "../layouts/topbar/Topbar";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import useValues from "../../provider/useValues";
 import services from "../../services/paciente";
 import { Loader } from "../../elements/Loader";
 
 const PacientesView = () => {
   const { isCollapsed } = useValues();
+  const history = useHistory();
   const [pacientes, setPacientes] = useState([]);
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -17,8 +18,8 @@ const PacientesView = () => {
       setIsListed(true);
     }
   };
-  const handleUpdate = () => {
-    console.log("actualizar paciente");
+  const handleUpdate = (id) => {
+    history.push(`/dashboard/pacientes/${id}/edit`);
   };
   useEffect(() => {
     let source = services.Axios.CancelToken.source();
@@ -101,7 +102,7 @@ const PacientesView = () => {
                     <td>{paciente.genero}</td>
                     <td>
                       <button onClick={() => handleDelete(paciente.id)}>Eliminar</button>
-                      <button onClick={() => handleUpdate()}>Actualizar</button>
+                      <button onClick={() => handleUpdate(paciente.id)}>Actualizar</button>
                     </td>
                   </tr>
                 ))

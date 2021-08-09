@@ -1,6 +1,7 @@
 import Axios from "axios";
-const baseUrl = "http://192.168.0.104:5000/api/ventas";
-const ventaDetalle = "http://192.168.0.104:5000/api/ventasdetalle";
+import Url from "../utils/Url";
+const baseUrl = `${Url}/ventas`;
+const ventaDetalle = `${Url}/ventasdetalle`;
 
 const getVentas = async () => {
   const { data } = await Axios.get(`${baseUrl}`);

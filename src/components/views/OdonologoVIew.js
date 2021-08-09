@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import services from "../../services/odontologos";
 import { Loader } from "../../elements/Loader";
 
@@ -10,7 +10,7 @@ const OdontologoView = () => {
   const [odontologos, setOdontologos] = useState([]);
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
+  const history = useHistory();
   const handleDelete = async (id) => {
     setIsLoading(true);
     const item = await services.deleteOdontologo(id);
@@ -18,8 +18,8 @@ const OdontologoView = () => {
       setIsListed(true);
     }
   };
-  const handleUpdate = () => {
-    console.log("actualizar paciente");
+  const handleUpdate = (id) => {
+    history.push(`/dashboard/odontologos/${id}/edit`);
   };
   useEffect(() => {
     let source = services.Axios.CancelToken.source();
@@ -100,7 +100,7 @@ const OdontologoView = () => {
                       <td>{new Date(item.fecha_registro).toLocaleDateString()}</td>
                       <td>
                         <button onClick={() => handleDelete(item.id_Odontologo)}>Eliminar</button>
-                        <button onClick={() => handleUpdate()}>Actualizar</button>
+                        <button onClick={() => handleUpdate(item.id_Odontologo)}>Actualizar</button>
                       </td>
                     </tr>
                   );

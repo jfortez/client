@@ -49,16 +49,21 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/ventas/reporte/:id" component={VentasReporteView} />
         <PrivateRoute exact path="/dashboard/personal" component={PersonalView} />
         <PrivateRoute exact path="/dashboard/personal/create" component={PersonalCreate} />
+        <PrivateRoute exact path="/dashboard/personal/:id/edit" component={PersonalCreate} />
         <PrivateRoute exact path="/dashboard/pacientes" component={PacientesView} />
         <PrivateRoute exact path="/dashboard/pacientes/create" component={PacientesCreate} />
+        <PrivateRoute exact path="/dashboard/pacientes/:id/edit" component={PacientesCreate} />
         <PrivateRoute exact path="/dashboard/usuarios" component={UsuariosView} />
         <PrivateRoute exact path="/dashboard/usuarios/create" component={UsuarioCreate} />
         <PrivateRoute exact path="/dashboard/clientes" component={ClienteView} />
         <PrivateRoute exact path="/dashboard/clientes/create" component={ClienteCreate} />
+        <PrivateRoute exact path="/dashboard/clientes/:id/edit" component={ClienteCreate} />
         <PrivateRoute exact path="/dashboard/odontologos" component={OdontologoView} />
         <PrivateRoute exact path="/dashboard/odontologos/create" component={OdontologoCreate} />
+        <PrivateRoute exact path="/dashboard/odontologos/:id/edit" component={OdontologoCreate} />
         <PrivateRoute exact path="/dashboard/productos" component={ProductosView} />
         <PrivateRoute exact path="/dashboard/productos/createProduct" component={ProductosCreate} />
+        <PrivateRoute exact path="/dashboard/productos/:id/edit" component={ProductosCreate} />
         <PrivateRoute exact path="/dashboard/productos/createCategory" component={CategoryCreate} />
         <PrivateRoute exact path="/dashboard/servicios" component={ServiciosView} />
         <PrivateRoute exact path="/dashboard/agenda" component={AgendaView} />

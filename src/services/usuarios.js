@@ -1,5 +1,6 @@
 import Axios from "axios";
-const baseUrl = "http://192.168.0.104:5000/api/usuarios";
+import Url from "../utils/Url";
+const baseUrl = `${Url}/usuarios`;
 
 const getUsuarios = async (src) => {
   const { data } = await Axios.get(`${baseUrl}/`, {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
@@ -15,9 +15,11 @@ import {
 } from "../../elements/Formularios";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import services from "../../services/paciente";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 const PacientesCreate = () => {
   const { isCollapsed } = useValues();
+  const [elementId, setElementId] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
   const [nombres, setNombres] = useState({ campo: "", valido: null });
   const [apellidos, setApellidos] = useState({ campo: "", valido: null });
   const [cedula, setCedula] = useState({ campo: "", valido: null });
@@ -35,6 +37,56 @@ const PacientesCreate = () => {
     numero: /^\d{5,14}$/, // 7 a 14 numeros.
     edad: /^\d{1,3}$/, // 1 a 3 numeros.
     fecha: /^\d{4}-\d{2}-\d{2}$/,
+  };
+  const { id } = useParams();
+  const pacienteId = id;
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (pathname === `/dashboard/pacientes/${pacienteId}/edit`) {
+      setIsEditing(true);
+      const getPacienteById = async () => {
+        const paciente = await services.getPacientesById(pacienteId);
+        const {
+          id,
+          nombres,
+          apellidos,
+          cedula,
+          telefono,
+          direccion,
+          ciudad,
+          fecha_nacimiento,
+          edad,
+          genero,
+        } = paciente[0];
+        setElementId(id);
+        setNombres({ campo: nombres, valido: null });
+        setApellidos({ campo: apellidos, valido: null });
+        setCedula({ campo: cedula, valido: null });
+        setTelefono({ campo: telefono, valido: null });
+        setDireccion({ campo: direccion, valido: null });
+        setCiudad({ campo: ciudad, valido: null });
+        setFecha_nacimiento({ campo: fecha_nacimiento, valido: null });
+        setEdad({ campo: edad, valido: null });
+        setGenero({ campo: genero, valido: null });
+      };
+      getPacienteById();
+    }
+  }, [pacienteId, pathname]);
+  const handleUpdate = async (evt) => {
+    evt.preventDefault();
+    const updtPaciente = {
+      cedula: cedula.campo,
+      nombres: nombres.campo,
+      apellidos: apellidos.campo,
+      telefono: telefono.campo,
+      direccion: direccion.campo,
+      ciudad: ciudad.campo,
+      fecha_nacimiento: fecha_nacimiento.campo,
+      edad: edad.campo,
+      genero: genero.campo,
+      // active: active.campo,
+    };
+    await services.updatePacientes(updtPaciente, elementId);
   };
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -67,6 +119,8 @@ const PacientesCreate = () => {
       } else {
         setNombres({ campo: "", valido: null });
         setApellidos({ campo: "", valido: null });
+        setCedula({ campo: "", valido: null });
+        setFecha_nacimiento({ campo: "", valido: null });
         setTelefono({ campo: "", valido: null });
         setDireccion({ campo: "", valido: null });
         setCiudad({ campo: "", valido: null });
@@ -81,7 +135,8 @@ const PacientesCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Nuevo Paciente</h1>
+        {isEditing ? <h1>Editar Paciente</h1> : <h1>Nuevo Paciente</h1>}
+
         <div>
           <nav>
             <ul>
@@ -91,13 +146,11 @@ const PacientesCreate = () => {
               <li>
                 <Link to="/dashboard/pacientes">Pacientes</Link>
               </li>
-              <li>
-                <b>Nuevo Paciente</b>
-              </li>
+              <li>{isEditing ? <b>Editar Paciente</b> : <b>Nuevo Paciente</b>}</li>
             </ul>
           </nav>
         </div>
-        <Formulario onSubmit={onSubmit}>
+        <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
           <ComponentInput
             state={nombres} //value
             setState={setNombres} //onChange
@@ -199,7 +252,11 @@ const PacientesCreate = () => {
             </MensajeError>
           )}
           <ContenedorBotonCentrado>
-            <Boton type="submit">Crear</Boton>
+            {isEditing ? (
+              <Boton type="submit">Actualizar</Boton>
+            ) : (
+              <Boton type="submit">Crear</Boton>
+            )}
           </ContenedorBotonCentrado>
         </Formulario>
       </div>

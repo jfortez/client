@@ -16,9 +16,11 @@ import { Error } from "@material-ui/icons";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import services from "../../services/personal";
 import cargoServices from "../../services/cargo";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 const PersonalCreate = () => {
   const { isCollapsed } = useValues();
+  const [elementId, setElementId] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
   const [nombres, setNombres] = useState({ campo: "", valido: null });
   const [apellidos, setApellidos] = useState({ campo: "", valido: null });
   const [cedula, setCedula] = useState({ campo: "", valido: null });
@@ -28,6 +30,7 @@ const PersonalCreate = () => {
   const [fecha_nacimiento, setFecha_nacimiento] = useState({ campo: "", valido: null });
   const [email, setEmail] = useState({ campo: "", valido: null });
   const [idCargo, setIdCargo] = useState({ campo: "", valido: null });
+  // const [active, setActive] = useState({ campo: "", valido: null });
   const [cargo, setCargo] = useState([]);
   const [formValid, setFormValid] = useState(null);
   const expresiones = {
@@ -41,9 +44,58 @@ const PersonalCreate = () => {
     const cargos = await cargoServices.optionCargo();
     setCargo(cargos);
   };
+  const { id } = useParams();
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (pathname === `/dashboard/personal/${id}/edit`) {
+      setIsEditing(true);
+      const getPersonalById = async () => {
+        const personal = await services.getPersonalById(id);
+        const {
+          id_Personal,
+          nombres,
+          apellidos,
+          cedula,
+          telefono,
+          direccion,
+          ciudad,
+          fecha_nacimiento,
+          email,
+          id_Cargo,
+        } = personal[0];
+        setElementId(id_Personal);
+        setNombres({ campo: nombres, valido: null });
+        setApellidos({ campo: apellidos, valido: null });
+        setCedula({ campo: cedula, valido: null });
+        setTelefono({ campo: telefono, valido: null });
+        setDireccion({ campo: direccion, valido: null });
+        setCiudad({ campo: ciudad, valido: null });
+        setFecha_nacimiento({ campo: fecha_nacimiento, valido: null });
+        setEmail({ campo: email, valido: null });
+        setIdCargo({ campo: id_Cargo, valido: null });
+      };
+      getPersonalById();
+    }
+  }, [id, pathname]);
   useEffect(() => {
     listCargos();
   }, []);
+  const handleUpdate = async (evt) => {
+    evt.preventDefault();
+    const updatePersonal = {
+      cedula: cedula.campo,
+      nombres: nombres.campo,
+      apellidos: apellidos.campo,
+      telefono: telefono.campo,
+      direccion: direccion.campo,
+      ciudad: ciudad.campo,
+      fecha_nacimiento: fecha_nacimiento.campo,
+      email: email.campo,
+      id_Cargo: idCargo.campo,
+      // active: active.campo,
+    };
+    await services.updatePersonal(updatePersonal, elementId);
+  };
   const onSubmit = async (event) => {
     event.preventDefault();
     if (
@@ -87,7 +139,7 @@ const PersonalCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Nuevo Personal</h1>
+        {isEditing ? <h1>Editar Personal</h1> : <h1>Nuevo Personal</h1>}
         <div>
           <nav>
             <ul>
@@ -97,14 +149,12 @@ const PersonalCreate = () => {
               <li>
                 <Link to="/dashboard/personal">Personal</Link>
               </li>
-              <li>
-                <b>Nuevo Personal</b>
-              </li>
+              <li>{isEditing ? <b>Editar Personal</b> : <b>Nuevo Personal</b>}</li>
             </ul>
           </nav>
         </div>
         <h3>Datos Personales</h3>
-        <Formulario onSubmit={onSubmit}>
+        <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
           <ComponentInput
             state={nombres} //value
             setState={setNombres} //onChange
@@ -215,7 +265,11 @@ const PersonalCreate = () => {
             </MensajeError>
           )}
           <ContenedorBotonCentrado>
-            <Boton type="submit">Crear</Boton>
+            {isEditing ? (
+              <Boton type="submit">Actualizar</Boton>
+            ) : (
+              <Boton type="submit">Crear</Boton>
+            )}
           </ContenedorBotonCentrado>
         </Formulario>
       </div>

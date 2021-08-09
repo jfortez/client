@@ -1,5 +1,6 @@
 import Axios from "axios";
-const baseUrl = "http://192.168.0.104:5000/api/empresa";
+import Url from "../utils/Url";
+const baseUrl = `${Url}/empresa`;
 
 const getEmpresa = async (src) => {
   const { data } = await Axios.get(baseUrl, {
