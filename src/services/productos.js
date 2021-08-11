@@ -20,6 +20,10 @@ const test = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/test`, objectData);
   return data;
 };
+const updateByCompras = async (objectData) => {
+  const { data } = await Axios.post(`${baseUrl}/actualizarByCompras`, objectData);
+  return data;
+};
 const getProductoByCod = async (cod) => {
   const { data } = await Axios.post(`${baseUrl}/cod`, cod);
   return data;
@@ -32,7 +36,10 @@ const createProductos = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
 };
-
+const multipleCreateProd = async (objectData) => {
+  const { data } = await Axios.post(`${baseUrl}/createmultiple`, objectData);
+  return data;
+};
 const deleteProductos = async (id) => {
   const { data } = await Axios.delete(`${baseUrl}/delete/${id}`);
   return data;
@@ -47,5 +54,7 @@ export default {
   getProductosById,
   updateProductos,
   Axios,
+  updateByCompras,
+  multipleCreateProd,
   test,
 };

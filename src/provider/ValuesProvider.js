@@ -7,7 +7,7 @@ export default function ValuesProvider({ children }) {
   const [user, setUser] = useState([]);
   const [authLoading, setAuthLoading] = useState(true);
   const [datosVentas, setDatosVentas] = useState({ cliente: [], producto: [] });
-  const [types, setTypes] = useState({ ruc: "", cod_producto: "", cantidad: 1, lastProd: "" });
+  const [types, setTypes] = useState({ ruc: "", cod_producto: "", cantidad: 1 });
   const [productosVenta, setProductosVenta] = useState([]);
   const [detalleVenta, setDetalleVenta] = useState([]);
 

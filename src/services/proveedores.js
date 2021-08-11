@@ -12,6 +12,10 @@ const getProveedoresbyId = async (id) => {
   const { data } = await Axios.get(`${baseUrl}/${id}`);
   return data;
 };
+const getProveedorByRUC = async (ruc) => {
+  const { data } = await Axios.post(`${baseUrl}/proveedorruc`, ruc);
+  return data;
+};
 const createProveedores = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
@@ -37,5 +41,6 @@ export default {
   bajaProveedor,
   updateProveedor,
   getProveedoresbyId,
+  getProveedorByRUC,
   Axios,
 };

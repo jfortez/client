@@ -59,6 +59,7 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/proveedores/:id/edit" component={ProveedoresCreate} />
         <PrivateRoute exact path="/dashboard/compras" component={ComprasView} />
         <PrivateRoute exact path="/dashboard/compras/create" component={ComprasCreate} />
+        <PrivateRoute exact path="/dashboard/compras/:id/edit" component={ComprasCreate} />
         <PrivateRoute exact path="/dashboard/pacientes" component={PacientesView} />
         <PrivateRoute exact path="/dashboard/pacientes/create" component={PacientesCreate} />
         <PrivateRoute exact path="/dashboard/pacientes/:id/edit" component={PacientesCreate} />

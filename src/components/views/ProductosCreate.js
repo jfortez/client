@@ -200,7 +200,7 @@ const ProductCreate = () => {
             <Label>Categoría</Label>
             <Select
               value={idCategoria.campo}
-              name="id_Cargo"
+              name="id_Categoria"
               onChange={(e) => setIdCategoria({ campo: e.target.value })}
             >
               <Option value="0">Seleccione</Option>

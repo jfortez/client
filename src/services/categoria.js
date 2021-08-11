@@ -8,6 +8,10 @@ const getCategorias = async (src) => {
   });
   return data;
 };
+const getCategoriasById = async (id) => {
+  const { data } = await Axios.get(`${baseUrl}/${id}`);
+  return data;
+};
 const optionCategorias = async () => {
   const { data } = await Axios.get(baseUrl);
   return data;
@@ -23,4 +27,11 @@ const deleteCategoria = async (id) => {
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getCategorias, insertCategorias, deleteCategoria, Axios, optionCategorias };
+export default {
+  getCategorias,
+  insertCategorias,
+  deleteCategoria,
+  Axios,
+  optionCategorias,
+  getCategoriasById,
+};
