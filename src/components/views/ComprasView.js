@@ -21,8 +21,8 @@ const ComprasView = () => {
       setIsListed(true);
     }
   };
-  const handleUpdate = (id) => {
-    history.push(`/dashboard/compras/${id}/edit`);
+  const handleShow = (id) => {
+    history.push(`/dashboard/compras/reporte/${id}`);
   };
   useEffect(() => {
     let source = services.Axios.CancelToken.source();
@@ -99,7 +99,7 @@ const ComprasView = () => {
                       {/* <td>{new Date(item.fecha_registro).toLocaleDateString()}</td> */}
                       <td>
                         <button onClick={() => handleBaja(item.id)}>Dar de Baja</button>
-                        <button onClick={() => handleUpdate(item.id)}>Actualizar</button>
+                        <button onClick={() => handleShow(item.id)}>Visualizar</button>
                       </td>
                     </tr>
                   );

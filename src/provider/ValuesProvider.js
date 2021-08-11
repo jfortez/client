@@ -10,7 +10,15 @@ export default function ValuesProvider({ children }) {
   const [types, setTypes] = useState({ ruc: "", cod_producto: "", cantidad: 1 });
   const [productosVenta, setProductosVenta] = useState([]);
   const [detalleVenta, setDetalleVenta] = useState([]);
+  const [comprasValues, setComprasValues] = useState({
+    ruc_proveedor: "",
+    fecha: "",
+    num_factura: "",
+  });
 
+  const [productosCompras, setProductosCompras] = useState([]);
+  const [compraDetalle, setCompraDetalle] = useState([]);
+  const [proveedor, setProveedor] = useState([]);
   //logearse
   const login = (usr) => {
     setUser(usr);
@@ -57,6 +65,14 @@ export default function ValuesProvider({ children }) {
     setProductosVenta,
     detalleVenta,
     setDetalleVenta,
+    comprasValues,
+    setComprasValues,
+    productosCompras,
+    setProductosCompras,
+    compraDetalle,
+    setCompraDetalle,
+    proveedor,
+    setProveedor,
   };
   return <ValuesContext.Provider value={valueProvider}>{children}</ValuesContext.Provider>;
 }

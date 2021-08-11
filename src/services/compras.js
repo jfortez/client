@@ -9,6 +9,12 @@ const getCompras = async (src) => {
   });
   return data;
 };
+const getComprasDetalleByIdCompras = async (src, id) => {
+  const { data } = await Axios.get(`${compraDetalle}/${id}`, {
+    cancelToken: src.token,
+  });
+  return data;
+};
 const bajaCompras = async (id) => {
   const { data } = await Axios.post(`${baseUrl}/bajaCompra/${id}`);
   return data;
@@ -26,4 +32,12 @@ const newCompraDetalle = async (values) => {
   return data;
 };
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getCompras, bajaCompras, createCompras, updateCompras, newCompraDetalle, Axios };
+export default {
+  getCompras,
+  bajaCompras,
+  createCompras,
+  updateCompras,
+  newCompraDetalle,
+  getComprasDetalleByIdCompras,
+  Axios,
+};

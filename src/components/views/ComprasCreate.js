@@ -7,14 +7,19 @@ import categoriaServices from "../../services/categoria";
 import productoServices from "../../services/productos";
 import services from "../../services/compras";
 const ComprasCreate = () => {
-  const { isCollapsed } = useValues();
+  const {
+    isCollapsed,
+    comprasValues,
+    setComprasValues,
+    productosCompras,
+    setProductosCompras,
+    compraDetalle,
+    setCompraDetalle,
+    proveedor,
+    setProveedor,
+  } = useValues();
   const history = useHistory();
   const [categorias, setCategorias] = useState([]);
-  const [comprasValues, setComprasValues] = useState({
-    ruc_proveedor: "",
-    fecha: "",
-    num_factura: "",
-  });
   const [productos, setProductos] = useState({
     cod_producto: "",
     nombre: "",
@@ -24,9 +29,6 @@ const ComprasCreate = () => {
     precio: 0.0,
     id_categoria: 0,
   });
-  const [productosCompras, setProductosCompras] = useState([]);
-  const [compraDetalle, setCompraDetalle] = useState([]);
-  const [proveedor, setProveedor] = useState([]);
   const onSubmit = async (event) => {
     event.preventDefault();
     const proveedor = await proveedorServices.getProveedorByRUC({
@@ -56,7 +58,7 @@ const ComprasCreate = () => {
       return [...acc, acv];
     }, []);
     setCompraDetalle(notaCompras);
-  }, [productosCompras]);
+  }, [productosCompras, setCompraDetalle]);
   useEffect(() => {
     listCategorias();
   }, []);
@@ -94,6 +96,9 @@ const ComprasCreate = () => {
       precio: 0.0,
       id_categoria: "",
     });
+    setProductosCompras([]);
+    setCompraDetalle([]);
+    setProveedor([]);
   };
   const handleCategoria = () => {
     history.push("/dashboard/productos/createCategory");
@@ -116,22 +121,10 @@ const ComprasCreate = () => {
     if (nuevaCompra) {
       addProductos();
       newDetalleCompra(nuevaCompra);
-      setComprasValues({ ruc_proveedor: "", fecha: "", num_factura: "" });
-
-      setProductos({
-        cod_producto: "",
-        nombre: "",
-        descripcion: "",
-        cantidad: 0,
-        costo: 0.0,
-        precio: 0.0,
-        id_categoria: "",
-      });
-      setProductosCompras([]);
-      setCompraDetalle([]);
-      setProveedor([]);
+      limpiar();
     }
   };
+
   const addProductos = async () => {
     const productos = await productoServices.listProducts();
     const codProds = productos.map((p) => p.cod_producto);
@@ -176,19 +169,21 @@ const ComprasCreate = () => {
     }
   };
   const newDetalleCompra = async (compraId) => {
-    const productos = await productoServices.listProducts();
-    const dtlleCompra = [];
-    for (const prd in productos) {
-      for (const dtl in compraDetalle) {
-        if (productos[prd].cod_producto === compraDetalle[dtl].cod_producto) {
-          const { id } = productos[prd];
-          const { cantidad, precio, totalCompra } = compraDetalle[dtl];
-          const arr = [compraId, id, cantidad, Number(precio), totalCompra];
-          dtlleCompra.push(arr);
+    setTimeout(async () => {
+      const productos = await productoServices.listProducts();
+      const dtlleCompra = [];
+      for (const prd in productos) {
+        for (const dtl in compraDetalle) {
+          if (productos[prd].cod_producto === compraDetalle[dtl].cod_producto) {
+            const { id } = productos[prd];
+            const { cantidad, costo, totalCompra } = compraDetalle[dtl];
+            const arr = [compraId, id, cantidad, Number(costo), totalCompra];
+            dtlleCompra.push(arr);
+          }
         }
       }
-    }
-    await services.newCompraDetalle({ dtlleCompra });
+      await services.newCompraDetalle({ dtlleCompra });
+    }, 1500);
   };
   return (
     <>
