@@ -36,6 +36,7 @@ import ComprasView from "./views/ComprasView";
 import ComprasCreate from "./views/ComprasCreate";
 import ProveedoresCreate from "./views/ProveedoresCreate";
 import ComprasReporte from "./views/ComprasReporte";
+import ServiciosCreate from "./views/ServiciosCreate";
 const Routes = () => {
   const { authLoading } = useValues();
   if (authLoading && getToken()) {
@@ -60,7 +61,6 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/proveedores/:id/edit" component={ProveedoresCreate} />
         <PrivateRoute exact path="/dashboard/compras" component={ComprasView} />
         <PrivateRoute exact path="/dashboard/compras/create" component={ComprasCreate} />
-        <PrivateRoute exact path="/dashboard/compras/:id/edit" component={ComprasCreate} />
         <PrivateRoute exact path="/dashboard/compras/reporte/:id" component={ComprasReporte} />
         <PrivateRoute exact path="/dashboard/pacientes" component={PacientesView} />
         <PrivateRoute exact path="/dashboard/pacientes/create" component={PacientesCreate} />
@@ -78,6 +78,8 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/productos/:id/edit" component={ProductosCreate} />
         <PrivateRoute exact path="/dashboard/productos/createCategory" component={CategoryCreate} />
         <PrivateRoute exact path="/dashboard/servicios" component={ServiciosView} />
+        <PrivateRoute exact path="/dashboard/servicios/create" component={ServiciosCreate} />
+        <PrivateRoute exact path="/dashboard/servicios/:id/edit" component={ServiciosCreate} />
         <PrivateRoute exact path="/dashboard/agenda" component={AgendaView} />
         <PrivateRoute exact path="/dashboard/calendario" component={CalendarioView} />
         <PrivateRoute exact path="/dashboard/reporteria" component={ReportView} />

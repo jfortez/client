@@ -4,8 +4,10 @@ const expresiones = {
   correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
   direccion: /^[a-zA-Z0-9À-ÿ-.\s]{4,100}$/, // Letras, numeros, Acentos
   telefono: /^\d{7,14}$/, // 7 a 14 numeros.
-  numero: /^\d{5,15}$/, // 7 a 14 numeros.
+  numero: /^\d{1,5}$/,
   ruc: /^\d{10,13}$/, // 7 a 14 numeros.
+  cod: /^\d{3,20}$/, // 7 a 14 numeros.
+  nombre_servicio: /^[a-zA-Z0-9À-ÿ-.\s]{4,100}$/,
 };
 
 export default expresiones;
