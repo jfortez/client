@@ -49,7 +49,10 @@ const ComprasCreate = () => {
             return {
               ...elemento,
               cantidad: elemento.cantidad + acv.cantidad,
-              totalCompra: (elemento.cantidad + acv.cantidad) * parseFloat(elemento.costo),
+              totalCompra: (
+                (elemento.cantidad + acv.cantidad) *
+                parseFloat(elemento.costo)
+              ).toFixed(2),
             };
           }
           return elemento;

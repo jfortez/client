@@ -12,6 +12,10 @@ const getServiciosById = async (id) => {
   const { data } = await Axios.get(`${baseUrl}/${id}`);
   return data;
 };
+const getServiciosByCod = async (cod) => {
+  const { data } = await Axios.post(`${baseUrl}/codigo`, cod);
+  return data;
+};
 const createServicios = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
@@ -30,6 +34,7 @@ export default {
   createServicios,
   bajaServicios,
   updateServicios,
+  getServiciosByCod,
   getServiciosById,
   Axios,
 };
