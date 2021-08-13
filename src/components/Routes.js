@@ -37,6 +37,8 @@ import ComprasCreate from "./views/ComprasCreate";
 import ProveedoresCreate from "./views/ProveedoresCreate";
 import ComprasReporte from "./views/ComprasReporte";
 import ServiciosCreate from "./views/ServiciosCreate";
+import CitasView from "./views/CitasView";
+import CitaSeguimiento from "./views/CitaSeguimiento";
 const Routes = () => {
   const { authLoading } = useValues();
   if (authLoading && getToken()) {
@@ -81,6 +83,8 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/servicios/create" component={ServiciosCreate} />
         <PrivateRoute exact path="/dashboard/servicios/:id/edit" component={ServiciosCreate} />
         <PrivateRoute exact path="/dashboard/agenda" component={AgendaView} />
+        <PrivateRoute exact path="/dashboard/cita" component={CitasView} />
+        <PrivateRoute exact path="/dashboard/cita/seguimiento/:id" component={CitaSeguimiento} />
         <PrivateRoute exact path="/dashboard/calendario" component={CalendarioView} />
         <PrivateRoute exact path="/dashboard/reporteria" component={ReportView} />
         <PrivateRoute exact path="/dashboard/inventario" component={InventarioView} />

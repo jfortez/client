@@ -64,7 +64,7 @@ const AgendaView = () => {
       id_Servicio: servicio[0].id,
     };
     const nuevaAgenda = await services.createAgenda(nuevo);
-    if (nuevaAgenda) {
+    if (!nuevaAgenda.message) {
       const cola_agenda = {
         fechainicio_cola: entradas.fecha_inicio,
         horainicio_cola: entradas.hora,
@@ -72,6 +72,9 @@ const AgendaView = () => {
         id_agenda: nuevaAgenda,
       };
       await services.createColaAgenda(cola_agenda);
+      handleClean();
+    } else {
+      return console.log("duplicado");
     }
   };
   return (
