@@ -1,6 +1,8 @@
 import Axios from "axios";
 import Url from "../utils/Url";
 const baseUrl = `${Url}/servicios`;
+const ventaservicios = `${Url}/ventaservicios`;
+const FacturacionServicio = `${Url}/facturacionservicios`;
 
 const getServicios = async (src) => {
   const { data } = await Axios.get(baseUrl, {
@@ -20,6 +22,14 @@ const createServicios = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
 };
+const createVentaServicios = async (objectData) => {
+  const { data } = await Axios.post(`${ventaservicios}/create`, objectData);
+  return data;
+};
+const createFactServicios = async (objectData) => {
+  const { data } = await Axios.post(`${FacturacionServicio}/create`, objectData);
+  return data;
+};
 const bajaServicios = async (id) => {
   const { data } = await Axios.post(`${baseUrl}/baja/${id}`);
   return data;
@@ -36,5 +46,7 @@ export default {
   updateServicios,
   getServiciosByCod,
   getServiciosById,
+  createVentaServicios,
+  createFactServicios,
   Axios,
 };

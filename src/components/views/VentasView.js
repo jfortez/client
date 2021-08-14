@@ -5,13 +5,12 @@ import RucInput from "../layouts/ventaComponents/rucInput";
 import CodInput from "../layouts/ventaComponents/CodInput";
 import CantidadInput from "../layouts/ventaComponents/CantidadInput";
 import VentaDetalle from "../layouts/ventaComponents/VentaDetalle";
-import { useEffect, useState } from "react";
 import valuesServices from "../../services/values";
 import ventaValues from "../../services/venta";
 import productoServices from "../../services/productos";
 import NavigationVentas from "../layouts/ventaComponents/NavigationVentas";
+
 const VentasView = () => {
-  const [values, setValues] = useState([]);
   const {
     isCollapsed,
     setDatosVentas,
@@ -23,6 +22,8 @@ const VentasView = () => {
     user,
     setProductosVenta,
     productosVenta,
+    values,
+    setValues,
   } = useValues();
   const limpiar = () => {
     setTypes({ ...types, ruc: "", cod_producto: "", cantidad: 1 });
@@ -30,13 +31,7 @@ const VentasView = () => {
     setProductosVenta([]);
     setDetalleVenta([]);
   };
-  useEffect(() => {
-    const getValues = async () => {
-      const numValues = await valuesServices.getValues();
-      setValues(numValues[0]);
-    };
-    getValues();
-  }, []);
+
   const fecha = new Date();
   const nuevaVenta = () => {
     const totCantidad = detalleVenta.reduce((acc, acv) => {

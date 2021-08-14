@@ -11,7 +11,6 @@ const CitasView = () => {
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
-  console.log(user);
   useEffect(() => {
     let source = agendaServices.Axios.CancelToken.source();
     let unmounted = false;
@@ -23,7 +22,7 @@ const CitasView = () => {
           user.id_persona
         );
         if (!unmounted) {
-          if (user.role === "1") {
+          if (user.role === "1" || user.role === 1) {
             setAgenda(agenda);
           } else {
             setAgenda(agendabyOdontologo);

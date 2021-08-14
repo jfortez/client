@@ -6,8 +6,10 @@ import odontologoServices from "../../services/odontologos";
 import serviciosServices from "../../services/servicios";
 import services from "../../services/agenda";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 const AgendaView = () => {
-  const { isCollapsed } = useValues();
+  const { isCollapsed, setId_agenda } = useValues();
+  const history = useHistory();
   const [entradas, setEntradas] = useState({
     paciente: "",
     odontologo: "",
@@ -54,6 +56,16 @@ const AgendaView = () => {
     setServicio([]);
   };
   const handleSubmit = async () => {
+    if (
+      entradas.paciente === "" ||
+      entradas.odontologo === "" ||
+      entradas.servicio === "" ||
+      entradas.descripcion === "" ||
+      entradas.fecha_inicio === "" ||
+      entradas.hora === ""
+    ) {
+      return null;
+    }
     const nuevo = {
       descripcion: entradas.descripcion,
       fechainicio_agenda: entradas.fecha_inicio,
@@ -73,6 +85,8 @@ const AgendaView = () => {
       };
       await services.createColaAgenda(cola_agenda);
       handleClean();
+      history.push("/dashboard/agenda/ventaservicio");
+      setId_agenda(nuevaAgenda);
     } else {
       return console.log("duplicado");
     }
