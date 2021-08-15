@@ -36,18 +36,17 @@ const AgendaServicioVenta = () => {
       id_Usuario: user.id,
     };
     const ventaserv = await services.createVentaServicios(venta_servicio);
-    console.log(ventaserv);
-    // if (ventaserv) {
-    //   const fact_serv = {
-    //     id_venta_servicios: ventaserv,
-    //     id_Servicio: agendaInfo[0].id_Servicio,
-    //     precio: agendaInfo[0].precio_servicio,
-    //     total: agendaInfo[0].precio_servicio,
-    //   };
-    //   await services.createFactServicios(fact_serv);
-    // }
-    // updateValues();
-    // clean();
+    if (ventaserv) {
+      const fact_serv = {
+        id_venta_servicios: ventaserv,
+        id_Servicio: agendaInfo[0].id_Servicio,
+        precio: agendaInfo[0].precio_servicio,
+        total: agendaInfo[0].precio_servicio,
+      };
+      await services.createFactServicios(fact_serv);
+    }
+    updateValues();
+    clean();
   };
   const clean = () => {
     setAgendaInfo([]);

@@ -40,6 +40,7 @@ import ServiciosCreate from "./views/ServiciosCreate";
 import CitasView from "./views/CitasView";
 import CitaSeguimiento from "./views/CitaSeguimiento";
 import AgendaServicioVenta from "./views/AgendaServicioVenta";
+import CajaView from "./views/CajaView";
 const Routes = () => {
   const { authLoading } = useValues();
   if (authLoading && getToken()) {
@@ -54,6 +55,7 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute exact path="/dashboard/test" component={PageTest} />
         <PrivateRoute exact path="/dashboard/ventas" component={VentasView} />
+        <PrivateRoute exact path="/dashboard/ventas/caja" component={CajaView} />
         <PrivateRoute exact path="/dashboard/ventas/reporte" component={VentasReporte} />
         <PrivateRoute exact path="/dashboard/ventas/reporte/:id" component={VentasReporteView} />
         <PrivateRoute exact path="/dashboard/personal" component={PersonalView} />

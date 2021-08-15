@@ -8,6 +8,9 @@ const Location = () => {
         <Link to="/dashboard/ventas">Nueva Venta</Link>
       </li>
       <li>
+        <Link to="/dashboard/ventas/caja">Caja</Link>
+      </li>
+      <li>
         <Link to="/dashboard/ventas/reporte">Reporte de Ventas</Link>
       </li>
     </>

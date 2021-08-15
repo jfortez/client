@@ -20,5 +20,6 @@ const updateCita = async (newData, id) => {
   const { data } = await Axios.post(`${baseUrl}/update/${id}`, newData);
   return data;
 };
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default { getCitas, Axios, createCita, getCitasByIdAgenda, updateCita };
