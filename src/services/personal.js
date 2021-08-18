@@ -18,7 +18,10 @@ const createPersonal = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
 };
-
+const bajaPersonal = async (id) => {
+  const { data } = await Axios.post(`${baseUrl}/baja/${id}`);
+  return data;
+};
 const setIdUsuario = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/setUser`, objectData);
   return data;
@@ -39,6 +42,7 @@ export default {
   deletePersonal,
   getPersonalById,
   updatePersonal,
+  bajaPersonal,
   setIdUsuario,
   Axios,
 };

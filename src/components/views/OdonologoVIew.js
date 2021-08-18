@@ -13,9 +13,9 @@ const OdontologoView = () => {
   const history = useHistory();
   const handleDelete = async (id) => {
     setIsLoading(true);
-    const item = await services.deleteOdontologo(id);
+    const item = await services.bajaOdontologo(id);
     if (item) {
-      setIsListed(true);
+      setIsListed(!isListed);
     }
   };
   const handleUpdate = (id) => {
@@ -42,7 +42,6 @@ const OdontologoView = () => {
       }
     };
     getOdontologos();
-    setIsListed(false);
     return () => {
       unmounted = true;
       source.cancel("Cancelling in Cleanup");

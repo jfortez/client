@@ -14,9 +14,9 @@ const PersonalView = () => {
 
   const handleDelete = async (id) => {
     setIsLoading(true);
-    const deletedPersonal = await services.deletePersonal(id);
-    if (deletedPersonal) {
-      setIsListed(true);
+    const bajaPersonal = await services.bajaPersonal(id);
+    if (bajaPersonal) {
+      setIsListed(!isListed);
     }
   };
   const handleUpdate = (id) => {
@@ -44,7 +44,6 @@ const PersonalView = () => {
       }
     };
     getPersonal();
-    setIsListed(false);
     return () => {
       unmounted = true;
       source.cancel("Cancelling in Cleanup");

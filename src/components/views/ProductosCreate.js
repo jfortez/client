@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import services from "../../services/productos";
 import categoriaServices from "../../services/categoria";
+import expresiones from "../../utils/Expresiones";
 import {
   Formulario,
   ContenedorBotonCentrado,
@@ -30,14 +31,6 @@ const ProductCreate = () => {
   const [precio, setPrecio] = useState({ campo: "", valido: null });
   const [idCategoria, setIdCategoria] = useState({ campo: "", valido: null });
   const [formValid, setFormValid] = useState(null);
-  const expresiones = {
-    nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
-    correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-    telefono: /^\d{7,14}$/, // 7 a 14 numeros.
-    numero: /^\d{0,9}$/, // 0 a 9 numeros.
-    codigo: /^\d{5,50}$/, // 7 a 14 numeros.
-    fecha: /^\d{4}-\d{2}-\d{2}$/,
-  };
   const { id } = useParams();
   const productoId = id;
   const { pathname } = useLocation();

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import { Link, useLocation, useParams } from "react-router-dom";
+import expresiones from "../../utils/Expresiones";
 import {
   Formulario,
   ContenedorBotonCentrado,
@@ -25,13 +26,7 @@ const OdontologoCreate = () => {
   const [fecha_nacimiento, setFecha_nacimiento] = useState({ campo: "", valido: null });
   const [email, setEmail] = useState({ campo: "", valido: null });
   const [formValid, setFormValid] = useState(null);
-  const expresiones = {
-    nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
-    correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-    telefono: /^\d{7,14}$/, // 7 a 14 numeros.
-    numero: /^\d{5,14}$/, // 7 a 14 numeros.
-    fecha: /^\d{4}-\d{2}-\d{2}$/,
-  };
+
   const { id } = useParams();
   const { pathname } = useLocation();
   useEffect(() => {
@@ -74,9 +69,16 @@ const OdontologoCreate = () => {
       ciudad: ciudad.campo,
       fecha_nacimiento: fecha_nacimiento.campo,
       email: email.campo,
-      // active: active.campo,
     };
     await services.updateOdontologo(updateData, elementId);
+    setNombres({ ...nombres, valido: null });
+    setApellidos({ ...apellidos, valido: null });
+    setCedula({ ...cedula, valido: null });
+    setTelefono({ ...telefono, valido: null });
+    setDireccion({ ...direccion, valido: null });
+    setCiudad({ ...ciudad, valido: null });
+    setFecha_nacimiento({ ...fecha_nacimiento, valido: null });
+    setEmail({ ...email, valido: null });
   };
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -84,11 +86,9 @@ const OdontologoCreate = () => {
       nombres.valido === "true" &&
       apellidos.valido === "true" &&
       cedula.valido === "true" &&
-      telefono.valido === "true" &&
       direccion.valido === "true" &&
       ciudad.valido === "true" &&
-      fecha_nacimiento.valido === "true" &&
-      email.valido === "true"
+      fecha_nacimiento.valido === "true"
     ) {
       const newOdontologo = {
         nombres: nombres.campo,
@@ -100,7 +100,25 @@ const OdontologoCreate = () => {
         fecha_nacimiento: fecha_nacimiento.campo,
         email: email.campo,
       };
-      await services.createOdontologo(newOdontologo);
+      const nuevoOdontologo = await services.createOdontologo(newOdontologo);
+      if (
+        nuevoOdontologo.message === "cedula ya existe" &&
+        nuevoOdontologo.cedulaExiste[0].active === 0
+      ) {
+        await services.updateOdontologo(
+          newOdontologo,
+          nuevoOdontologo.cedulaExiste[0].id_Odontologo
+        );
+      }
+      if (
+        nuevoOdontologo.message === "cedula ya existe" &&
+        nuevoOdontologo.cedulaExiste[0].active === 1
+      ) {
+        return console.log("El dato ya existe"); //codigo para la alerta
+      }
+      if (nuevoOdontologo.message === "Dato ya existe") {
+        return console.log("El dato ya existe en la base de datos global");
+      }
       setFormValid(true);
       setNombres({ campo: "", valido: null });
       setApellidos({ campo: "", valido: null });
@@ -161,7 +179,7 @@ const OdontologoCreate = () => {
             name="cedula"
             placeholder="Cedula"
             error="la longitud de numeros debe ser de 15"
-            expresion={expresiones.numero}
+            expresion={expresiones.ruc}
           />
           <br />
           <ComponentInput
@@ -182,7 +200,7 @@ const OdontologoCreate = () => {
             name="direccion"
             placeholder="Dirección"
             error="el campo está incompleto"
-            expresion={expresiones.nombre}
+            expresion={expresiones.direccion}
           />
           <ComponentInput
             state={ciudad} //value
@@ -212,8 +230,6 @@ const OdontologoCreate = () => {
             type="text"
             name="email"
             placeholder="Correo"
-            error="el campo está incompleto"
-            expresion={expresiones.correo}
           />
           {/* Validacion */}
           {formValid === false && (

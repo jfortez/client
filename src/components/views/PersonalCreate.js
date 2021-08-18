@@ -12,6 +12,7 @@ import {
   Option,
   Label,
 } from "../../elements/Formularios";
+import expresiones from "../../utils/Expresiones";
 import { Error } from "@material-ui/icons";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import services from "../../services/personal";
@@ -33,13 +34,6 @@ const PersonalCreate = () => {
   // const [active, setActive] = useState({ campo: "", valido: null });
   const [cargo, setCargo] = useState([]);
   const [formValid, setFormValid] = useState(null);
-  const expresiones = {
-    nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
-    correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-    telefono: /^\d{7,14}$/, // 7 a 14 numeros.
-    numero: /^\d{5,14}$/, // 7 a 14 numeros.
-    fecha: /^\d{4}-\d{2}-\d{2}$/,
-  };
   const listCargos = async () => {
     const cargos = await cargoServices.optionCargo();
     setCargo(cargos);
@@ -95,6 +89,15 @@ const PersonalCreate = () => {
       // active: active.campo,
     };
     await services.updatePersonal(updatePersonal, elementId);
+    setNombres({ ...nombres, valido: null });
+    setApellidos({ ...apellidos, valido: null });
+    setCedula({ ...cedula, valido: null });
+    setTelefono({ ...telefono, valido: null });
+    setDireccion({ ...direccion, valido: null });
+    setCiudad({ ...ciudad, valido: null });
+    setFecha_nacimiento({ ...fecha_nacimiento, valido: null });
+    setEmail({ ...email, valido: null });
+    setIdCargo({ ...idCargo, valido: null });
   };
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -102,11 +105,8 @@ const PersonalCreate = () => {
       nombres.valido === "true" &&
       apellidos.valido === "true" &&
       cedula.valido === "true" &&
-      telefono.valido === "true" &&
       direccion.valido === "true" &&
       ciudad.valido === "true" &&
-      fecha_nacimiento.valido === "true" &&
-      email.valido === "true" &&
       idCargo.campo > 0
     ) {
       const newPersonal = {
@@ -120,7 +120,22 @@ const PersonalCreate = () => {
         email: email.campo,
         id_Cargo: idCargo.campo,
       };
-      await services.createPersonal(newPersonal);
+      const nuevoPersonal = await services.createPersonal(newPersonal);
+      if (
+        nuevoPersonal.message === "cedula ya existe" &&
+        nuevoPersonal.cedulaExiste[0].active === 0
+      ) {
+        await services.updatePersonal(newPersonal, nuevoPersonal.cedulaExiste[0].id_Personal);
+      }
+      if (
+        nuevoPersonal.message === "cedula ya existe" &&
+        nuevoPersonal.cedulaExiste[0].active === 1
+      ) {
+        return console.log("El dato ya existe"); //codigo para la alerta
+      }
+      if (nuevoPersonal.message === "Dato ya existe") {
+        return console.log("El dato ya existe en la base de datos global");
+      }
       setFormValid(true);
       setNombres({ campo: "", valido: null });
       setApellidos({ campo: "", valido: null });
@@ -162,7 +177,7 @@ const PersonalCreate = () => {
             type="text"
             name="nombres"
             placeholder="Nombres"
-            error="El campo está incompleto"
+            error="el campo es obligatorio"
             expresion={expresiones.nombre}
           />
           <ComponentInput
@@ -172,7 +187,7 @@ const PersonalCreate = () => {
             type="text"
             name="apellidos"
             placeholder="Apellidos"
-            error="El campo está incompleto"
+            error="el campo es obligatorio"
             expresion={expresiones.nombre}
           />
           <ComponentInput
@@ -182,8 +197,8 @@ const PersonalCreate = () => {
             type="text"
             name="cedula"
             placeholder="Cedula"
-            error="la longitud de numeros debe ser de 15"
-            expresion={expresiones.numero}
+            error="el campo es obligatorio"
+            expresion={expresiones.ruc}
           />
           <br />
           <ComponentInput
@@ -193,7 +208,7 @@ const PersonalCreate = () => {
             type="text"
             name="telefono"
             placeholder="Telefono"
-            error="el campo está incompleto"
+            error="el campo es obligatorio"
             expresion={expresiones.telefono}
           />
           <ComponentInput
@@ -203,8 +218,8 @@ const PersonalCreate = () => {
             type="text"
             name="direccion"
             placeholder="Dirección"
-            error="el campo está incompleto"
-            expresion={expresiones.nombre}
+            error="el campo es obligatorio"
+            expresion={expresiones.direccion}
           />
           <ComponentInput
             state={ciudad} //value
@@ -213,7 +228,7 @@ const PersonalCreate = () => {
             type="text"
             name="ciudad"
             placeholder="Ciudad"
-            error="el campo está incompleto"
+            error="el campo es obligatorio"
             expresion={expresiones.nombre}
           />
           <br />
@@ -234,8 +249,6 @@ const PersonalCreate = () => {
             type="text"
             name="email"
             placeholder="Correo"
-            error="el campo está incompleto"
-            expresion={expresiones.correo}
           />
           <GrupoInput>
             <Label>Cargo</Label>

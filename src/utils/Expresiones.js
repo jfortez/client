@@ -3,7 +3,7 @@ const expresiones = {
   compañia: /^[a-zA-ZÀ-ÿ_.-\s]{5,40}$/, // Letras y espacios, pueden llevar acentos.
   correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
   direccion: /^[a-zA-Z0-9À-ÿ-.\s]{4,100}$/, // Letras, numeros, Acentos
-  telefono: /^\d{7,14}$/, // 7 a 14 numeros.
+  telefono: /^\d{7,12}$/, // 7 a 14 numeros.
   numero: /^\d{1,5}$/,
   ruc: /^\d{10,13}$/, // 7 a 14 numeros.
   cod: /^\d{3,20}$/, // 7 a 14 numeros.

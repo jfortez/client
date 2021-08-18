@@ -20,6 +20,10 @@ const createOdontologo = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
 };
+const bajaOdontologo = async (id) => {
+  const { data } = await Axios.post(`${baseUrl}/baja/${id}`);
+  return data;
+};
 const deleteOdontologo = async (id) => {
   const { data } = await Axios.delete(`${baseUrl}/delete/${id}`);
   return data;
@@ -39,6 +43,7 @@ export default {
   createOdontologo,
   deleteOdontologo,
   setIdUsuario,
+  bajaOdontologo,
   listOdontologoByCed,
   getOdontologosById,
   updateOdontologo,
