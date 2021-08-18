@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./index.css";
 import { setUserSession } from "../../utils/Common";
 import services from "../../services/login";
 import { useHistory } from "react-router-dom";
@@ -31,46 +32,44 @@ const LoginPage = () => {
   };
 
   return (
-    <>
-      <div className="container-md mt-4">
-        <div className="card">
-          <div className="card-head">
-            <h1>Login</h1>
-          </div>
-          <div className="card-body">
-            <form onSubmit={handleLogin}>
-              <div className="form-group">
-                <input
-                  type="text"
-                  value={signin.usuario}
-                  name="contraseña"
-                  className="form-control"
-                  placeholder="Usuario"
-                  onChange={(e) => setSignIn({ ...signin, usuario: e.target.value })}
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  value={signin.contraseña}
-                  // type="password"
-                  name="contraseña"
-                  className="form-control"
-                  placeholder="Password"
-                  onChange={(e) => setSignIn({ ...signin, contraseña: e.target.value })}
-                />
-              </div>
-              {error && <div className="error">{error}</div>}
+    <div className="body">
+      <div className="center">
+        <h1>Login</h1>
+        <div className="card-body">
+          <form onSubmit={handleLogin}>
+            <div className="txt_field">
               <input
-                type="submit"
-                value={loading ? "Loading..." : "Login"}
-                disabled={loading}
-                className="btn btn-primary btn-lg"
+                type="text"
+                value={signin.usuario}
+                name="contraseña"
+                required
+                onChange={(e) => setSignIn({ ...signin, usuario: e.target.value })}
               />
-            </form>
-          </div>
+              <span></span>
+              <label>Username</label>
+            </div>
+            <div className="txt_field">
+              <input
+                value={signin.contraseña}
+                type="password"
+                name="contraseña"
+                required
+                onChange={(e) => setSignIn({ ...signin, contraseña: e.target.value })}
+              />
+              <span></span>
+              <label>Password</label>
+            </div>
+            {error && <div className="error">{error}</div>}
+            <input
+              type="submit"
+              value={loading ? "Loading..." : "Login"}
+              disabled={loading}
+              className="btn btn-primary btn-lg"
+            />
+          </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
