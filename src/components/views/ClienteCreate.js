@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import services from "../../services/cliente";
+import expresiones from "../../utils/Expresiones";
 import {
   Formulario,
   ContenedorBotonCentrado,
@@ -24,12 +25,6 @@ const ClienteCreate = () => {
   const [ciudad, setCiudad] = useState({ campo: "", valido: null });
   const [email, setEmail] = useState({ campo: "", valido: null });
   const [formValid, setFormValid] = useState(null);
-  const expresiones = {
-    nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
-    correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-    telefono: /^\d{7,14}$/, // 7 a 14 numeros.
-    numero: /^\d{5,15}$/, // 7 a 14 numeros.
-  };
   const { id } = useParams();
   const idCliente = id;
   const { pathname } = useLocation();
@@ -61,9 +56,15 @@ const ClienteCreate = () => {
       telefono: telefono.campo,
       direccion: direccion.campo,
       ciudad: ciudad.campo,
-      // active: active.campo,
     };
     await services.updateCliente(updateCliente, elementId);
+    setRuc({ ...ruc, valido: null });
+    setNombres({ ...nombres, valido: null });
+    setApellidos({ ...apellidos, valido: null });
+    setTelefono({ ...telefono, valido: null });
+    setDireccion({ ...direccion, valido: null });
+    setCiudad({ ...ciudad, valido: null });
+    setEmail({ ...email, valido: null });
   };
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -71,10 +72,8 @@ const ClienteCreate = () => {
       ruc.valido === "true" &&
       nombres.valido === "true" &&
       apellidos.valido === "true" &&
-      telefono.valido === "true" &&
       direccion.valido === "true" &&
-      ciudad.valido === "true" &&
-      email.valido === "true"
+      ciudad.valido === "true"
     ) {
       const newCliente = {
         ruc: ruc.campo,
@@ -85,7 +84,13 @@ const ClienteCreate = () => {
         ciudad: ciudad.campo,
         email: email.campo,
       };
-      await services.createCliente(newCliente);
+      const nuevo = await services.createCliente(newCliente);
+      if (nuevo.message === "el ruc ya existe" && nuevo.response[0].active === 0) {
+        await services.updateCliente(newCliente, nuevo.response[0].id);
+      }
+      if (nuevo.message === "el ruc ya existe" && nuevo.response[0].active === 1) {
+        return console.log("ruc ya existe"); //codigo para la alerta
+      }
       setFormValid(true);
       setRuc({ campo: "", valido: null });
       setNombres({ campo: "", valido: null });
@@ -123,8 +128,8 @@ const ClienteCreate = () => {
               type="text"
               name="ruc"
               placeholder="RUC"
-              error="la longitud de numeros debe ser de 15"
-              expresion={expresiones.numero}
+              error="el campo es obligatorio"
+              expresion={expresiones.ruc}
             />
             <ComponentInput
               state={nombres} //value
@@ -133,7 +138,7 @@ const ClienteCreate = () => {
               type="text"
               name="nombres"
               placeholder="Nombres"
-              error="El campo está incompleto"
+              error="el campo es obligatorio"
               expresion={expresiones.nombre}
             />
             <ComponentInput
@@ -143,7 +148,7 @@ const ClienteCreate = () => {
               type="text"
               name="apellidos"
               placeholder="Apellidos"
-              error="El campo está incompleto"
+              error="el campo es obligatorio"
               expresion={expresiones.nombre}
             />
             <br />
@@ -154,8 +159,6 @@ const ClienteCreate = () => {
               type="text"
               name="telefono"
               placeholder="Telefono"
-              error="el campo está incompleto"
-              expresion={expresiones.telefono}
             />
             <ComponentInput
               state={direccion} //value
@@ -164,8 +167,8 @@ const ClienteCreate = () => {
               type="text"
               name="direccion"
               placeholder="Dirección"
-              error="el campo está incompleto"
-              expresion={expresiones.nombre}
+              error="el campo es obligatorio"
+              expresion={expresiones.direccion}
             />
             <ComponentInput
               state={ciudad} //value
@@ -174,7 +177,7 @@ const ClienteCreate = () => {
               type="text"
               name="ciudad"
               placeholder="Ciudad"
-              error="el campo está incompleto"
+              error="el campo es obligatorio"
               expresion={expresiones.nombre}
             />
             <br />
@@ -185,8 +188,6 @@ const ClienteCreate = () => {
               type="text"
               name="email"
               placeholder="Correo"
-              error="el campo está incompleto"
-              expresion={expresiones.correo}
             />
             {/* Validacion */}
             {formValid === false && (

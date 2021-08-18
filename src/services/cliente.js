@@ -20,6 +20,10 @@ const createCliente = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
 };
+const bajaCliente = async (id) => {
+  const { data } = await Axios.post(`${baseUrl}/baja/${id}`);
+  return data;
+};
 const updateCliente = async (objectData, id) => {
   const { data } = await Axios.post(`${baseUrl}/update/${id}`, objectData);
   return data;
@@ -33,6 +37,7 @@ export default {
   getClientes,
   createCliente,
   deleteCliente,
+  bajaCliente,
   Axios,
   getRUC,
   getClienteById,
