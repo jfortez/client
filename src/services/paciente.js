@@ -24,7 +24,10 @@ const createPacientes = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, objectData);
   return data;
 };
-
+const bajaPacientes = async (id) => {
+  const { data } = await Axios.post(`${baseUrl}/baja/${id}`);
+  return data;
+};
 const deletePacientes = async (id) => {
   const { data } = await Axios.delete(`${baseUrl}/delete/${id}`);
   return data;
@@ -35,6 +38,7 @@ export default {
   createPacientes,
   deletePacientes,
   listPacientesByCed,
+  bajaPacientes,
   getPacientesById,
   updatePacientes,
   Axios,

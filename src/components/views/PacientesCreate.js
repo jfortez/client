@@ -3,6 +3,7 @@ import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import { Error } from "@material-ui/icons";
+import expresiones from "../../utils/Expresiones";
 import {
   Formulario,
   ContenedorBotonCentrado,
@@ -30,14 +31,6 @@ const PacientesCreate = () => {
   const [edad, setEdad] = useState({ campo: "", valido: null });
   const [genero, setGenero] = useState({ campo: "", valido: null });
   const [formValid, setFormValid] = useState(null);
-  const expresiones = {
-    nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
-    correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-    telefono: /^\d{7,14}$/, // 7 a 14 numeros.
-    numero: /^\d{5,14}$/, // 7 a 14 numeros.
-    edad: /^\d{1,3}$/, // 1 a 3 numeros.
-    fecha: /^\d{4}-\d{2}-\d{2}$/,
-  };
   const { id } = useParams();
   const pacienteId = id;
   const { pathname } = useLocation();
@@ -87,6 +80,15 @@ const PacientesCreate = () => {
       // active: active.campo,
     };
     await services.updatePacientes(updtPaciente, elementId);
+    setNombres({ ...nombres, valido: null });
+    setApellidos({ ...apellidos, valido: null });
+    setCedula({ ...cedula, valido: null });
+    setFecha_nacimiento({ ...fecha_nacimiento, valido: null });
+    setTelefono({ ...telefono, valido: null });
+    setDireccion({ ...direccion, valido: null });
+    setCiudad({ ...ciudad, valido: null });
+    setEdad({ ...edad, valido: null });
+    setGenero({ ...genero, valido: null });
   };
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -97,12 +99,11 @@ const PacientesCreate = () => {
       telefono.valido === "true" &&
       direccion.valido === "true" &&
       ciudad.valido === "true" &&
-      fecha_nacimiento.valido === "true" &&
       edad.valido === "true" &&
-      (genero.campo === "Masculino" || genero.campo === "Masculino")
+      (genero.campo === "Masculino" || genero.campo === "Femenino")
     ) {
       setFormValid(true);
-      const nuevoPaciente = {
+      const newItem = {
         nombres: nombres.campo,
         apellidos: apellidos.campo,
         cedula: cedula.campo,
@@ -113,20 +114,22 @@ const PacientesCreate = () => {
         edad: edad.campo,
         genero: genero.campo,
       };
-      const item = await services.createPacientes(nuevoPaciente);
-      if (item.code === "e500") {
-        console.log(item.message); //paciente ya se encuentra registrado
-      } else {
-        setNombres({ campo: "", valido: null });
-        setApellidos({ campo: "", valido: null });
-        setCedula({ campo: "", valido: null });
-        setFecha_nacimiento({ campo: "", valido: null });
-        setTelefono({ campo: "", valido: null });
-        setDireccion({ campo: "", valido: null });
-        setCiudad({ campo: "", valido: null });
-        setEdad({ campo: "", valido: null });
-        setGenero({ campo: "", valido: null });
+      const nuevo = await services.createPacientes(newItem);
+      if (nuevo.message === "dato ya existe" && nuevo.result[0].active === 0) {
+        await services.updatePacientes(newItem, nuevo.result[0].id);
       }
+      if (nuevo.message === "dato ya existe" && nuevo.result[0].active === 1) {
+        return console.log("dato ya existe"); //codigo para la alerta
+      }
+      setNombres({ campo: "", valido: null });
+      setApellidos({ campo: "", valido: null });
+      setCedula({ campo: "", valido: null });
+      setFecha_nacimiento({ campo: "", valido: null });
+      setTelefono({ campo: "", valido: null });
+      setDireccion({ campo: "", valido: null });
+      setCiudad({ campo: "", valido: null });
+      setEdad({ campo: "", valido: null });
+      setGenero({ campo: "", valido: null });
     } else {
       setFormValid(false);
     }
@@ -179,7 +182,7 @@ const PacientesCreate = () => {
             name="cedula"
             placeholder="Cedula"
             error="la longitud de numeros debe ser de 15"
-            expresion={expresiones.numero}
+            expresion={expresiones.ruc}
           />
           <br />
           <ComponentInput
@@ -220,8 +223,6 @@ const PacientesCreate = () => {
             type="date"
             name="fecha_nacimiento"
             placeholder="Fecha de Nacimiento"
-            error="el campo está incompleto"
-            expresion={expresiones.fecha}
           />
           <ComponentInput
             state={edad} //value

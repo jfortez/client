@@ -13,9 +13,9 @@ const PacientesView = () => {
   const [isLoading, setIsLoading] = useState(true);
   const handleDelete = async (id) => {
     setIsLoading(true);
-    const item = await services.deletePacientes(id);
+    const item = await services.bajaPacientes(id);
     if (item) {
-      setIsListed(true);
+      setIsListed(!isListed);
     }
   };
   const handleUpdate = (id) => {
@@ -43,7 +43,6 @@ const PacientesView = () => {
       }
     };
     getPacientes();
-    setIsListed(false);
     return () => {
       unmounted = true;
       source.cancel("Cancelling in Cleanup");
