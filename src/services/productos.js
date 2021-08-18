@@ -20,6 +20,10 @@ const test = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/test`, objectData);
   return data;
 };
+const bajaProductos = async (id) => {
+  const { data } = await Axios.post(`${baseUrl}/baja/${id}`);
+  return data;
+};
 const updateByCompras = async (objectData) => {
   const { data } = await Axios.post(`${baseUrl}/actualizarByCompras`, objectData);
   return data;
@@ -52,6 +56,7 @@ export default {
   getProductoByCod,
   listProducts,
   getProductosById,
+  bajaProductos,
   updateProductos,
   Axios,
   updateByCompras,

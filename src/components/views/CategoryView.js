@@ -2,34 +2,24 @@ import React, { useState, useEffect } from "react";
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import services from "../../services/productos";
+import services from "../../services/categoria";
 import { Link, useHistory } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
 
-const ProductosView = () => {
+const CategoryView = () => {
   const { isCollapsed } = useValues();
-  const history = useHistory();
-  const [productos, setProductos] = useState([]);
   const [isListed, setIsListed] = useState(false);
+  const [categorias, setCategorias] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const handleDelete = async (id) => {
-    setIsLoading(true);
-    const item = await services.bajaProductos(id);
-    if (item) {
-      setIsListed(!isListed);
-    }
-  };
-  const handleUpdate = (id) => {
-    history.push(`/dashboard/productos/${id}/edit`);
-  };
+  const history = useHistory();
   useEffect(() => {
     let source = services.Axios.CancelToken.source();
     let unmounted = false;
-    const getProductos = async () => {
+    const getCategorias = async () => {
       try {
-        const productos = await services.getProductos(source);
+        const categorias = await services.getCategorias(source);
         if (!unmounted) {
-          setProductos(productos);
+          setCategorias(categorias);
           setIsLoading(false);
         }
       } catch (error) {
@@ -42,17 +32,31 @@ const ProductosView = () => {
         }
       }
     };
-    getProductos();
+    getCategorias();
+    setIsListed(false);
     return () => {
       unmounted = true;
       source.cancel("Cancelling in Cleanup");
     };
   }, [isListed]);
+  const newCategory = () => {
+    history.push("/dashboard/productos/categoria/create");
+  };
+  const handleDelete = async (id) => {
+    setIsLoading(true);
+    const deleteid = await services.bajaCategoria(id);
+    if (deleteid) {
+      setIsListed(true);
+    }
+  };
+  const handleUpdate = (id) => {
+    history.push(`/dashboard/productos/categoria/${id}/edit`);
+  };
   return (
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Productos</h1>
+        <h1>Nueva Categoría</h1>
         <div>
           <nav>
             <ul>
@@ -60,48 +64,38 @@ const ProductosView = () => {
                 <Link to="/dashboard">Home</Link>
               </li>
               <li>
-                <b>Productos</b>
+                <Link to="/dashboard/productos">Productos</Link>
+              </li>
+              <li>
+                <b>Categoría</b>
               </li>
             </ul>
           </nav>
-        </div>
-        <div>
-          <Link to="/dashboard/productos/createProduct">
-            <button>Nuevo Producto</button>
-          </Link>
-          <Link to="/dashboard/productos/categoria">
-            <button>Nueva Categoría</button>
-          </Link>
+          <button onClick={newCategory}>Nueva Categoría</button>
         </div>
         <div>
           <table>
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Cod. Producto</th>
-                <th>Nombre de Producto</th>
+                <th>Nombre</th>
                 <th>Descripción</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <Loader loading={isLoading} />
-              ) : productos ? (
-                productos.map((producto) => {
+              ) : categorias ? (
+                categorias.map((categoria) => {
                   return (
-                    <tr key={producto.id}>
-                      <td>{producto.id}</td>
-                      <td>{producto.cod_producto}</td>
-                      <td>{producto.nombre}</td>
-                      <td>{producto.descripcion}</td>
-                      <td>{producto.cantidad}</td>
-                      <td>{producto.precio}</td>
+                    <tr key={categoria.id}>
+                      <td>{categoria.id}</td>
+                      <td>{categoria.nombre}</td>
+                      <td>{categoria.descripcion}</td>
                       <td>
-                        <button onClick={() => handleDelete(producto.id)}>Eliminar</button>
-                        <button onClick={() => handleUpdate(producto.id)}>Actualizar</button>
+                        <button onClick={() => handleDelete(categoria.id)}>Eliminar</button>
+                        <button onClick={() => handleUpdate(categoria.id)}>Actualizar</button>
                       </td>
                     </tr>
                   );
@@ -110,9 +104,9 @@ const ProductosView = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div>{" "}
     </>
   );
 };
 
-export default ProductosView;
+export default CategoryView;

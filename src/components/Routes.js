@@ -41,6 +41,7 @@ import CitasView from "./views/CitasView";
 import CitaSeguimiento from "./views/CitaSeguimiento";
 import AgendaServicioVenta from "./views/AgendaServicioVenta";
 import CajaView from "./views/CajaView";
+import CategoryView from "./views/CategoryView";
 const Routes = () => {
   const { authLoading } = useValues();
   if (authLoading && getToken()) {
@@ -81,7 +82,17 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/productos" component={ProductosView} />
         <PrivateRoute exact path="/dashboard/productos/createProduct" component={ProductosCreate} />
         <PrivateRoute exact path="/dashboard/productos/:id/edit" component={ProductosCreate} />
-        <PrivateRoute exact path="/dashboard/productos/createCategory" component={CategoryCreate} />
+        <PrivateRoute exact path="/dashboard/productos/categoria" component={CategoryView} />
+        <PrivateRoute
+          exact
+          path="/dashboard/productos/categoria/create"
+          component={CategoryCreate}
+        />
+        <PrivateRoute
+          exact
+          path="/dashboard/productos/categoria/:id/edit"
+          component={CategoryCreate}
+        />
         <PrivateRoute exact path="/dashboard/servicios" component={ServiciosView} />
         <PrivateRoute exact path="/dashboard/servicios/create" component={ServiciosCreate} />
         <PrivateRoute exact path="/dashboard/servicios/:id/edit" component={ServiciosCreate} />

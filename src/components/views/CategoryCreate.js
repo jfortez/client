@@ -7,83 +7,76 @@ import {
   Formulario,
   ContenedorBotonCentrado,
   Boton,
-  MensajeExito,
+  // MensajeExito,
   MensajeError,
 } from "../../elements/Formularios";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import services from "../../services/categoria";
-import { Link } from "react-router-dom";
-import { Loader } from "../../elements/Loader";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 const CategoryCreate = () => {
   const { isCollapsed } = useValues();
-  const [isListed, setIsListed] = useState(false);
+  const [elementId, setElementId] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
   const [nombre, setNombre] = useState({ campo: "", valido: null });
   const [descripcion, setDescripcion] = useState({ campo: "", valido: null });
-  const [categorias, setCategorias] = useState([]);
   const [formValid, setFormValid] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let source = services.Axios.CancelToken.source();
-    let unmounted = false;
-    const getCategorias = async () => {
-      try {
-        const categorias = await services.getCategorias(source);
-        if (!unmounted) {
-          setCategorias(categorias);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        if (!unmounted) {
-          if (services.Axios.isCancel(error)) {
-            console.log("AxiosCancel: caught cancel", error.message);
-          } else {
-            console.log("throw error", error.message);
-          }
-        }
-      }
-    };
-    getCategorias();
-    setIsListed(false);
-    return () => {
-      unmounted = true;
-      source.cancel("Cancelling in Cleanup");
-    };
-  }, [isListed]);
   const expresiones = {
     nombre: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
   };
-  const handleSubmit = async (e) => {
+  const { id } = useParams();
+  const idCategoria = id;
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (pathname === `/dashboard/productos/categoria/${idCategoria}/edit`) {
+      setIsEditing(true);
+      const getClienteById = async () => {
+        const categoria = await services.getCategoriasById(idCategoria);
+        const { id, nombre, descripcion } = categoria[0];
+        setElementId(id);
+        setNombre({ campo: nombre, valido: null });
+        setDescripcion({ campo: descripcion, valido: null });
+      };
+      getClienteById();
+    }
+  }, [idCategoria, pathname]);
+  const handleUpdate = async (evt) => {
+    evt.preventDefault();
+    const updateCliente = {
+      nombre: nombre.campo,
+      descripcion: descripcion.campo,
+    };
+    await services.updateCategoria(updateCliente, elementId);
+    setNombre({ ...nombre, valido: null });
+    setDescripcion({ ...descripcion, valido: null });
+  };
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (nombre.valido === "true" && descripcion.valido === "true") {
       setFormValid(true);
-      await services.insertCategorias({
+      const newItem = {
         nombre: nombre.campo,
         descripcion: descripcion.campo,
-      });
+      };
+      const nuevo = await services.insertCategorias(newItem);
+      if (nuevo.message === "el dato existe" && nuevo.catExiste[0].active === 0) {
+        await services.updateCategoria(newItem, nuevo.catExiste[0].id);
+      }
+      if (nuevo.message === "el dato existe" && nuevo.catExiste[0].active === 1) {
+        return console.log("el dato existe"); //codigo para la alerta
+      }
       setNombre({ campo: "" });
       setDescripcion({ campo: "" });
-      setIsListed(true);
     } else {
       setFormValid(false);
     }
-  };
-  const handleDelete = async (id) => {
-    setIsLoading(true);
-    const deleteid = await services.deleteCategoria(id);
-    if (deleteid) {
-      setIsListed(true);
-    }
-  };
-  const handleUpdate = () => {
-    console.log("update");
   };
   return (
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Nueva Categoría</h1>
+        {isEditing ? <h1>Editar Categoría</h1> : <h1>Nuevo Categoría</h1>}
+
         <div>
           <nav>
             <ul>
@@ -94,13 +87,14 @@ const CategoryCreate = () => {
                 <Link to="/dashboard/productos">Productos</Link>
               </li>
               <li>
-                <b>Nueva Categoría</b>
+                <Link to="/dashboard/productos/categoria">Categoria</Link>
               </li>
+              <li>{isEditing ? <b>Editar Categoría</b> : <b>Nuevo Categoría</b>}</li>
             </ul>
           </nav>
         </div>
         <div>
-          <Formulario onSubmit={handleSubmit}>
+          <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
             <ComponentInput
               state={nombre} //value
               setState={setNombre} //onChange
@@ -131,40 +125,9 @@ const CategoryCreate = () => {
             )}
             <ContenedorBotonCentrado>
               <Boton type="submit">Enviar</Boton>
-              {formValid === true && <MensajeExito>Formulario enviado exitosamente!</MensajeExito>}
+              {/* {formValid === true && <MensajeExito>Formulario enviado exitosamente!</MensajeExito>} */}
             </ContenedorBotonCentrado>
           </Formulario>
-          <div>
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nombre</th>
-                  <th>Descripción</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {isLoading ? (
-                  <Loader loading={isLoading} />
-                ) : categorias ? (
-                  categorias.map((categoria) => {
-                    return (
-                      <tr key={categoria.id}>
-                        <td>{categoria.id}</td>
-                        <td>{categoria.nombre}</td>
-                        <td>{categoria.descripcion}</td>
-                        <td>
-                          <button onClick={() => handleDelete(categoria.id)}>Eliminar</button>
-                          <button onClick={handleUpdate}>Actualizar</button>
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : null}
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
     </>

@@ -70,9 +70,15 @@ const ProductCreate = () => {
       costo: costo.campo,
       precio: precio.campo,
       id_categoria: idCategoria.campo,
-      // active: active.campo,
     };
     await services.updateProductos(updtProducto, elementId);
+    setCod_Producto({ ...cod_Producto, valido: null });
+    setNombre({ ...nombre, valido: null });
+    setDescripcion({ ...descripcion, valido: null });
+    setCantidad({ ...cantidad, valido: null });
+    setCosto({ ...costo, valido: null });
+    setPrecio({ ...precio, valido: null });
+    setIdCategoria({ ...idCategoria, valido: null });
   };
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -94,7 +100,13 @@ const ProductCreate = () => {
         precio: precio.campo,
         id_categoria: idCategoria.campo,
       };
-      await services.createProductos(nuevoProducto);
+      const nuevo = await services.createProductos(nuevoProducto);
+      if (nuevo.message === "el dato existe" && nuevo.codExiste[0].active === 0) {
+        await services.updateProductos(nuevoProducto, nuevo.codExiste[0].id);
+      }
+      if (nuevo.message === "el dato existe" && nuevo.codExiste[0].active === 1) {
+        return console.log("Producto ya existe"); //codigo para la alerta
+      }
       setFormValid(true);
       setCod_Producto({ campo: "", valido: null });
       setNombre({ campo: "", valido: null });
@@ -135,7 +147,7 @@ const ProductCreate = () => {
             name="codigo"
             placeholder="Codigo"
             error="El campo está incompleto"
-            expresion={expresiones.codigo}
+            expresion={expresiones.cod}
           />
           <ComponentInput
             state={nombre} //value

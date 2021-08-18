@@ -20,7 +20,14 @@ const insertCategorias = async (newData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, newData);
   return data;
 };
-
+const updateCategoria = async (newData, id) => {
+  const { data } = await Axios.post(`${baseUrl}/update/${id}`, newData);
+  return data;
+};
+const bajaCategoria = async (id) => {
+  const { data } = await Axios.post(`${baseUrl}/baja/${id}`);
+  return data;
+};
 const deleteCategoria = async (id) => {
   const { data } = await Axios.delete(`${baseUrl}/delete/${id}`);
   return data;
@@ -31,6 +38,8 @@ export default {
   getCategorias,
   insertCategorias,
   deleteCategoria,
+  updateCategoria,
+  bajaCategoria,
   Axios,
   optionCategorias,
   getCategoriasById,
