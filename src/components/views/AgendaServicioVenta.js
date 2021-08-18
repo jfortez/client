@@ -6,6 +6,7 @@ import agendaServices from "../../services/agenda";
 import clienteServices from "../../services/cliente";
 import valuesServices from "../../services/values";
 import services from "../../services/servicios";
+import cajaServices from "../../services/caja";
 const AgendaServicioVenta = () => {
   const { isCollapsed, id_agenda, values, setId_agenda, setValues, user } = useValues();
   const [agendaInfo, setAgendaInfo] = useState([]);
@@ -25,6 +26,10 @@ const AgendaServicioVenta = () => {
   };
   const fecha = new Date().toLocaleDateString();
   const handleVenta = async () => {
+    if (entradasVenta.importe === 0) {
+      return console.log("debe ingresar un importe");
+    }
+    const total = agendaInfo[0].precio_servicio;
     const venta_servicio = {
       num_venta: values.num_venta,
       num_recibo: values.num_recibo,
@@ -35,18 +40,35 @@ const AgendaServicioVenta = () => {
       id_Cliente: cliente[0].id,
       id_Usuario: user.id,
     };
+    const caja = await cajaServices.getCajaByMaxId();
+    if (caja[0]?.estado_caja === "CERRADO") {
+      return console.log("debe abrir una caja para proceder");
+    }
     const ventaserv = await services.createVentaServicios(venta_servicio);
     if (ventaserv) {
+      ingresoACaja(caja, total, venta_servicio.num_recibo, ventaserv);
       const fact_serv = {
         id_venta_servicios: ventaserv,
         id_Servicio: agendaInfo[0].id_Servicio,
         precio: agendaInfo[0].precio_servicio,
-        total: agendaInfo[0].precio_servicio,
+        total,
       };
       await services.createFactServicios(fact_serv);
     }
     updateValues();
     clean();
+  };
+  const ingresoACaja = async (caja, totalVenta, recibo, idvservicio) => {
+    const ingreso = {
+      id_caja: caja[0]?.id,
+      ingreso: totalVenta,
+      descripcion: `Venta Servicio Bajo Factura No.: ${recibo}`,
+      caja_actual: parseFloat(Number(caja[0].caja_actual + Number(totalVenta)).toFixed(2)),
+      id_Usuario: user.id,
+      id_venta_servicio: idvservicio,
+    };
+    await cajaServices.nuevoMovimiento(ingreso);
+    await cajaServices.updateCaja({ caja_actual: ingreso.caja_actual }, ingreso.id_caja);
   };
   const clean = () => {
     setAgendaInfo([]);

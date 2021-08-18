@@ -49,12 +49,24 @@ const VentasReporteView = () => {
 
           <ul>
             <li>
-              <strong>RUC Cliente:</strong>
+              <strong>Facturacion No.: </strong>
+              {reporteDetalleVentas[0]?.num_recibo}
+            </li>
+            <li>
+              <strong>RUC Cliente: </strong>
               {reporteDetalleVentas[0]?.ruc}
             </li>
             <li>
-              <strong>Datos del Cliente:</strong>
+              <strong>Datos del Cliente: </strong>
               {reporteDetalleVentas[0]?.nombres} {reporteDetalleVentas[0]?.apellidos}
+            </li>
+            <li>
+              <strong>Importe: </strong>
+              {reporteDetalleVentas[0]?.importe}
+            </li>
+            <li>
+              <strong>Devolución: </strong>
+              {reporteDetalleVentas[0]?.devolucion}
             </li>
           </ul>
 
@@ -72,8 +84,6 @@ const VentasReporteView = () => {
                 <th>Cantidad</th>
                 <th>Precio</th>
                 <th>Total</th>
-                <th>Realizado Por</th>
-                <th>Fecha</th>
               </tr>
             </thead>
             <tbody>
@@ -89,8 +99,6 @@ const VentasReporteView = () => {
                       <td>{item.cantidad}</td>
                       <td>{item.precio}</td>
                       <td>{item.total}</td>
-                      <td>{item.usuario}</td>
-                      <td>{new Date(item.fecha).toLocaleDateString()}</td>
                     </tr>
                   );
                 })

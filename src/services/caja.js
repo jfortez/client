@@ -17,6 +17,10 @@ const getCajaMovimientos = async (src) => {
   const { data } = await Axios.get(movimientos);
   return data;
 };
+const getCajaMovimientosByIdCaja = async (id) => {
+  const { data } = await Axios.get(`${movimientos}/${id}`);
+  return data;
+};
 const cierreCaja = async (newData) => {
   const { data } = await Axios.post(`${baseUrl}/cierrecaja`, newData);
   return data;
@@ -39,6 +43,7 @@ export default {
   getCaja,
   getCajaByMaxId,
   getCajaMovimientos,
+  getCajaMovimientosByIdCaja,
   cierreCaja,
   nuevoMovimiento,
   updateCaja,

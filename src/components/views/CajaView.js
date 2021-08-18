@@ -13,6 +13,7 @@ const CajaView = () => {
     egreso: 0,
     descripcion_egreso: "",
   });
+  const [cajaMovimientos, setCajaMovimientos] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isListed, setIsListed] = useState(false);
   const [isCierre, setIsCierre] = useState(false);
@@ -21,8 +22,10 @@ const CajaView = () => {
   useEffect(() => {
     const getCajaActual = async () => {
       const ultimaCaja = await services.getCajaByMaxId();
+      const movimientos = await services.getCajaMovimientosByIdCaja(ultimaCaja[0].id);
       console.log(ultimaCaja);
       setCaja(ultimaCaja);
+      setCajaMovimientos(movimientos);
     };
     getCajaActual();
   }, [isListed]);
@@ -33,11 +36,7 @@ const CajaView = () => {
         setIsOpen(true);
       }
     };
-    // const getMovimientos = async () => {
-    //   const movimientos = await services.getCajaMovimientos();
-    //   setCaja(movimientos);
-    // };
-    // getMovimientos();
+
     verificarCaja();
   }, [isOpen]);
   const switchCierre = () => {
@@ -179,6 +178,7 @@ const CajaView = () => {
             <button onClick={switchIngreso}>Añadir Ingresos</button>
             {isIngreso ? (
               <div>
+                {/* Añadir Ingresos */}
                 <label htmlFor="cierre">Añadir un Valor</label>
                 <input
                   type="text"
@@ -196,6 +196,7 @@ const CajaView = () => {
                 <button onClick={addIngreso}>Ingresar</button>
               </div>
             ) : null}
+            {/* Añadir Egresos */}
             <button onClick={switchEgreso}>Añadir Egresos</button>
             {isEgreso ? (
               <div>
@@ -218,8 +219,46 @@ const CajaView = () => {
             ) : null}
           </div>
         )}
-
-        {/* Añadir Egresos */}
+        <div>
+          <h3>Movimientos en Caja</h3>
+          {caja[0]?.estado_caja === "ABIERTO" ? (
+            <>
+              <strong>Valor Inicial a la Caja: </strong>${caja[0]?.caja_inicio}
+            </>
+          ) : null}
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha y Hora del movimiento</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Descripción</th>
+                <th>Valor Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {caja[0]?.estado_caja === "ABIERTO" && cajaMovimientos ? (
+                cajaMovimientos.map((item, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{new Date(item.fechaMovimiento).toLocaleString()}</td>
+                      <td>{item.ingreso ? <b>ingreso</b> : <b>Egreso</b>}</td>
+                      <td>
+                        {item.ingreso ? <span>${item.ingreso}</span> : <span>${item.egreso}</span>}
+                      </td>
+                      <td>{item.descripcion}</td>
+                      <td>${item.caja_actual}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan="5">Debe ingresar un valor en Caja primero</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );

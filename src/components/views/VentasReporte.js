@@ -54,6 +54,7 @@ const VentasReporte = () => {
             <thead>
               <tr>
                 <th>No. Venta</th>
+                <th>No. Factura</th>
                 <th>Fecha</th>
                 <th>Cliente</th>
                 <th>Cantidad de Productos</th>
@@ -69,6 +70,7 @@ const VentasReporte = () => {
                   return (
                     <tr key={item.idVenta}>
                       <td>{item.num_venta}</td>
+                      <td>{item.num_recibo}</td>
                       <td>{new Date(item.fecha).toLocaleDateString()}</td>
                       <td>
                         {item.nombres} {item.apellidos}
