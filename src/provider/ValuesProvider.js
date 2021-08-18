@@ -9,7 +9,7 @@ export default function ValuesProvider({ children }) {
   const [authLoading, setAuthLoading] = useState(true);
   //Ventas
   const [datosVentas, setDatosVentas] = useState({ cliente: [], producto: [] });
-  const [types, setTypes] = useState({ ruc: "", cod_producto: "", cantidad: 1 });
+  const [types, setTypes] = useState({ ruc: "", cod_producto: "", cantidad: 1, importe: 0 });
   const [productosVenta, setProductosVenta] = useState([]);
   const [detalleVenta, setDetalleVenta] = useState([]);
   //Compras

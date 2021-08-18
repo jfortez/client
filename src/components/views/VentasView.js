@@ -26,7 +26,7 @@ const VentasView = () => {
     setValues,
   } = useValues();
   const limpiar = () => {
-    setTypes({ ...types, ruc: "", cod_producto: "", cantidad: 1 });
+    setTypes({ ...types, ruc: "", cod_producto: "", cantidad: 1, importe: 0 });
     setDatosVentas({ cliente: [], producto: [] });
     setProductosVenta([]);
     setDetalleVenta([]);
@@ -34,6 +34,9 @@ const VentasView = () => {
 
   const fecha = new Date();
   const nuevaVenta = () => {
+    if (types.importe === 0) {
+      return console.log("debe ingresar un importe");
+    }
     const totCantidad = detalleVenta.reduce((acc, acv) => {
       return acc + acv.cantidad;
     }, 0);
@@ -42,10 +45,13 @@ const VentasView = () => {
     }, 0);
     const venta = {
       num_venta: values.num_venta,
+      num_recibo: values.num_recibo,
       fecha,
       cantidad: totCantidad,
       subtotal: valorTotal,
       total: valorTotal,
+      importe: types.importe,
+      devolucion: (Number(types.importe) - valorTotal).toFixed(2),
       id_Cliente: datosVentas.cliente[0].id,
       id_Usuario: user.id,
     };
@@ -53,7 +59,7 @@ const VentasView = () => {
       newVenta(venta);
       //aquí iria la función que modificaría la cantidad del producto dejando la cantidad restante tras la venta realizada
       updateProducto();
-      setTypes({ ...types, ruc: "", cod_producto: "", cantidad: 1 });
+      setTypes({ ...types, ruc: "", cod_producto: "", cantidad: 1, importe: 0 });
       setDatosVentas({ cliente: [], producto: [] });
       setProductosVenta([]);
       setDetalleVenta([]);
@@ -61,9 +67,9 @@ const VentasView = () => {
     }
   };
   const updateValues = async () => {
-    const newValue = { num_venta: values.num_venta + 1 };
+    const newValue = { num_venta: values.num_venta + 1, num_recibo: values.num_recibo + 1 };
     await valuesServices.updateValues(newValue);
-    setValues({ ...values, num_venta: values.num_venta + 1 });
+    setValues({ num_venta: values.num_venta + 1, num_recibo: values.num_recibo + 1 });
   };
   const newVenta = async (nVenta) => {
     const ventaId = await ventaValues.newVenta(nVenta);
@@ -107,6 +113,8 @@ const VentasView = () => {
         </p>
         <p>
           <strong>Venta No: {values?.num_venta}</strong>
+          <br />
+          <strong>Factura No: {values?.num_recibo}</strong>
         </p>
         <button onClick={limpiar}>Limpiar</button>
         <RucInput
@@ -134,6 +142,17 @@ const VentasView = () => {
           detalleVenta={detalleVenta}
           setDetalleVenta={setDetalleVenta}
         />
+        <div>
+          <h4>Importe Cliente</h4>
+          <label htmlFor="importe">Importe:</label>
+          <input
+            type="text"
+            name="importe"
+            id="importe"
+            value={types.importe}
+            onChange={(e) => setTypes({ ...types, importe: e.target.value })}
+          />
+        </div>
         <button onClick={nuevaVenta}>Venta</button>
       </div>
     </>
