@@ -13,14 +13,16 @@ import {
 } from "../../elements/Formularios";
 import { Error } from "@material-ui/icons";
 import ComponentInput from "../layouts/forms/ComponentInput";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import personalServices from "../../services/personal";
 import personas from "../../services/personas";
 import odontologoServices from "../../services/odontologos";
-
+import services from "../../services/usuarios";
 const UsuarioCreate = () => {
   const { isCollapsed } = useValues();
   const [ci, setCi] = useState({ campo: "", valido: null });
+  const [elementId, setElementId] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
   const [dataByCedula, setDataByCedula] = useState([]);
   const [usuario, setUsuario] = useState({ campo: "", valido: null });
   const [contraseña, setContraseña] = useState({ campo: "", valido: null });
@@ -34,7 +36,23 @@ const UsuarioCreate = () => {
     telefono: /^\d{7,14}$/, // 7 a 14 numeros.
     numero: /^\d{5,15}$/, // 9 a 14 numeros.
   };
-
+  const { id } = useParams();
+  const idUser = id;
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (pathname === `/dashboard/usuarios/${idUser}/edit`) {
+      setIsEditing(true);
+      const getProveedoresById = async () => {
+        const usuarios = await services.getUsersById(idUser);
+        const { id, usuario, contraseña, previlegios } = usuarios[0];
+        setElementId(id);
+        setUsuario({ campo: usuario, valido: null });
+        setContraseña({ campo: contraseña, valido: null });
+        setPrevilegios({ campo: previlegios, valido: null });
+      };
+      getProveedoresById();
+    }
+  }, [idUser, pathname]);
   const onSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -65,6 +83,18 @@ const UsuarioCreate = () => {
       setFormValid(false);
     }
   };
+  const handleUpdate = async (evt) => {
+    evt.preventDefault();
+    const updateData = {
+      usuario: usuario.campo,
+      contraseña: contraseña.campo,
+      previlegios: previlegios.campo,
+    };
+    await services.updateUsuarios(updateData, elementId);
+    setUsuario({ ...usuario, valido: null });
+    setContraseña({ ...contraseña, valido: null });
+    setPrevilegios({ ...previlegios, valido: null });
+  };
   useEffect(() => {
     const getDataByCedula = async () => {
       if (ci.campo.length > 0) {
@@ -89,7 +119,8 @@ const UsuarioCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Nuevo Usuario</h1>
+        {isEditing ? <h1>Editar Usuario</h1> : <h1>Nuevo Usuario</h1>}
+
         <div>
           <nav>
             <ul>
@@ -99,9 +130,7 @@ const UsuarioCreate = () => {
               <li>
                 <Link to="/dashboard/Usuarios">Usuarios</Link>
               </li>
-              <li>
-                <b>Nuevo Usuario</b>
-              </li>
+              <li>{isEditing ? <b>Editar Usuario</b> : <b>Nuevo Usuario</b>}</li>
             </ul>
           </nav>
 
@@ -129,17 +158,19 @@ const UsuarioCreate = () => {
               <Link to="/dashboard/odontologos/create">Crear Odontólogo</Link>
             </h5>
           ) : null}
-          <Formulario onSubmit={onSubmit}>
-            <ComponentInput
-              state={ci} //value
-              setState={setCi} //onChange
-              title="Cedula"
-              type="text"
-              name="cedula"
-              placeholder="Cedula"
-              error="El campo es requerido y deben incluir numeros"
-              expresion={expresiones.numero}
-            />
+          <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
+            {isEditing ? null : (
+              <ComponentInput
+                state={ci} //value
+                setState={setCi} //onChange
+                title="Cedula"
+                type="text"
+                name="cedula"
+                placeholder="Cedula"
+                error="El campo es requerido y deben incluir numeros"
+                expresion={expresiones.numero}
+              />
+            )}
             <ComponentInput
               state={usuario} //value
               setState={setUsuario} //onChange
@@ -160,7 +191,7 @@ const UsuarioCreate = () => {
               error="El campo está incompleto"
               expresion={expresiones.password}
             />
-            <br />
+            {isEditing ? null : <br />}
             <GrupoInput>
               <Label>Previlegios</Label>
               <Select
@@ -168,9 +199,8 @@ const UsuarioCreate = () => {
                 onChange={(e) => setPrevilegios({ campo: e.target.value })}
               >
                 <Option value="0">Seleccione</Option>
-                <Option value="1">Super Admin</Option>
-                <Option value="2">Admin</Option>
-                <Option value="3">Básico</Option>
+                <Option value="1">Admin</Option>
+                <Option value="2">Odontologo</Option>
               </Select>
               <br />
             </GrupoInput>
@@ -184,7 +214,11 @@ const UsuarioCreate = () => {
               </MensajeError>
             )}
             <ContenedorBotonCentrado>
-              <Boton type="submit">Crear</Boton>
+              {isEditing ? (
+                <Boton type="submit">Actualizar</Boton>
+              ) : (
+                <Boton type="submit">Crear</Boton>
+              )}
             </ContenedorBotonCentrado>
           </Formulario>
         </div>

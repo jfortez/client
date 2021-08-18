@@ -124,7 +124,11 @@ const CategoryCreate = () => {
               </MensajeError>
             )}
             <ContenedorBotonCentrado>
-              <Boton type="submit">Enviar</Boton>
+              {isEditing ? (
+                <Boton type="submit">Actualizar</Boton>
+              ) : (
+                <Boton type="submit">Crear</Boton>
+              )}
               {/* {formValid === true && <MensajeExito>Formulario enviado exitosamente!</MensajeExito>} */}
             </ContenedorBotonCentrado>
           </Formulario>

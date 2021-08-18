@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar//Topbar";
 import useValues from "../../provider/useValues";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import services from "../../services/usuarios";
 import { Loader } from "../../elements/Loader";
 
@@ -12,31 +12,43 @@ const UsuariosView = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const handleDelete = async (id) => {
+  const history = useHistory();
+  const handeActive = async (id) => {
     setIsLoading(true);
-    const usersInUse = await services.getUsersInUse();
-    let idValue = 0;
-    const finInPersonal = usersInUse.personal;
-    const findInOdontologo = usersInUse.odontologos;
-    const valPer = finInPersonal.filter((ced) => ced.id_Usuario === id);
-    const valOd = findInOdontologo.filter((ced) => ced.id_Usuario === id);
-    if (valPer.length > 0) {
-      idValue = valPer[0].id_Usuario;
-      const deleteUser = await services.deletePerUsuario(idValue);
-      if (deleteUser) {
-        setIsListed(true);
-      }
-    }
-    if (valOd.length > 0) {
-      idValue = valOd[0].id_Usuario;
-      const deleteUser = await services.deleteOdUsuario(idValue);
-      if (deleteUser) {
-        setIsListed(true);
-      }
+    const deleteUser = await services.activarUsuario(id);
+    if (deleteUser) {
+      setIsListed(!isListed);
     }
   };
-  const handleUpdate = () => {
-    console.log("actualizar paciente");
+  const handleDelete = async (id) => {
+    setIsLoading(true);
+    const deleteUser = await services.bajaUsuarios(id);
+    if (deleteUser) {
+      setIsListed(!isListed);
+    }
+    // const usersInUse = await services.getUsersInUse();
+    // let idValue = 0;
+    // const finInPersonal = usersInUse.personal;
+    // const findInOdontologo = usersInUse.odontologos;
+    // const valPer = finInPersonal.filter((ced) => ced.id_Usuario === id);
+    // const valOd = findInOdontologo.filter((ced) => ced.id_Usuario === id);
+    // if (valPer.length > 0) {
+    //   idValue = valPer[0].id_Usuario;
+    //   const deleteUser = await services.deletePerUsuario(idValue);
+    //   if (deleteUser) {
+    //     setIsListed(!isListed);
+    //   }
+    // }
+    // if (valOd.length > 0) {
+    //   idValue = valOd[0].id_Usuario;
+    //   const deleteUser = await services.deleteOdUsuario(idValue);
+    //   if (deleteUser) {
+    //     setIsListed(!isListed);
+    //   }
+    // }
+  };
+  const handleUpdate = (id) => {
+    history.push(`/dashboard/usuarios/${id}/edit`);
   };
   useEffect(() => {
     let source = services.Axios.CancelToken.source();
@@ -59,7 +71,6 @@ const UsuariosView = () => {
       }
     };
     getUsuarios();
-    setIsListed(false);
     return () => {
       unmounted = true;
       source.cancel("Cancelling in Cleanup");
@@ -114,11 +125,13 @@ const UsuariosView = () => {
                       <td>{new Date(user.fecha_registro).toLocaleDateString()}</td>
                       <td>{user.active === 1 ? "Activo" : "Inactivo"}</td>
                       <td>
-                        {userLogged.id === user.id ? null : (
-                          <button onClick={() => handleDelete(user.id)}>Eliminar</button>
-                        )}
-                        {userLogged.id === user.id ? null : (
-                          <button onClick={() => handleUpdate()}>Actualizar</button>
+                        {userLogged.id === user.id ? null : user.active === 1 ? (
+                          <div>
+                            <button onClick={() => handleDelete(user.id)}>Inactivar</button>
+                            <button onClick={() => handleUpdate(user.id)}>Actualizar</button>
+                          </div>
+                        ) : (
+                          <button onClick={() => handeActive(user.id)}>Activar</button>
                         )}
                       </td>
                     </tr>
