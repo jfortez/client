@@ -106,7 +106,7 @@ const VentasView = () => {
           <strong>Fecha:</strong> {fecha.toLocaleDateString()}
         </p>
         <p>
-          <strong>Venta No: {values.num_venta}</strong>
+          <strong>Venta No: {values?.num_venta}</strong>
         </p>
         <button onClick={limpiar}>Limpiar</button>
         <RucInput

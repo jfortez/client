@@ -25,6 +25,14 @@ const createCaja = async (newData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, newData);
   return data;
 };
+const updateCaja = async (newData, id) => {
+  const { data } = await Axios.post(`${baseUrl}/update/${id}`, newData);
+  return data;
+};
+const nuevoMovimiento = async (newData) => {
+  const { data } = await Axios.post(`${movimientos}/create`, newData);
+  return data;
+};
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
@@ -32,6 +40,8 @@ export default {
   getCajaByMaxId,
   getCajaMovimientos,
   cierreCaja,
+  nuevoMovimiento,
+  updateCaja,
   Axios,
   createCaja,
 };
