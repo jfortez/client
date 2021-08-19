@@ -87,8 +87,7 @@ const OdontologoCreate = () => {
       apellidos.valido === "true" &&
       cedula.valido === "true" &&
       direccion.valido === "true" &&
-      ciudad.valido === "true" &&
-      fecha_nacimiento.valido === "true"
+      ciudad.valido === "true"
     ) {
       const newOdontologo = {
         nombres: nombres.campo,
@@ -220,8 +219,6 @@ const OdontologoCreate = () => {
             type="date"
             name="fecha_nacimiento"
             placeholder="Fecha de Nacimiento"
-            error="el campo está incompleto"
-            expresion={expresiones.fecha}
           />
           <ComponentInput
             state={email} //value

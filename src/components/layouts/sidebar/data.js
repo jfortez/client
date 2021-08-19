@@ -28,7 +28,7 @@ export const SidebarData = [
     exact: true,
   },
   {
-    title: "Personal",
+    title: "Ventas",
     class: "slidebar-nav-item",
     url: "/dashboard/ventas",
     urlClass: "slidebar-nav-link",

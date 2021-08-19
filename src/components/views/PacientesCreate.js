@@ -96,7 +96,6 @@ const PacientesCreate = () => {
       nombres.valido === "true" &&
       apellidos.valido === "true" &&
       cedula.valido === "true" &&
-      telefono.valido === "true" &&
       direccion.valido === "true" &&
       ciudad.valido === "true" &&
       edad.valido === "true" &&
@@ -192,8 +191,6 @@ const PacientesCreate = () => {
             type="text"
             name="telefono"
             placeholder="Telefono"
-            error="el campo está incompleto"
-            expresion={expresiones.telefono}
           />
           <ComponentInput
             state={direccion} //value
@@ -203,7 +200,7 @@ const PacientesCreate = () => {
             name="direccion"
             placeholder="Dirección"
             error="el campo está incompleto"
-            expresion={expresiones.nombre}
+            expresion={expresiones.direccion}
           />
           <ComponentInput
             state={ciudad} //value
