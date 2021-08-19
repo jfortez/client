@@ -10,6 +10,10 @@ import ventaValues from "../../services/venta";
 import productoServices from "../../services/productos";
 import NavigationVentas from "../layouts/ventaComponents/NavigationVentas";
 import cajaServices from "../../services/caja";
+//Importes para faturación
+import jsPDFInvoiceTemplate from "jspdf-invoice-template";
+import empresaServices from "../../services/empresa";
+import { useEffect, useState } from "react";
 
 const VentasView = () => {
   const {
@@ -32,7 +36,14 @@ const VentasView = () => {
     setProductosVenta([]);
     setDetalleVenta([]);
   };
-
+  const [empresa, setEmpresa] = useState([]);
+  useEffect(() => {
+    const getEmpresa = async () => {
+      const compañia = await empresaServices.optionEmpresa();
+      setEmpresa(compañia);
+    };
+    getEmpresa();
+  }, []);
   const fecha = new Date();
   const nuevaVenta = async () => {
     if (types.importe === 0) {
@@ -42,7 +53,7 @@ const VentasView = () => {
       return acc + acv.cantidad;
     }, 0);
     const valorTotal = detalleVenta.reduce((acc, acv) => {
-      return acc + acv.total;
+      return acc + Number(acv.total);
     }, 0);
     const venta = {
       num_venta: values.num_venta,
@@ -50,7 +61,7 @@ const VentasView = () => {
       fecha,
       cantidad: totCantidad,
       subtotal: valorTotal,
-      total: valorTotal,
+      total: Number(valorTotal).toFixed(2),
       importe: types.importe,
       devolucion: (Number(types.importe) - valorTotal).toFixed(2),
       id_Cliente: datosVentas.cliente[0].id,
@@ -63,6 +74,7 @@ const VentasView = () => {
       }
       newVenta(caja, venta, venta.total, venta.num_recibo);
       updateProducto();
+      handleCreatePdf();
       setTypes({ ...types, ruc: "", cod_producto: "", cantidad: 1, importe: 0 });
       setDatosVentas({ cliente: [], producto: [] });
       setProductosVenta([]);
@@ -119,6 +131,90 @@ const VentasView = () => {
     }
     await productoServices.test({ vDetalle });
   };
+  const totalCuenta = detalleVenta.reduce((acc, acv) => {
+    return acc + Number(acv.total);
+  }, 0);
+  var props = {
+    outputType: "save",
+    returnJsPDFDocObject: true,
+    fileName: `Factura${values.num_recibo}${fecha.getDate()}${
+      fecha.getMonth() + 1
+    }${fecha.getFullYear()}`,
+    orientationLandscape: false,
+    logo: {
+      src: "https://raw.githubusercontent.com/jfortez/vitasmile/main/logo.png",
+      width: 53.33, //aspect ratio = width/height
+      height: 26.66,
+      margin: {
+        top: 0, //negative or positive num, from the current position
+        left: 0, //negative or positive num, from the current position
+      },
+    },
+    business: {
+      name: empresa[0]?.nombre,
+      address: `RUC: ${empresa[0]?.ruc}`,
+      phone: `Dirección: ${empresa[0]?.direccion}`,
+      email: `Telefono: ${empresa[0]?.telefono}`,
+      email_1: "",
+      website: "",
+    },
+    contact: {
+      label: "Factura emitida a:",
+      name: `${datosVentas.cliente[0]?.nombres} ${datosVentas.cliente[0]?.apellidos}`,
+      phone: `Dirección: ${datosVentas.cliente[0]?.direccion}`,
+      address: `RUC: ${datosVentas.cliente[0]?.ruc}`,
+      otherInfo: `Telefono: ${datosVentas.cliente[0]?.telefono}`,
+      email: `Correo: ${datosVentas.cliente[0]?.email}`,
+    },
+    invoice: {
+      label: "Factura #: ",
+      num: values?.num_recibo,
+      invDate: `Fecha Emisión: ${fecha.toLocaleString()}`,
+      invGenDate: "",
+      headerBorder: false,
+      tableBodyBorder: false,
+      header: ["#", "COD", "Producto", "Cantidad", "Precio", "Total"],
+      table: detalleVenta.map((item, index) => [
+        index + 1,
+        item.cod_producto,
+        item.nombre,
+        item.cantidad,
+        Number(item.precio).toFixed(2),
+        Number(item.total).toFixed(2),
+      ]),
+      invTotalLabel: "Total:",
+      invTotal: `$${Number(totalCuenta).toFixed(2)}`,
+      // invCurrency: "ALL",
+      // row1: {
+      //   col1: "VAT:",
+      //   col2: "20",
+      //   col3: "%",
+      //   style: {
+      //     fontSize: 10, //optional, default 12
+      //   },
+      // },
+      // row2: {
+      //   col1: "SubTotal:",
+      //   col2: "116,199.90",
+      //   col3: "ALL",
+      //   style: {
+      //     fontSize: 10, //optional, default 12
+      //   },
+      // },
+      // invDescLabel: "Invoice Note",
+      // invDesc:
+      // "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.",
+    },
+    // footer: {
+    //   text: "The invoice is created on a computer and is valid without the signature and stamp.",
+    // },
+    pageEnable: true,
+    pageLabel: "Page ",
+  };
+  const handleCreatePdf = () => {
+    jsPDFInvoiceTemplate(props);
+  };
+
   return (
     <>
       <Topbar />
@@ -159,12 +255,7 @@ const VentasView = () => {
           detalleVenta={detalleVenta}
           setDetalleVenta={setDetalleVenta}
         />
-        <h4>
-          Total Venta:{" "}
-          {detalleVenta.reduce((acc, acv) => {
-            return acc + acv.total;
-          }, 0)}
-        </h4>
+        <h4>Total Venta: {Number(totalCuenta).toFixed(2)}</h4>
         <div>
           <h4>Importe Cliente</h4>
           <label htmlFor="importe">Importe:</label>

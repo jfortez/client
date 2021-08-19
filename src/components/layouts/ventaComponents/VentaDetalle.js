@@ -10,7 +10,7 @@ const VentaDetalle = ({ productosVenta, detalleVenta, setDetalleVenta }) => {
             return {
               ...elemento,
               cantidad: elemento.cantidad + acv.cantidad,
-              total: (elemento.cantidad + acv.cantidad) * elemento.precio,
+              total: ((elemento.cantidad + acv.cantidad) * elemento.precio).toFixed(2),
             };
           }
           return elemento;
@@ -40,8 +40,8 @@ const VentaDetalle = ({ productosVenta, detalleVenta, setDetalleVenta }) => {
                     <td>{item.cod_producto}</td>
                     <td>{item.nombre}</td>
                     <td>{item.cantidad}</td>
-                    <td>{item.precio}</td>
-                    <td>{item.total}</td>
+                    <td>{Number(item.precio).toFixed(2)}</td>
+                    <td>{Number(item.total).toFixed(2)}</td>
                   </tr>
                 );
               })
