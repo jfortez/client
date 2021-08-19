@@ -7,11 +7,22 @@ import clienteServices from "../../services/cliente";
 import valuesServices from "../../services/values";
 import services from "../../services/servicios";
 import cajaServices from "../../services/caja";
+import jsPDFInvoiceTemplate from "jspdf-invoice-template";
+import empresaServices from "../../services/empresa";
+
 const AgendaServicioVenta = () => {
   const { isCollapsed, id_agenda, values, setId_agenda, setValues, user } = useValues();
   const [agendaInfo, setAgendaInfo] = useState([]);
   const [entradasVenta, setEntradasVenta] = useState({ ruc: "", importe: 0 });
   const [cliente, setCliente] = useState([]);
+  const [empresa, setEmpresa] = useState([]);
+  useEffect(() => {
+    const getEmpresa = async () => {
+      const compañia = await empresaServices.optionEmpresa();
+      setEmpresa(compañia);
+    };
+    getEmpresa();
+  }, []);
   useEffect(() => {
     const getAgendaByID = async () => {
       const agenda = await agendaServices.getAgendaById(id_agenda);
@@ -24,8 +35,11 @@ const AgendaServicioVenta = () => {
     const clienteData = await clienteServices.getRUC({ ruc: entradasVenta.ruc });
     setCliente(clienteData);
   };
-  const fecha = new Date().toLocaleDateString();
+  const fecha = new Date();
   const handleVenta = async () => {
+    if (!cliente.length > 0) {
+      return console.log("debe ingresar un cliente");
+    }
     if (entradasVenta.importe === 0) {
       return console.log("debe ingresar un importe");
     }
@@ -33,7 +47,7 @@ const AgendaServicioVenta = () => {
     const venta_servicio = {
       num_venta: values.num_venta,
       num_recibo: values.num_recibo,
-      fecha,
+      fecha: fecha,
       id_Agenda: id_agenda,
       importe: Number(entradasVenta.importe),
       devolucion: (Number(entradasVenta.importe) - agendaInfo[0]?.precio_servicio).toFixed(2),
@@ -46,6 +60,7 @@ const AgendaServicioVenta = () => {
     }
     const ventaserv = await services.createVentaServicios(venta_servicio);
     if (ventaserv) {
+      handleCreatePdf();
       ingresoACaja(caja, total, venta_servicio.num_recibo, ventaserv);
       const fact_serv = {
         id_venta_servicios: ventaserv,
@@ -81,6 +96,85 @@ const AgendaServicioVenta = () => {
     await valuesServices.updateValues(newValue);
     setValues({ num_venta: values.num_venta + 1, num_recibo: values.num_recibo + 1 });
   };
+  var props = {
+    outputType: "save",
+    returnJsPDFDocObject: true,
+    fileName: `Factura${values?.num_recibo}${fecha.getDate()}${
+      fecha.getMonth() + 1
+    }${fecha.getFullYear()}`,
+    orientationLandscape: false,
+    logo: {
+      src: "https://raw.githubusercontent.com/jfortez/vitasmile/main/logo.png",
+      width: 53.33, //aspect ratio = width/height
+      height: 26.66,
+      margin: {
+        top: 0, //negative or positive num, from the current position
+        left: 0, //negative or positive num, from the current position
+      },
+    },
+    business: {
+      name: empresa[0]?.nombre,
+      address: `RUC: ${empresa[0]?.ruc}`,
+      phone: `Dirección: ${empresa[0]?.direccion}`,
+      email: `Telefono: ${empresa[0]?.telefono}`,
+      email_1: "",
+      website: "",
+    },
+    contact: {
+      label: "Factura emitida a:",
+      name: `${cliente[0]?.nombres} ${cliente[0]?.apellidos}`,
+      phone: `Dirección: ${cliente[0]?.direccion}`,
+      address: `RUC: ${cliente[0]?.ruc}`,
+      otherInfo: `Telefono: ${cliente[0]?.telefono}`,
+      email: `Correo: ${cliente[0]?.email}`,
+    },
+    invoice: {
+      label: "Factura #: ",
+      num: values?.num_recibo,
+      invDate: `Fecha Emisión: ${fecha.toLocaleString()}`,
+      invGenDate: "",
+      headerBorder: false,
+      tableBodyBorder: false,
+      header: ["#", "COD", "Servicio", "Descripción Servicio", "Total"],
+      table: agendaInfo.map((item, index) => [
+        index + 1,
+        item.cod_servicio,
+        item.nombre_servicio,
+        item.descripcion_servicio,
+        Number(item.precio_servicio).toFixed(2),
+      ]),
+      invTotalLabel: "Total:",
+      invTotal: `$${Number(agendaInfo[0]?.precio_servicio).toFixed(2)}`,
+      invCurrency: "",
+      // row1: {
+      //   col1: "Importe:",
+      //   col2: `$${Number(entradasVenta?.importe).toFixed(2)}`,
+      //   col3: "",
+      //   style: {
+      //     fontSize: 10, //OPTIONAL, DEFAULT 12
+      //   },
+      // },
+      // row2: {
+      //   col1: "Devolución:",
+      //   col2: `$${(Number(entradasVenta.importe) - agendaInfo[0]?.precio_servicio).toFixed(2)}`,
+      //   col3: "",
+      //   style: {
+      //     fontSize: 10, //optional, default 12
+      //   },
+      // },
+      // invDescLabel: "Invoice Note",
+      // invDesc:
+      // "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.",
+    },
+    // footer: {
+    //   text: "The invoice is created on a computer and is valid without the signature and stamp.",
+    // },
+    pageEnable: true,
+    pageLabel: "Page ",
+  };
+  const handleCreatePdf = () => {
+    jsPDFInvoiceTemplate(props);
+  };
   return (
     <>
       <Topbar />
@@ -100,7 +194,7 @@ const AgendaServicioVenta = () => {
         </div>
         <h3>Venta No: {values.num_venta}</h3>
         <h3>Recibo No: {values.num_recibo}</h3>
-        <h3>Fecha: {fecha}</h3>
+        <h3>Fecha: {fecha.toLocaleDateString()}</h3>
         <div>
           <div>
             <h4>Datos de Facturación</h4>
@@ -173,7 +267,7 @@ const AgendaServicioVenta = () => {
                       <td>{item.cod_servicio}</td>
                       <td>{item.nombre_servicio}</td>
                       <td>{item.descripcion_servicio}</td>
-                      <td>{item.precio_servicio}</td>
+                      <td>{Number(item.precio_servicio).toFixed(2)}</td>
                     </tr>
                   );
                 })}
@@ -191,7 +285,7 @@ const AgendaServicioVenta = () => {
               onChange={(e) => setEntradasVenta({ ...entradasVenta, importe: e.target.value })}
             />
           </div>
-          <button onClick={handleVenta}>Guardar</button>
+          <button onClick={handleVenta}>Venta</button>
         </div>
       </div>
     </>

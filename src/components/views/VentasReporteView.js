@@ -12,7 +12,6 @@ import empresaServices from "../../services/empresa";
 const VentasReporteView = () => {
   const { isCollapsed } = useValues();
   const [reporteDetalleVentas, setReporteDetalleVentas] = useState([]);
-  console.log(reporteDetalleVentas);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
   const [empresa, setEmpresa] = useState([]);
