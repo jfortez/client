@@ -69,6 +69,9 @@ const VentasView = () => {
     };
     if (venta) {
       const caja = await cajaServices.getCajaByMaxId();
+      if (!caja.length > 0) {
+        return console.log("no hay una caja activa, debe ingresar");
+      }
       if (caja[0]?.estado_caja === "CERRADO") {
         return console.log("debe abrir una caja para proceder");
       }
@@ -92,7 +95,7 @@ const VentasView = () => {
       id_caja: caja[0]?.id,
       ingreso: totalVenta,
       descripcion: `Venta Bajo Factura No.: ${recibo}`,
-      caja_actual: parseFloat(Number(caja[0].caja_actual + Number(totalVenta)).toFixed(2)),
+      caja_actual: parseFloat(Number(caja[0]?.caja_actual + Number(totalVenta)).toFixed(2)),
       id_Usuario: user.id,
       id_venta: ventaId,
     };

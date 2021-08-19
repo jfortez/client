@@ -55,6 +55,9 @@ const AgendaServicioVenta = () => {
       id_Usuario: user.id,
     };
     const caja = await cajaServices.getCajaByMaxId();
+    if (!caja.length > 0) {
+      return console.log("no hay una caja activa, debe ingresar");
+    }
     if (caja[0]?.estado_caja === "CERRADO") {
       return console.log("debe abrir una caja para proceder");
     }

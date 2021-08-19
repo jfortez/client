@@ -22,8 +22,7 @@ const CajaView = () => {
   useEffect(() => {
     const getCajaActual = async () => {
       const ultimaCaja = await services.getCajaByMaxId();
-      const movimientos = await services.getCajaMovimientosByIdCaja(ultimaCaja[0].id);
-      console.log(ultimaCaja);
+      const movimientos = await services.getCajaMovimientosByIdCaja(ultimaCaja[0]?.id);
       setCaja(ultimaCaja);
       setCajaMovimientos(movimientos);
     };
@@ -32,11 +31,10 @@ const CajaView = () => {
   useEffect(() => {
     const verificarCaja = async () => {
       const ultimaCaja = await services.getCajaByMaxId();
-      if (ultimaCaja[0]?.id === null || ultimaCaja[0]?.estado_caja === "CERRADO") {
+      if (!ultimaCaja.length > 0 || ultimaCaja[0]?.estado_caja === "CERRADO") {
         setIsOpen(true);
       }
     };
-
     verificarCaja();
   }, [isOpen]);
   const switchCierre = () => {
@@ -141,7 +139,9 @@ const CajaView = () => {
         <div>
           <h4>Ingresar Caja</h4>
           {caja[0]?.estado_caja === "ABIERTO" ? (
-            <h3>Saldo en Caja: ${caja[0]?.caja_actual}</h3>
+            <div>
+              <h3>Saldo en Caja: ${caja[0]?.caja_actual}</h3>
+            </div>
           ) : null}
           {/* Ingresar Caja */}
           {isOpen ? (
