@@ -8,6 +8,12 @@ const getCitas = async (src) => {
   });
   return data;
 };
+const getCitasByyId = async (src, id) => {
+  const { data } = await Axios.get(`${baseUrl}/${id}`, {
+    cancelToken: src.token,
+  });
+  return data;
+};
 const getCitasByIdAgenda = async (id) => {
   const { data } = await Axios.get(`${baseUrl}/${id}`);
   return data;
@@ -26,4 +32,12 @@ const updateCita = async (newData, id) => {
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getCitas, Axios, createCita, getCitasByIdAgenda, updateCita, maxid };
+export default {
+  getCitas,
+  Axios,
+  createCita,
+  getCitasByIdAgenda,
+  updateCita,
+  getCitasByyId,
+  maxid,
+};

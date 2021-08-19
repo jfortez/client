@@ -5,6 +5,7 @@ import useValues from "../../provider/useValues";
 import services from "../../services/personal";
 import { Link, useHistory } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
+import { Delete, Update } from "@material-ui/icons";
 const PersonalView = () => {
   const { isCollapsed } = useValues();
   const history = useHistory();
@@ -72,7 +73,7 @@ const PersonalView = () => {
           </Link>
         </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
                 <th>Nombres Completos</th>
@@ -90,7 +91,7 @@ const PersonalView = () => {
               ) : personal ? (
                 personal.map((person) => {
                   return (
-                    <tr key={person.id}>
+                    <tr key={person.id} className="rowData">
                       <td>
                         {person.nombres} {person.apellidos}
                       </td>
@@ -99,9 +100,19 @@ const PersonalView = () => {
                       <td>{person.direccion}</td>
                       <td>{person.email}</td>
                       <td>{new Date(person.fecha_registro).toLocaleDateString()}</td>
-                      <td>
-                        <button onClick={() => handleDelete(person.id_Personal)}>Eliminar</button>
-                        <button onClick={() => handleUpdate(person.id_Personal)}>Actualizar</button>
+                      <td className="botones">
+                        <button
+                          onClick={() => handleDelete(person.id_Personal)}
+                          className="button borrar"
+                        >
+                          <Delete />
+                        </button>
+                        <button
+                          onClick={() => handleUpdate(person.id_Personal)}
+                          className="button actualizar"
+                        >
+                          <Update />
+                        </button>
                       </td>
                     </tr>
                   );

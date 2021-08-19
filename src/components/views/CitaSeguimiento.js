@@ -46,7 +46,6 @@ const CitaSeguimiento = () => {
     };
     obtenerCitaByIdAgenda();
     obtenerDatos();
-    console.log("test");
   }, [id, isUpdate]);
   useEffect(() => {
     const obtenerRecetas = async () => {
@@ -177,7 +176,7 @@ const CitaSeguimiento = () => {
         <div>
           <h4>Datos Ingresados</h4>
           <div>
-            <label htmlFor="sintomas">Sintomas</label>
+            <label htmlFor="sintomas">Motivo de Consulta</label>
             <input
               type="text"
               value={infoCita.sintomas}
@@ -193,7 +192,7 @@ const CitaSeguimiento = () => {
                   value={infoCita.nombre_receta}
                   onChange={(e) => setInfoCita({ ...infoCita, nombre_receta: e.target.value })}
                 />
-                <label htmlFor="sintomas">Descripción de Receta</label>
+                <label htmlFor="sintomas">Descripción</label>
                 <input
                   type="text"
                   value={infoCita.descripcion_receta}
@@ -210,7 +209,7 @@ const CitaSeguimiento = () => {
                           {item.nombre}
                         </li>
                         <li>
-                          <strong>Descripcion de Receta: </strong>
+                          <strong>Descripcion: </strong>
                           {item.descripcion}
                         </li>
                       </ul>

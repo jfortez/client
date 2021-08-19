@@ -22,7 +22,7 @@ const VentaDetalle = ({ productosVenta, detalleVenta, setDetalleVenta }) => {
   }, [productosVenta, setDetalleVenta]);
   return (
     <div>
-      <table>
+      <table className="paleBlueRows">
         <thead>
           <tr>
             <th>Codigo</th>
