@@ -14,6 +14,7 @@ const CitaSeguimiento = () => {
   const [infoAgenda, setInfoAgenda] = useState([]);
   const [switchPermiso, setSwitchPermiso] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
+  const [isListed, setIsListed] = useState(false);
   const [recetas, setRecetas] = useState([]);
   const [infoCita, setInfoCita] = useState({
     sintomas: "",
@@ -25,14 +26,12 @@ const CitaSeguimiento = () => {
     descripcion_receta: "",
   });
   const [permisoMedico, setPermisoMedico] = useState({ motivo: "", dias: 0 });
-  const [addReceta, setAddReceta] = useState(false);
   useEffect(() => {
     const obtenerCitaByIdAgenda = async () => {
       const datosCita = await services.getCitasByIdAgenda(id);
       if (datosCita.length > 0) {
         setInfoCita({
           sintomas: datosCita[0].sintomas,
-          id_receta: datosCita[0].id_receta,
           asistencia: datosCita[0].asistencia,
           observaciones: datosCita[0].observaciones,
           nombre_receta: "",
@@ -47,19 +46,19 @@ const CitaSeguimiento = () => {
     };
     obtenerCitaByIdAgenda();
     obtenerDatos();
-  }, [id]);
+    console.log("test");
+  }, [id, isUpdate]);
   useEffect(() => {
     const obtenerRecetas = async () => {
-      const receta = await recetaServices.listReceta();
+      const receta = await recetaServices.listRecetaById(infoAgenda[0]?.id);
       setRecetas(receta);
     };
     obtenerRecetas();
-  }, [addReceta]);
+  }, [isListed, infoAgenda]);
   const handleSeguimiento = async () => {
     const cita = {
       id_agenda: infoAgenda[0].id,
       sintomas: infoCita.sintomas,
-      id_receta: infoCita.id_receta,
       asistencia: infoCita.asistencia,
       observaciones: infoCita.observaciones,
     };
@@ -67,19 +66,22 @@ const CitaSeguimiento = () => {
       await services.updateCita(cita, id);
     } else {
       await services.createCita(cita);
+      setIsUpdate(true);
     }
   };
-  const handleOpen = () => {
-    setAddReceta(!addReceta);
-  };
+
   const handleAddReceta = async () => {
     const nuevaReceta = {
+      id_agenda: infoAgenda[0].id,
       nombre: infoCita.nombre_receta,
       descripcion: infoCita.descripcion_receta,
     };
+    if (nuevaReceta.nombre === "" || nuevaReceta.descripcion === "") {
+      return console.log("los campos deben estar completos");
+    }
     await recetaServices.createReceta(nuevaReceta);
+    setIsListed(!isListed);
     setInfoCita({ ...infoCita, nombre_receta: "", descripcion_receta: "" });
-    setAddReceta(!addReceta);
   };
   const handleSeguimientoFinal = async () => {
     const estado = {
@@ -183,47 +185,39 @@ const CitaSeguimiento = () => {
             />
           </div>
           <div>
-            <label htmlFor="sintomas">Receta</label>
-            <select
-              value={infoCita.id_receta}
-              onChange={(e) => setInfoCita({ ...infoCita, id_receta: Number(e.target.value) })}
-            >
-              <option value="0">Seleccione</option>
+            <div>
+              <div>
+                <label htmlFor="sintomas">Producto o Medicamento</label>
+                <input
+                  type="text"
+                  value={infoCita.nombre_receta}
+                  onChange={(e) => setInfoCita({ ...infoCita, nombre_receta: e.target.value })}
+                />
+                <label htmlFor="sintomas">Descripción de Receta</label>
+                <input
+                  type="text"
+                  value={infoCita.descripcion_receta}
+                  onChange={(e) => setInfoCita({ ...infoCita, descripcion_receta: e.target.value })}
+                />
+              </div>
+              <button onClick={handleAddReceta}>Añadir</button>
               {recetas
                 ? recetas.map((item) => {
                     return (
-                      <option value={item.id} key={item.id}>
-                        {item.nombre} | {item.descripcion}
-                      </option>
+                      <ul key={item.id}>
+                        <li>
+                          <strong>Producto o Medicamento: </strong>
+                          {item.nombre}
+                        </li>
+                        <li>
+                          <strong>Descripcion de Receta: </strong>
+                          {item.descripcion}
+                        </li>
+                      </ul>
                     );
                   })
                 : null}
-            </select>
-            {addReceta ? null : <button onClick={handleOpen}>Añadir Receta</button>}
-            {addReceta ? (
-              <div>
-                <div>
-                  <label htmlFor="sintomas">Nombre Receta</label>
-                  <input
-                    type="text"
-                    value={infoCita.nombre_receta}
-                    onChange={(e) => setInfoCita({ ...infoCita, nombre_receta: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="sintomas">Descripción Receta</label>
-                  <input
-                    type="text"
-                    value={infoCita.descripcion_receta}
-                    onChange={(e) =>
-                      setInfoCita({ ...infoCita, descripcion_receta: e.target.value })
-                    }
-                  />
-                </div>
-                <button onClick={handleAddReceta}>Añadir</button>
-                <button onClick={handleOpen}>Cancelar</button>
-              </div>
-            ) : null}
+            </div>
           </div>
           <div>
             <label htmlFor="sintomas">Asistencia</label>

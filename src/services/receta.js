@@ -12,10 +12,14 @@ const listReceta = async () => {
   const { data } = await Axios.get(baseUrl);
   return data;
 };
+const listRecetaById = async (id) => {
+  const { data } = await Axios.get(`${baseUrl}/${id}`);
+  return data;
+};
 const createReceta = async (newData) => {
   const { data } = await Axios.post(`${baseUrl}/create`, newData);
   return data;
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getReceta, listReceta, Axios, createReceta };
+export default { getReceta, listReceta, Axios, createReceta, listRecetaById };
