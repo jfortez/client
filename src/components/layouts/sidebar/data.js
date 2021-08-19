@@ -146,7 +146,7 @@ export const SidebarData = [
   {
     title: "Reportería",
     class: "slidebar-nav-item",
-    url: "/dashboard/reporteria",
+    url: "/dashboard/reporteria/ventas",
     urlClass: "slidebar-nav-link",
     icon: ListAlt,
     iconClass: "slide-icon",

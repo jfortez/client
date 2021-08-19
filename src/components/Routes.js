@@ -20,7 +20,6 @@ import AgendaView from "./views/AgendaView";
 import CalendarioView from "./views/CalendarioView";
 import ConfigView from "./views/ConfigView";
 import ReportView from "./views/ReportView";
-import InventarioView from "./views/InventarioView";
 import OdontologoView from "./views/OdonologoVIew";
 import OdontologoCreate from "./views/OdontologoCreate";
 import PersonalCreate from "./views/PersonalCreate";
@@ -43,6 +42,8 @@ import AgendaServicioVenta from "./views/AgendaServicioVenta";
 import CajaView from "./views/CajaView";
 import CategoryView from "./views/CategoryView";
 import Viewer from "./views/Viewer";
+import ReporteriaCajaView from "./views/ReporteriaCajaView";
+import ReporteriaHistorialPacienteView from "./views/ReporteriaHistorialPacienteView";
 const Routes = () => {
   const { authLoading } = useValues();
   if (authLoading && getToken()) {
@@ -109,7 +110,19 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/cita/seguimiento/:id" component={CitaSeguimiento} />
         <PrivateRoute exact path="/dashboard/calendario" component={CalendarioView} />
         <PrivateRoute exact path="/dashboard/reporteria" component={ReportView} />
-        <PrivateRoute exact path="/dashboard/inventario" component={InventarioView} />
+        <PrivateRoute exact path="/dashboard/reporteria/ventas" component={ReportView} />
+        <PrivateRoute exact path="/dashboard/reporteria/caja" component={ReportView} />
+        <PrivateRoute
+          exact
+          path="/dashboard/reporteria/caja/:id/view"
+          component={ReporteriaCajaView}
+        />
+        <PrivateRoute exact path="/dashboard/reporteria/historialpaciente" component={ReportView} />
+        <PrivateRoute
+          exact
+          path="/dashboard/reporteria/historialpaciente/:id/view"
+          component={ReporteriaHistorialPacienteView}
+        />
         <PrivateRoute exact path="/dashboard/settings" component={ConfigView} />
         <PrivateRoute exact path="/dashboard/settings/empresa" component={ConfigView} />
         <PrivateRoute exact path="/dashboard/settings/account" component={ConfigView} />

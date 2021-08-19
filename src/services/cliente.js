@@ -8,6 +8,10 @@ const getClientes = async (src) => {
   });
   return data;
 };
+const listClientes = async () => {
+  const { data } = await Axios.get(baseUrl);
+  return data;
+};
 const getClienteById = async (id) => {
   const { data } = await Axios.get(`${baseUrl}/${id}`);
   return data;
@@ -38,6 +42,7 @@ export default {
   createCliente,
   deleteCliente,
   bajaCliente,
+  listClientes,
   Axios,
   getRUC,
   getClienteById,

@@ -17,8 +17,10 @@ const getCajaMovimientos = async (src) => {
   const { data } = await Axios.get(movimientos);
   return data;
 };
-const getCajaMovimientosByIdCaja = async (id) => {
-  const { data } = await Axios.get(`${movimientos}/${id}`);
+const getCajaMovimientosByIdCaja = async (src, id) => {
+  const { data } = await Axios.get(`${movimientos}/${id}`, {
+    cancelToken: src.token,
+  });
   return data;
 };
 const cierreCaja = async (newData) => {
