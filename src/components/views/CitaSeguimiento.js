@@ -5,11 +5,14 @@ import { Link, useParams, useHistory } from "react-router-dom";
 import agendaServices from "../../services/agenda";
 import recetaServices from "../../services/receta";
 import services from "../../services/cita.js";
+import permisosServices from "../../services/permisos";
+
 const CitaSeguimiento = () => {
   const { isCollapsed } = useValues();
   const { id } = useParams();
   const history = useHistory();
   const [infoAgenda, setInfoAgenda] = useState([]);
+  const [switchPermiso, setSwitchPermiso] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [recetas, setRecetas] = useState([]);
   const [infoCita, setInfoCita] = useState({
@@ -21,6 +24,7 @@ const CitaSeguimiento = () => {
     nombre_receta: "",
     descripcion_receta: "",
   });
+  const [permisoMedico, setPermisoMedico] = useState({ motivo: "", dias: 0 });
   const [addReceta, setAddReceta] = useState(false);
   useEffect(() => {
     const obtenerCitaByIdAgenda = async () => {
@@ -85,6 +89,22 @@ const CitaSeguimiento = () => {
     await agendaServices.estadoAgenda(estado, id);
     history.push("/dashboard/cita");
   };
+  const handleGenerarPermisos = async () => {
+    const fecha = new Date();
+    const nuevoPermiso = {
+      id_Paciente: infoAgenda[0].id_Paciente,
+      id_Odontologo: infoAgenda[0].id_Odontologo,
+      fecha_permiso: fecha,
+      motivo_permiso: permisoMedico.motivo,
+      dias_permiso: permisoMedico.dias,
+    };
+    permisosServices.createPermisos(nuevoPermiso);
+    setSwitchPermiso(!switchPermiso);
+    setPermisoMedico({ motivo: "", dias: 0 });
+  };
+  const switchPermisos = () => {
+    setSwitchPermiso(!switchPermiso);
+  };
   return (
     <>
       <Topbar />
@@ -106,6 +126,27 @@ const CitaSeguimiento = () => {
           </nav>
         </div>
         <div>
+          {switchPermiso ? (
+            <div>
+              <h4>Permiso Médico</h4>
+              <label htmlFor="">Motivo Permiso</label>
+              <input
+                type="text"
+                value={permisoMedico.motivo}
+                onChange={(e) => setPermisoMedico({ ...permisoMedico, motivo: e.target.value })}
+              />
+              <label htmlFor="">Días De Reposo</label>
+              <input
+                type="text"
+                value={permisoMedico.dias}
+                onChange={(e) => setPermisoMedico({ ...permisoMedico, dias: e.target.value })}
+              />
+              <button onClick={handleGenerarPermisos}>Generar</button>
+              <button onClick={switchPermisos}>Cancelar</button>
+            </div>
+          ) : (
+            <button onClick={switchPermisos}>Permiso Medico</button>
+          )}
           <h4>Información de la Cita</h4>
           <ul>
             <li>
