@@ -54,13 +54,16 @@ const PersonalView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Personal </h1>
-        <div>
+        <h3 className="titulo">Personal </h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
                 <b>Personal</b>
               </li>
