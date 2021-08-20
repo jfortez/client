@@ -4,30 +4,33 @@ import { setUserSession } from "../../utils/Common";
 import services from "../../services/login";
 import { useHistory } from "react-router-dom";
 import useValues from "../../provider/useValues";
+import notificacion from "../../utils/Notificaciones";
+
 const LoginPage = () => {
   const { login, setAuthLoading } = useValues();
   const history = useHistory();
   const [signin, setSignIn] = useState({ usuario: "", contraseña: "" });
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(null);
     setLoading(true);
     const userLogged = {
       usuario: signin.usuario,
       contraseña: signin.contraseña,
     };
-    const logged = await services.login(userLogged);
-    if (logged) {
-      setError(null);
-      setUserSession(logged.token, logged.user);
-      login(logged.user);
-      setAuthLoading(false);
-      history.push("/dashboard");
-    } else {
+    const userExist = await services.verifiyUser(userLogged);
+    if (userExist.message) {
       setLoading(false);
-      setError("Something went wrong. please try again later.");
+      return notificacion("Error", "Usuario o Contraseña Invalidos", "danger");
+    } else {
+      const logged = await services.login(userLogged);
+      if (logged) {
+        setUserSession(logged.token, logged.user);
+        login(logged.user);
+        setAuthLoading(false);
+        notificacion("Inicio de Sesión", "Ingreso realizado con exito", "success");
+        history.push("/dashboard");
+      }
     }
   };
 
@@ -59,7 +62,6 @@ const LoginPage = () => {
               <span></span>
               <label>Password</label>
             </div>
-            {error && <div className="error">{error}</div>}
             <input
               type="submit"
               value={loading ? "Loading..." : "Login"}

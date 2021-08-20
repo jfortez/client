@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import img from "../../../img/pic.jpg";
 import { removeUserSession } from "../../../utils/Common";
 import useValues from "../../../provider/useValues";
+import notificacion from "../../../utils/Notificaciones";
+
 const Topbar = () => {
   const { collapseSidebar, logout } = useValues();
   const [isDropDown, setIsDropDown] = useState(false);
@@ -16,6 +18,7 @@ const Topbar = () => {
     setIsDropDown(!isDropDown);
   };
   const handleLogout = () => {
+    notificacion("Cerrar Sesión", "Cierre de Sesión realizado con exito", "success");
     removeUserSession();
     logout();
   };
