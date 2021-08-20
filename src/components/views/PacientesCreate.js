@@ -2,21 +2,14 @@ import React, { useEffect, useState } from "react";
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import { Error } from "@material-ui/icons";
 import expresiones from "../../utils/Expresiones";
-import {
-  Formulario,
-  ContenedorBotonCentrado,
-  Boton,
-  MensajeError,
-  GrupoInput,
-  Label,
-  Select,
-  Option,
-} from "../../elements/Formularios";
+import { Formulario, GrupoInput, Label, Select, Option } from "../../elements/Formularios";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import services from "../../services/paciente";
 import { Link, useLocation, useParams } from "react-router-dom";
+import { Icon } from "@material-ui/core";
+import { Save, SystemUpdateAlt } from "@material-ui/icons";
+
 const PacientesCreate = () => {
   const { isCollapsed } = useValues();
   const [elementId, setElementId] = useState(0);
@@ -137,20 +130,36 @@ const PacientesCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        {isEditing ? <h1>Editar Paciente</h1> : <h1>Nuevo Paciente</h1>}
-
-        <div>
+        <h3 className="titulo">{isEditing ? "Editar Paciente" : "Nuevo Paciente"}</h3>
+        {formValid ? "ok" : "nom"}
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
-                <Link to="/dashboard/pacientes">Pacientes</Link>
+                <Link to="/dashboard/pacientes" className="navegacion__redirect">
+                  Pacientes
+                </Link>
               </li>
-              <li>{isEditing ? <b>Editar Paciente</b> : <b>Nuevo Paciente</b>}</li>
+              <li> / </li>
+              <li>
+                <b>{isEditing ? "Editar Paciente" : "Nuevo Paciente"}</b>
+              </li>
             </ul>
           </nav>
+        </div>
+        <div className="crear-item">
+          <button className="button actualizar" onClick={isEditing ? handleUpdate : onSubmit}>
+            <span className="button__icon">
+              <Icon component={isEditing ? SystemUpdateAlt : Save} className="icon" />
+            </span>
+            <span className="button__text">{isEditing ? "Actualizar" : "Guardar"}</span>
+          </button>
         </div>
         <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
           <ComponentInput
@@ -183,7 +192,6 @@ const PacientesCreate = () => {
             error="la longitud de numeros debe ser de 15"
             expresion={expresiones.ruc}
           />
-          <br />
           <ComponentInput
             state={telefono} //value
             setState={setTelefono} //onChange
@@ -212,7 +220,6 @@ const PacientesCreate = () => {
             error="el campo está incompleto"
             expresion={expresiones.nombre}
           />
-          <br />
           <ComponentInput
             state={fecha_nacimiento} //value
             setState={setFecha_nacimiento} //onChange
@@ -240,22 +247,6 @@ const PacientesCreate = () => {
             </Select>
             <br />
           </GrupoInput>
-
-          {formValid === false && (
-            <MensajeError>
-              <p>
-                <Error />
-                <b>Error: </b> Por favor rellene el formulario correctamente
-              </p>
-            </MensajeError>
-          )}
-          <ContenedorBotonCentrado>
-            {isEditing ? (
-              <Boton type="submit">Actualizar</Boton>
-            ) : (
-              <Boton type="submit">Crear</Boton>
-            )}
-          </ContenedorBotonCentrado>
         </Formulario>
       </div>
     </>

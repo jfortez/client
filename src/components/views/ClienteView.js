@@ -5,6 +5,7 @@ import services from "../../services/cliente";
 import useValues from "../../provider/useValues";
 import { Link, useHistory } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
+import { Delete, Update, Add } from "@material-ui/icons";
 
 const ClienteView = () => {
   const { isCollapsed } = useValues();
@@ -52,56 +53,71 @@ const ClienteView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Clientes</h1>
-        <div>
+        <h3 className="titulo">Clientes</h3>
+
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
                 <b>Clientes</b>
               </li>
             </ul>
           </nav>
         </div>
-        <div>
-          <Link to="/dashboard/clientes/create">
-            <button>Nuevo Cliente</button>
+        <div className="crear-item">
+          <Link to="/dashboard/clientes/create" className="button__link">
+            <button className="button crear">
+              <span className="button__icon">
+                <Add className="icon" />
+              </span>
+              <span className="button__text">Nuevo Clente</span>
+            </button>
           </Link>
         </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>RUC</th>
                 <th>Nombres Completos</th>
+                <th>Dirección</th>
                 <th>Email</th>
                 <th>Telefono</th>
-                <th>Dirección</th>
-                <th>Created At</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : (
-                clientes.map((cliente) => {
+                clientes.map((cliente, index) => {
                   return (
-                    <tr key={cliente.id}>
-                      <td>{cliente.id}</td>
+                    <tr key={cliente.id} className="rowData">
+                      <td>{index + 1}</td>
                       <td>{cliente.ruc}</td>
                       <td>
                         {cliente.nombres} {cliente.apellidos}
                       </td>
+                      <td>{cliente.direccion}</td>
                       <td>{cliente.email}</td>
                       <td>{cliente.telefono}</td>
-                      <td>{cliente.direccion}</td>
-                      <td>{new Date(cliente.fecha_registro).toLocaleDateString()}</td>
-                      <td>
-                        <button onClick={() => handleDelete(cliente.id)}>Eliminar</button>
-                        <button onClick={() => handleUpdate(cliente.id)}>Actualizar</button>
+                      <td className="botones">
+                        <button onClick={() => handleDelete(cliente.id)} className="button borrar">
+                          <Delete />
+                        </button>
+                        <button
+                          onClick={() => handleUpdate(cliente.id)}
+                          className="button actualizar"
+                        >
+                          <Update />
+                        </button>
                       </td>
                     </tr>
                   );

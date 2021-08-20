@@ -4,6 +4,7 @@ import useValues from "../../provider/useValues";
 import { Link, useHistory } from "react-router-dom";
 import agendaServices from "../../services/agenda";
 import { Loader } from "../../elements/Loader";
+import { EventBusy, Pageview, EventAvailable, Visibility } from "@material-ui/icons";
 
 const CitasView = () => {
   const { isCollapsed, user } = useValues();
@@ -57,27 +58,44 @@ const CitasView = () => {
     await agendaServices.estadoAgenda(estado, id);
     setIsListed(true);
   };
+  const showDetalles = (id) => {
+    history.push(`/dashboard/reporteria/historialpaciente/${id}/view`);
+  };
   return (
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Página Citas</h1>
-        <div>
+        <h3 className="titulo">Citas</h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
                 <b>Citas</b>
               </li>
             </ul>
           </nav>
         </div>
+        <div className="crear-item">
+          <Link to="/dashboard/agenda" className="button__link">
+            <button className="button crear">
+              <span className="button__icon">
+                <EventAvailable className="icon" />
+              </span>
+              <span className="button__text">Agendar Cita</span>
+            </button>
+          </Link>
+        </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Descripcion</th>
                 <th>Paciente</th>
                 <th>Odontologo Responsable</th>
@@ -86,15 +104,17 @@ const CitasView = () => {
                 <th>Hora Cita</th>
                 <th>Estado</th>
                 <th>Creado el</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : (
-                agenda.map((item) => {
+                agenda.map((item, index) => {
                   return (
-                    <tr key={item.id}>
+                    <tr key={item.id} className="rowData">
+                      <td>{index + 1}</td>
                       <td>{item.descripcion}</td>
                       <td>
                         {item.nombres_paciente} {item.apellidos_paciente}
@@ -107,12 +127,23 @@ const CitasView = () => {
                       <td>{item.hora_agenda}</td>
                       <td>{item.estado}</td>
                       <td>{new Date(item.fecha_registro).toLocaleDateString()}</td>
-                      <td>
+                      <td className="botones">
                         {item.estado === "PENDIENTE" ? (
                           <div>
-                            <button onClick={() => handleAtender(item.id)}>Atender</button>
-                            <button onClick={() => handleAnular(item.id)}>Anular</button>
+                            <button
+                              onClick={() => handleAtender(item.id)}
+                              className="button actualizar"
+                            >
+                              <Pageview />
+                            </button>
+                            <button onClick={() => handleAnular(item.id)} className="button borrar">
+                              <EventBusy />
+                            </button>
                           </div>
+                        ) : item.estado === "FINALIZADO" ? (
+                          <button className="button show" onClick={() => showDetalles(item.id)}>
+                            <Visibility />
+                          </button>
                         ) : null}
                       </td>
                     </tr>

@@ -5,6 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import services from "../../services/servicios";
 import { useEffect, useState } from "react";
 import { Loader } from "../../elements/Loader";
+import { Delete, Update, Add } from "@material-ui/icons";
 
 const ServiciosView = () => {
   const { isCollapsed } = useValues();
@@ -19,9 +20,6 @@ const ServiciosView = () => {
     }
   };
   const history = useHistory();
-  const handleAdd = () => {
-    history.push("/dashboard/servicios/create");
-  };
   const handleUpdate = (id) => {
     history.push(`/dashboard/servicios/${id}/edit`);
   };
@@ -56,44 +54,63 @@ const ServiciosView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Servicios</h1>
-        <div>
+        <h3 className="titulo">Servicios</h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
                 <b>Servicios</b>
               </li>
             </ul>
           </nav>
-          <button onClick={handleAdd}>Añadir Servicio</button>
+        </div>
+        <div className="crear-item">
+          <Link to="/dashboard/servicios/create" className="button__link">
+            <button className="button crear">
+              <span className="button__icon">
+                <Add className="icon" />
+              </span>
+              <span className="button__text">Nuevo Servicio</span>
+            </button>
+          </Link>
         </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Codigo Servicio</th>
                 <th>Nombre Servicio</th>
                 <th>Descripción del Servicio</th>
                 <th>Precio</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : (
-                servicios.map((item) => {
+                servicios.map((item, index) => {
                   return (
-                    <tr key={item.id}>
+                    <tr key={item.id} className="rowData">
+                      <td>{index + 1}</td>
                       <td>{item.cod_servicio}</td>
                       <td>{item.nombre}</td>
                       <td>{item.descripcion}</td>
                       <td>{item.precio}</td>
-                      <td>
-                        <button onClick={() => handleDelete(item.id)}>Eliminar</button>
-                        <button onClick={() => handleUpdate(item.id)}>Actualizar</button>
+                      <td className="botones">
+                        <button onClick={() => handleDelete(item.id)} className="button borrar">
+                          <Delete />
+                        </button>
+                        <button onClick={() => handleUpdate(item.id)} className="button actualizar">
+                          <Update />
+                        </button>
                       </td>
                     </tr>
                   );

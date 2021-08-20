@@ -4,14 +4,10 @@ import useValues from "../../provider/useValues";
 import { Link, useLocation, useParams } from "react-router-dom";
 import services from "../../services/proveedores";
 import expresiones from "../../utils/Expresiones";
-import {
-  Formulario,
-  ContenedorBotonCentrado,
-  Boton,
-  MensajeError,
-} from "../../elements/Formularios";
-import { Error } from "@material-ui/icons";
+import { Formulario } from "../../elements/Formularios";
 import ComponentInput from "../layouts/forms/ComponentInput";
+import { Icon } from "@material-ui/core";
+import { Save, SystemUpdateAlt } from "@material-ui/icons";
 
 const ProveedoresCreate = () => {
   const { isCollapsed } = useValues();
@@ -100,20 +96,36 @@ const ProveedoresCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        {isEditing ? <h1>Editar Proveedor</h1> : <h1>Nuevo Proveedor</h1>}
-
-        <div>
+        <h3 className="titulo">{isEditing ? "Editar Proveedor" : "Nuevo Proveedor"}</h3>
+        {formValid ? "ok" : "nom"}
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
-                <Link to="/dashboard/proveedores">Proveedores</Link>
+                <Link to="/dashboard/proveedores" className="navegacion__redirect">
+                  Proveedores
+                </Link>
               </li>
-              <li>{isEditing ? <b>Editar Proveedor</b> : <b>Nuevo Proveedor</b>}</li>
+              <li> / </li>
+              <li>
+                <b>{isEditing ? "Editar Proveedor" : "Nuevo Proveedor"}</b>
+              </li>
             </ul>
           </nav>
+        </div>
+        <div className="crear-item">
+          <button className="button actualizar" onClick={isEditing ? handleUpdate : onSubmit}>
+            <span className="button__icon">
+              <Icon component={isEditing ? SystemUpdateAlt : Save} className="icon" />
+            </span>
+            <span className="button__text">{isEditing ? "Actualizar" : "Guardar"}</span>
+          </button>
         </div>
         <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
           <ComponentInput
@@ -146,7 +158,6 @@ const ProveedoresCreate = () => {
             error="el campo está incompleto"
             expresion={expresiones.telefono}
           />
-          <br />
           <ComponentInput
             state={direccion} //value
             setState={setDireccion} //onChange
@@ -177,22 +188,6 @@ const ProveedoresCreate = () => {
             error="el campo está incompleto"
             expresion={expresiones.correo}
           />
-          {/* Validacion */}
-          {formValid === false && (
-            <MensajeError>
-              <p>
-                <Error />
-                <b>Error: </b> Por favor rellene el formulario correctamente
-              </p>
-            </MensajeError>
-          )}
-          <ContenedorBotonCentrado>
-            {isEditing ? (
-              <Boton type="submit">Actualizar</Boton>
-            ) : (
-              <Boton type="submit">Crear</Boton>
-            )}
-          </ContenedorBotonCentrado>
         </Formulario>
       </div>
     </>

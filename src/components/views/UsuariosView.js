@@ -5,6 +5,7 @@ import useValues from "../../provider/useValues";
 import { Link, useHistory } from "react-router-dom";
 import services from "../../services/usuarios";
 import { Loader } from "../../elements/Loader";
+import { Cancel, CheckCircle, Update, Add } from "@material-ui/icons";
 
 const UsuariosView = () => {
   const { isCollapsed, user } = useValues();
@@ -80,29 +81,37 @@ const UsuariosView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Usuarios</h1>
-        <div>
+        <h3 className="titulo">Usuarios </h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
-                <b>Usuario</b>
+                <b>Usuarios</b>
               </li>
             </ul>
           </nav>
         </div>
-        <div>
-          <Link to="/dashboard/usuarios/create">
-            <button>Nuevo Usuario</button>
+        <div className="crear-item">
+          <Link to="/dashboard/usuarios/create" className="button__link">
+            <button className="button crear">
+              <span className="button__icon">
+                <Add className="icon" />
+              </span>
+              <span className="button__text">Nuevo Usuario</span>
+            </button>
           </Link>
         </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>Usuario</th>
                 <th>Contraseña</th>
                 <th>Previlegios</th>
@@ -115,23 +124,35 @@ const UsuariosView = () => {
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : usuarios ? (
-                usuarios.map((user) => {
+                usuarios.map((user, index) => {
                   return (
-                    <tr key={user.id}>
-                      <td>{user.id}</td>
+                    <tr key={user.id} className="rowData">
+                      <td>{index + 1}</td>
                       <td>{user.usuario}</td>
                       <td>{user.contraseña}</td>
-                      <td>{user.previlegios}</td>
+                      <td>{user.previlegios === "1" ? "Administrador" : "Odontologo"}</td>
                       <td>{new Date(user.fecha_registro).toLocaleDateString()}</td>
                       <td>{user.active === 1 ? "Activo" : "Inactivo"}</td>
-                      <td>
+                      <td className="botones">
                         {userLogged.id === user.id ? null : user.active === 1 ? (
                           <div>
-                            <button onClick={() => handleDelete(user.id)}>Inactivar</button>
-                            <button onClick={() => handleUpdate(user.id)}>Actualizar</button>
+                            <button onClick={() => handleDelete(user.id)} className="button borrar">
+                              <Cancel />
+                            </button>
+                            <button
+                              onClick={() => handleUpdate(user.id)}
+                              className="button actualizar"
+                            >
+                              <Update />
+                            </button>
                           </div>
                         ) : (
-                          <button onClick={() => handeActive(user.id)}>Activar</button>
+                          <button
+                            onClick={() => handeActive(user.id)}
+                            className="button activeuser"
+                          >
+                            <CheckCircle />
+                          </button>
                         )}
                       </td>
                     </tr>

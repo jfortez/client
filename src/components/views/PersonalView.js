@@ -84,12 +84,12 @@ const PersonalView = () => {
           <table className="paleBlueRows">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Nombres Completos</th>
                 <th>Cedula</th>
                 <th>Telefono</th>
                 <th>Dirección</th>
                 <th>Correo</th>
-                <th>Creado el</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -97,9 +97,10 @@ const PersonalView = () => {
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : personal ? (
-                personal.map((person) => {
+                personal.map((person, index) => {
                   return (
                     <tr key={person.id} className="rowData">
+                      <td>{index + 1}</td>
                       <td>
                         {person.nombres} {person.apellidos}
                       </td>
@@ -107,7 +108,6 @@ const PersonalView = () => {
                       <td>{person.telefono}</td>
                       <td>{person.direccion}</td>
                       <td>{person.email}</td>
-                      <td>{new Date(person.fecha_registro).toLocaleDateString()}</td>
                       <td className="botones">
                         <button
                           onClick={() => handleDelete(person.id_Personal)}

@@ -42,15 +42,33 @@ const ReporteriaCajaView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <ul>
-          <Link to="/dashboard/reporteria/caja">
-            <li>Reportería</li>
-          </Link>
-        </ul>
-        <h1>Reporteria Caja View</h1>
-        <table>
+        <h3 className="titulo">Reportería</h3>
+        <div className="navegacion">
+          <nav>
+            <ul>
+              <li>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
+              </li>
+              <li> / </li>
+              <li>
+                <Link to="/dashboard/reporteria/caja" className="navegacion__redirect">
+                  Reporte de Caja
+                </Link>
+              </li>
+              <li> / </li>
+              <li>
+                <b>Movimientos</b>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <h3>Movimientos</h3>
+        <table className="paleBlueRows">
           <thead>
             <tr>
+              <th>#</th>
               <th>Fecha y Hora del movimiento</th>
               <th>Tipo</th>
               <th>Valor</th>
@@ -65,6 +83,7 @@ const ReporteriaCajaView = () => {
               movimientosCaja.map((item, index) => {
                 return (
                   <tr key={index}>
+                    <td>{index + 1}</td>
                     <td>{new Date(item.fechaMovimiento).toLocaleString()}</td>
                     <td>{item.ingreso ? <b>ingreso</b> : <b>Egreso</b>}</td>
                     <td>

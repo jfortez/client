@@ -2,22 +2,15 @@ import React, { useState, useEffect } from "react";
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import {
-  Formulario,
-  ContenedorBotonCentrado,
-  Boton,
-  MensajeError,
-  GrupoInput,
-  Select,
-  Option,
-  Label,
-} from "../../elements/Formularios";
+import { Formulario, GrupoInput, Select, Option, Label } from "../../elements/Formularios";
 import expresiones from "../../utils/Expresiones";
-import { Error } from "@material-ui/icons";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import services from "../../services/personal";
 import cargoServices from "../../services/cargo";
 import { Link, useLocation, useParams } from "react-router-dom";
+import { Icon } from "@material-ui/core";
+import { Save, SystemUpdateAlt } from "@material-ui/icons";
+
 const PersonalCreate = () => {
   const { isCollapsed } = useValues();
   const [elementId, setElementId] = useState(0);
@@ -154,21 +147,37 @@ const PersonalCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        {isEditing ? <h1>Editar Personal</h1> : <h1>Nuevo Personal</h1>}
-        <div>
+        <h3 className="titulo">{isEditing ? "Editar Personal" : "Nuevo Personal"}</h3>
+        {formValid ? "ok" : "nom"}
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
-                <Link to="/dashboard/personal">Personal</Link>
+                <Link to="/dashboard/personal" className="navegacion__redirect">
+                  Personal
+                </Link>
               </li>
-              <li>{isEditing ? <b>Editar Personal</b> : <b>Nuevo Personal</b>}</li>
+              <li> / </li>
+              <li>
+                <b>{isEditing ? "Editar Personal" : "Nuevo Personal"}</b>
+              </li>
             </ul>
           </nav>
         </div>
-        <h3>Datos Personales</h3>
+        <div className="crear-item">
+          <button className="button actualizar" onClick={isEditing ? handleUpdate : onSubmit}>
+            <span className="button__icon">
+              <Icon component={isEditing ? SystemUpdateAlt : Save} className="icon" />
+            </span>
+            <span className="button__text">{isEditing ? "Actualizar" : "Guardar"}</span>
+          </button>
+        </div>
         <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
           <ComponentInput
             state={nombres} //value
@@ -200,7 +209,6 @@ const PersonalCreate = () => {
             error="el campo es obligatorio"
             expresion={expresiones.ruc}
           />
-          <br />
           <ComponentInput
             state={telefono} //value
             setState={setTelefono} //onChange
@@ -231,7 +239,6 @@ const PersonalCreate = () => {
             error="el campo es obligatorio"
             expresion={expresiones.nombre}
           />
-          <br />
           <ComponentInput
             state={fecha_nacimiento} //value
             setState={setFecha_nacimiento} //onChange
@@ -269,7 +276,7 @@ const PersonalCreate = () => {
             <br />
           </GrupoInput>
           {/* Validacion */}
-          {formValid === false && (
+          {/* {formValid === false && (
             <MensajeError>
               <p>
                 <Error />
@@ -283,7 +290,7 @@ const PersonalCreate = () => {
             ) : (
               <Boton type="submit">Crear</Boton>
             )}
-          </ContenedorBotonCentrado>
+          </ContenedorBotonCentrado> */}
         </Formulario>
       </div>
     </>

@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import {
-  Formulario,
-  ContenedorBotonCentrado,
-  Boton,
-  MensajeError,
-  GrupoInput,
-  Label,
-  Select,
-  Option,
-} from "../../elements/Formularios";
-import { Error } from "@material-ui/icons";
+import { Formulario, GrupoInput, Label, Select, Option } from "../../elements/Formularios";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import { Link, useLocation, useParams } from "react-router-dom";
+import { Icon } from "@material-ui/core";
+import { Save, SystemUpdateAlt } from "@material-ui/icons";
 import personalServices from "../../services/personal";
 import personas from "../../services/personas";
 import odontologoServices from "../../services/odontologos";
@@ -119,21 +111,39 @@ const UsuarioCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        {isEditing ? <h1>Editar Usuario</h1> : <h1>Nuevo Usuario</h1>}
-
-        <div>
+        <h3 className="titulo">{isEditing ? "Editar Usuario" : "Nuevo Usuario"}</h3>
+        {formValid ? "ok" : "nom"}
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
-                <Link to="/dashboard/Usuarios">Usuarios</Link>
+                <Link to="/dashboard/usuarios" className="navegacion__redirect">
+                  Usuarios
+                </Link>
               </li>
-              <li>{isEditing ? <b>Editar Usuario</b> : <b>Nuevo Usuario</b>}</li>
+              <li> / </li>
+              <li>
+                <b>{isEditing ? "Editar Usuario" : "Nuevo Usuario"}</b>
+              </li>
             </ul>
           </nav>
+        </div>
+        <div className="crear-item">
+          <button className="button actualizar" onClick={isEditing ? handleUpdate : onSubmit}>
+            <span className="button__icon">
+              <Icon component={isEditing ? SystemUpdateAlt : Save} className="icon" />
+            </span>
+            <span className="button__text">{isEditing ? "Actualizar" : "Guardar"}</span>
+          </button>
+        </div>
 
+        <div>
           {dataByCedula ? <h3>Información Personal</h3> : null}
           {dataByCedula ? (
             dataByCedula.map((data) => {
@@ -191,7 +201,6 @@ const UsuarioCreate = () => {
               error="El campo está incompleto"
               expresion={expresiones.password}
             />
-            {isEditing ? null : <br />}
             <GrupoInput>
               <Label>Previlegios</Label>
               <Select
@@ -202,24 +211,7 @@ const UsuarioCreate = () => {
                 <Option value="1">Admin</Option>
                 <Option value="2">Odontologo</Option>
               </Select>
-              <br />
             </GrupoInput>
-            {/* Validacion */}
-            {formValid === false && (
-              <MensajeError>
-                <p>
-                  <Error />
-                  <b>Error: </b> Por favor rellene el formulario correctamente
-                </p>
-              </MensajeError>
-            )}
-            <ContenedorBotonCentrado>
-              {isEditing ? (
-                <Boton type="submit">Actualizar</Boton>
-              ) : (
-                <Boton type="submit">Crear</Boton>
-              )}
-            </ContenedorBotonCentrado>
           </Formulario>
         </div>
       </div>

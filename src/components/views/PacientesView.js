@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import useValues from "../../provider/useValues";
 import services from "../../services/paciente";
 import { Loader } from "../../elements/Loader";
+import { Delete, Update, Add } from "@material-ui/icons";
 
 const PacientesView = () => {
   const { isCollapsed } = useValues();
@@ -52,31 +53,38 @@ const PacientesView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Pacientes</h1>
-        <div>
+        <h3 className="titulo">Pacientes</h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
                 <b>Pacientes</b>
               </li>
             </ul>
           </nav>
         </div>
-        <div>
-          <Link to="/dashboard/pacientes/create">
-            <button>Nuevo Paciente</button>
+        <div className="crear-item">
+          <Link to="/dashboard/pacientes/create" className="button__link">
+            <button className="button crear">
+              <span className="button__icon">
+                <Add className="icon" />
+              </span>
+              <span className="button__text">Nuevo Paciente</span>
+            </button>
           </Link>
         </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
+                <th>#</th>
+                <th>Nombres Completos</th>
                 <th>Cedula</th>
                 <th>Telefono</th>
                 <th>Dirección</th>
@@ -89,19 +97,27 @@ const PacientesView = () => {
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : pacientes ? (
-                pacientes.map((paciente) => (
-                  <tr key={paciente.id}>
-                    <td>{paciente.id}</td>
-                    <td>{paciente.nombres}</td>
-                    <td>{paciente.apellidos}</td>
+                pacientes.map((paciente, index) => (
+                  <tr key={paciente.id} className="rowData">
+                    <td>{index + 1}</td>
+                    <td>
+                      {paciente.nombres} {paciente.apellidos}
+                    </td>
                     <td>{paciente.cedula}</td>
                     <td>{paciente.telefono}</td>
                     <td>{paciente.direccion}</td>
                     <td>{paciente.edad}</td>
                     <td>{paciente.genero}</td>
-                    <td>
-                      <button onClick={() => handleDelete(paciente.id)}>Eliminar</button>
-                      <button onClick={() => handleUpdate(paciente.id)}>Actualizar</button>
+                    <td className="botones">
+                      <button onClick={() => handleDelete(paciente.id)} className="button borrar">
+                        <Delete />
+                      </button>
+                      <button
+                        onClick={() => handleUpdate(paciente.id)}
+                        className="button actualizar"
+                      >
+                        <Update />
+                      </button>
                     </td>
                   </tr>
                 ))

@@ -3,15 +3,11 @@ import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import services from "../../services/cliente";
 import expresiones from "../../utils/Expresiones";
-import {
-  Formulario,
-  ContenedorBotonCentrado,
-  Boton,
-  MensajeError,
-} from "../../elements/Formularios";
-import { Error } from "@material-ui/icons";
+import { Formulario } from "../../elements/Formularios";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import { Link, useLocation, useParams } from "react-router-dom";
+import { Icon } from "@material-ui/core";
+import { Save, SystemUpdateAlt } from "@material-ui/icons";
 
 const ClienteCreate = () => {
   const { isCollapsed } = useValues();
@@ -107,19 +103,38 @@ const ClienteCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        {isEditing ? <h1>Editar Cliente</h1> : <h1>Nuevo Cliente</h1>}
+        <h3 className="titulo">{isEditing ? "Editar Cliente" : "Nuevo Cliente"}</h3>
+        {formValid ? "ok" : "nom"}
         <div>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/dashboard">Home</Link>
-              </li>
-              <li>
-                <Link to="/dashboard/clientes">Clientes</Link>
-              </li>
-              <li>{isEditing ? <b>Editar Cliente</b> : <b>Nuevo Cliente</b>}</li>
-            </ul>
-          </nav>
+          <div className="navegacion">
+            <nav>
+              <ul>
+                <li>
+                  <Link to="/dashboard" className="navegacion__redirect">
+                    Home
+                  </Link>
+                </li>
+                <li> / </li>
+                <li>
+                  <Link to="/dashboard/clientes" className="navegacion__redirect">
+                    Clientes
+                  </Link>
+                </li>
+                <li> / </li>
+                <li>
+                  <b>{isEditing ? "Editar Cliente" : "Nuevo Cliente"}</b>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div className="crear-item">
+            <button className="button actualizar" onClick={isEditing ? handleUpdate : onSubmit}>
+              <span className="button__icon">
+                <Icon component={isEditing ? SystemUpdateAlt : Save} className="icon" />
+              </span>
+              <span className="button__text">{isEditing ? "Actualizar" : "Guardar"}</span>
+            </button>
+          </div>
           <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
             <ComponentInput
               state={ruc} //value
@@ -151,7 +166,6 @@ const ClienteCreate = () => {
               error="el campo es obligatorio"
               expresion={expresiones.nombre}
             />
-            <br />
             <ComponentInput
               state={telefono} //value
               setState={setTelefono} //onChange
@@ -180,7 +194,6 @@ const ClienteCreate = () => {
               error="el campo es obligatorio"
               expresion={expresiones.nombre}
             />
-            <br />
             <ComponentInput
               state={email} //value
               setState={setEmail} //onChange
@@ -189,22 +202,6 @@ const ClienteCreate = () => {
               name="email"
               placeholder="Correo"
             />
-            {/* Validacion */}
-            {formValid === false && (
-              <MensajeError>
-                <p>
-                  <Error />
-                  <b>Error: </b> Por favor rellene el formulario correctamente
-                </p>
-              </MensajeError>
-            )}
-            <ContenedorBotonCentrado>
-              {isEditing ? (
-                <Boton type="submit">Actualizar</Boton>
-              ) : (
-                <Boton type="submit">Crear</Boton>
-              )}
-            </ContenedorBotonCentrado>
           </Formulario>
         </div>
       </div>

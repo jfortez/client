@@ -8,12 +8,12 @@ import VentaDetalle from "../layouts/ventaComponents/VentaDetalle";
 import valuesServices from "../../services/values";
 import ventaValues from "../../services/venta";
 import productoServices from "../../services/productos";
-import NavigationVentas from "../layouts/ventaComponents/NavigationVentas";
 import cajaServices from "../../services/caja";
 //Importes para faturación
 import jsPDFInvoiceTemplate from "jspdf-invoice-template";
 import empresaServices from "../../services/empresa";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const VentasView = () => {
   const {
@@ -222,8 +222,19 @@ const VentasView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <NavigationVentas />
-        <h1>Ventas</h1>
+        <nav className="menu-bar">
+          <div className="group">
+            <span className="item title">Ventas</span>
+          </div>
+          <div className="group">
+            <Link to="/dashboard/ventas/caja" className="item link">
+              Caja
+            </Link>
+            <Link to="/dashboard/reporteria/ventas" className="item link">
+              Reporte Ventas
+            </Link>
+          </div>
+        </nav>
         <p>
           <strong>Fecha:</strong> {fecha.toLocaleDateString()}
         </p>

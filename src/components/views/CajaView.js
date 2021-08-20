@@ -3,6 +3,8 @@ import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import { Link } from "react-router-dom";
 import services from "../../services/caja";
+import { Loader } from "../../elements/Loader";
+
 const CajaView = () => {
   const { isCollapsed, user } = useValues();
   const [caja, setCaja] = useState([]);
@@ -19,14 +21,37 @@ const CajaView = () => {
   const [isCierre, setIsCierre] = useState(false);
   const [isIngreso, setIsIngreso] = useState(false);
   const [isEgreso, setIsEgreso] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
+    let source = services.Axios.CancelToken.source();
+    let unmounted = false;
+
     const getCajaActual = async () => {
       const ultimaCaja = await services.getCajaByMaxId();
-      const movimientos = await services.getCajaMovimientosByIdCaja(ultimaCaja[0]?.id);
       setCaja(ultimaCaja);
-      setCajaMovimientos(movimientos);
+      try {
+        const movimientos = await services.getCajaMovimientosByIdCaja(source, ultimaCaja[0]?.id);
+        if (!unmounted) {
+          setCajaMovimientos(movimientos);
+
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (!unmounted) {
+          if (services.Axios.isCancel(error)) {
+            console.log("AxiosCancel: caught cancel", error.message);
+          } else {
+            console.log("throw error", error.message);
+          }
+        }
+      }
     };
     getCajaActual();
+    return () => {
+      unmounted = true;
+      source.cancel("Cancelling in Cleanup");
+    };
   }, [isListed]);
   useEffect(() => {
     const verificarCaja = async () => {
@@ -121,15 +146,21 @@ const CajaView = () => {
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h1>Caja</h1>
-        <div>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
-                <Link to="/dashboard/ventas">Ventas</Link>
+                <Link to="/dashboard/ventas" className="navegacion__redirect">
+                  Ventas
+                </Link>
               </li>
+              <li> / </li>
               <li>
                 <b>Caja</b>
               </li>
@@ -137,7 +168,6 @@ const CajaView = () => {
           </nav>
         </div>
         <div>
-          <h4>Ingresar Caja</h4>
           {caja[0]?.estado_caja === "ABIERTO" ? (
             <div>
               <h3>Saldo en Caja: ${caja[0]?.caja_actual}</h3>
@@ -145,14 +175,23 @@ const CajaView = () => {
           ) : null}
           {/* Ingresar Caja */}
           {isOpen ? (
-            <div>
-              <label htmlFor="caja_inicio">Caja Actual</label>
-              <input
-                type="text"
-                value={cajaActual.caja_inicio}
-                onChange={(e) => setCajaActual({ ...cajaActual, caja_inicio: e.target.value })}
-              />
-              <button onClick={abrirCaja}>Ingresar Caja</button>
+            <div className="caja__abrir">
+              <div className="caja__ingresar">
+                <h4 className="caja__title">Ingresar Caja</h4>
+                <label htmlFor="caja_inicio" className="caja__input">
+                  Caja Actual
+                </label>
+                <input
+                  className="caja__input input"
+                  type="text"
+                  id="caja_inicio"
+                  value={cajaActual.caja_inicio}
+                  onChange={(e) => setCajaActual({ ...cajaActual, caja_inicio: e.target.value })}
+                />
+                <button onClick={abrirCaja} className="button crear abrir">
+                  Ingresar Caja
+                </button>
+              </div>
             </div>
           ) : !isCierre ? (
             <button onClick={switchCierre}>Cerrar Caja</button>
@@ -226,21 +265,25 @@ const CajaView = () => {
               <strong>Valor Inicial a la Caja: </strong>${caja[0]?.caja_inicio}
             </>
           ) : null}
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Fecha y Hora del movimiento</th>
                 <th>Tipo</th>
                 <th>Valor</th>
                 <th>Descripción</th>
-                <th>Valor Total</th>
+                <th>Caja Actual</th>
               </tr>
             </thead>
             <tbody>
-              {caja[0]?.estado_caja === "ABIERTO" && cajaMovimientos ? (
+              {isLoading ? (
+                <Loader loading={isLoading} />
+              ) : caja[0]?.estado_caja === "ABIERTO" && cajaMovimientos ? (
                 cajaMovimientos.map((item, index) => {
                   return (
-                    <tr key={index}>
+                    <tr key={index} className="rowData">
+                      <td>{index + 1}</td>
                       <td>{new Date(item.fechaMovimiento).toLocaleString()}</td>
                       <td>{item.ingreso ? <b>ingreso</b> : <b>Egreso</b>}</td>
                       <td>
@@ -253,7 +296,7 @@ const CajaView = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan="5">Debe ingresar un valor en Caja primero</td>
+                  <td colSpan="6">No se Observan Movimientos en Caja</td>
                 </tr>
               )}
             </tbody>

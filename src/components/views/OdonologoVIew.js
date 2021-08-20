@@ -4,6 +4,7 @@ import useValues from "../../provider/useValues";
 import { Link, useHistory } from "react-router-dom";
 import services from "../../services/odontologos";
 import { Loader } from "../../elements/Loader";
+import { Delete, Update, Add } from "@material-ui/icons";
 
 const OdontologoView = () => {
   const { isCollapsed } = useValues();
@@ -51,34 +52,42 @@ const OdontologoView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Odontologos</h1>
-        <div>
+        <h3 className="titulo">Odontologos</h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
                 <b>Odontologos</b>
               </li>
             </ul>
           </nav>
         </div>
-        <div>
-          <Link to="/dashboard/odontologos/create">
-            <button>Nuevo Odontologo</button>
+        <div className="crear-item">
+          <Link to="/dashboard/odontologos/create" className="button__link">
+            <button className="button crear">
+              <span className="button__icon">
+                <Add className="icon" />
+              </span>
+              <span className="button__text">Nuevo Odontologo</span>
+            </button>
           </Link>
         </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Nombres Completos</th>
                 <th>Cedula</th>
                 <th>Telefono</th>
                 <th>Dirección</th>
                 <th>Correo</th>
-                <th>Creado el</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -86,9 +95,10 @@ const OdontologoView = () => {
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : odontologos ? (
-                odontologos.map((item) => {
+                odontologos.map((item, index) => {
                   return (
-                    <tr key={item.id}>
+                    <tr key={item.id} className="rowData">
+                      <td>{index + 1}</td>
                       <td>
                         {item.nombres} {item.apellidos}
                       </td>
@@ -96,10 +106,19 @@ const OdontologoView = () => {
                       <td>{item.telefono}</td>
                       <td>{item.direccion}</td>
                       <td>{item.email}</td>
-                      <td>{new Date(item.fecha_registro).toLocaleDateString()}</td>
-                      <td>
-                        <button onClick={() => handleDelete(item.id_Odontologo)}>Eliminar</button>
-                        <button onClick={() => handleUpdate(item.id_Odontologo)}>Actualizar</button>
+                      <td className="botones">
+                        <button
+                          onClick={() => handleDelete(item.id_Odontologo)}
+                          className="button borrar"
+                        >
+                          <Delete />
+                        </button>
+                        <button
+                          onClick={() => handleUpdate(item.id_Odontologo)}
+                          className="button actualizar"
+                        >
+                          <Update />
+                        </button>
                       </td>
                     </tr>
                   );

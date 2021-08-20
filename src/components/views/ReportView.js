@@ -15,17 +15,38 @@ const ReportView = () => {
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h1>Reportería</h1>
         {/* Navegacion */}
-        <ul>
-          <NavLink to="/dashboard/reporteria/ventas">
-            <li>Ventas</li>
-          </NavLink>
-          <NavLink to="/dashboard/reporteria/caja">
-            <li>Caja</li>
-          </NavLink>
-          <NavLink to="/dashboard/reporteria/historialpaciente">
-            <li>Historial Paciente</li>
-          </NavLink>
-        </ul>
+        <div className="navegacion">
+          <nav>
+            <ul>
+              <li>
+                <NavLink exact={true} to="/dashboard" className="navegacion__redirect">
+                  Home
+                </NavLink>
+              </li>
+              <li> / </li>
+              <li>
+                <NavLink to="/dashboard/reporteria/ventas" className="navegacion__redirect">
+                  Ventas
+                </NavLink>
+              </li>
+              <li> / </li>
+              <li>
+                <NavLink to="/dashboard/reporteria/caja" className="navegacion__redirect">
+                  Caja
+                </NavLink>
+              </li>
+              <li> / </li>
+              <li>
+                <NavLink
+                  to="/dashboard/reporteria/historialpaciente"
+                  className="navegacion__redirect"
+                >
+                  Historial Paciente
+                </NavLink>
+              </li>
+            </ul>
+          </nav>
+        </div>
         <div>
           {pathname === "/dashboard/reporteria/ventas" ? (
             <ReporteriaVentas />

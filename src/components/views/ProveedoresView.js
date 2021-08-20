@@ -4,6 +4,7 @@ import useValues from "../../provider/useValues";
 import { Link, useHistory } from "react-router-dom";
 import services from "../../services/proveedores";
 import { Loader } from "../../elements/Loader";
+import { Delete, Update, Add } from "@material-ui/icons";
 
 const ProveedoresView = () => {
   const { isCollapsed } = useValues();
@@ -11,9 +12,6 @@ const ProveedoresView = () => {
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
-  const nuevoItem = () => {
-    history.push("/dashboard/proveedores/create");
-  };
   const handleBaja = async (id) => {
     setIsLoading(true);
     const item = await services.bajaProveedor(id);
@@ -55,52 +53,67 @@ const ProveedoresView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Proveedores</h1>
-        <div>
+        <h3 className="titulo">Proveedores</h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
                 <b>Proveedores</b>
               </li>
             </ul>
           </nav>
         </div>
-        <div>
-          <button onClick={nuevoItem}>Nuevo Proveedor</button>
+        <div className="crear-item">
+          <Link to="/dashboard/proveedores/create" className="button__link">
+            <button className="button crear">
+              <span className="button__icon">
+                <Add className="icon" />
+              </span>
+              <span className="button__text">Nuevo Proveedor</span>
+            </button>
+          </Link>
         </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
+                <th>#</th>
                 <th>RUC</th>
-                <th>Nombre</th>
+                <th>Razon Social</th>
                 <th>Direccion</th>
                 <th>Ciudad</th>
                 <th>Telefono</th>
                 <th>Email</th>
-                <th>Creado el</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : proveedores ? (
-                proveedores.map((item) => {
+                proveedores.map((item, index) => {
                   return (
-                    <tr key={item.id}>
+                    <tr key={item.id} className="rowData">
+                      <td>{index + 1}</td>
                       <td>{item.ruc}</td>
                       <td>{item.nombre}</td>
                       <td>{item.direccion}</td>
                       <td>{item.ciudad}</td>
                       <td>{item.telefono}</td>
                       <td>{item.email}</td>
-                      <td>{new Date(item.fecha_registro).toLocaleDateString()}</td>
-                      <td>
-                        <button onClick={() => handleBaja(item.id)}>Dar de Baja</button>
-                        <button onClick={() => handleUpdate(item.id)}>Actualizar</button>
+                      <td className="botones">
+                        <button onClick={() => handleBaja(item.id)} className="button borrar">
+                          <Delete />
+                        </button>
+                        <button onClick={() => handleUpdate(item.id)} className="button actualizar">
+                          <Update />
+                        </button>
                       </td>
                     </tr>
                   );

@@ -5,6 +5,7 @@ import useValues from "../../provider/useValues";
 import services from "../../services/productos";
 import { Link, useHistory } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
+import { Delete, Update, Add } from "@material-ui/icons";
 
 const ProductosView = () => {
   const { isCollapsed } = useValues();
@@ -52,36 +53,47 @@ const ProductosView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Productos</h1>
-        <div>
+        <h3 className="titulo">Productos</h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
+              <li>
+                <Link to="/dashboard/productos/categoria" className="navegacion__redirect">
+                  Crear Categoría
+                </Link>
+              </li>
+              <li> / </li>
               <li>
                 <b>Productos</b>
               </li>
             </ul>
           </nav>
         </div>
-        <div>
-          <Link to="/dashboard/productos/createProduct">
-            <button>Nuevo Producto</button>
-          </Link>
-          <Link to="/dashboard/productos/categoria">
-            <button>Nueva Categoría</button>
+        <div className="crear-item">
+          <Link to="/dashboard/productos/createProduct" className="button__link">
+            <button className="button crear">
+              <span className="button__icon">
+                <Add className="icon" />
+              </span>
+              <span className="button__text">Nuevo Producto</span>
+            </button>
           </Link>
         </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>Cod. Producto</th>
                 <th>Nombre de Producto</th>
                 <th>Descripción</th>
-                <th>Cantidad</th>
+                <th>Stock</th>
                 <th>Precio</th>
                 <th>Acciones</th>
               </tr>
@@ -90,18 +102,25 @@ const ProductosView = () => {
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : productos ? (
-                productos.map((producto) => {
+                productos.map((producto, index) => {
                   return (
-                    <tr key={producto.id}>
-                      <td>{producto.id}</td>
+                    <tr key={producto.id} className="rowData">
+                      <td>{index + 1}</td>
                       <td>{producto.cod_producto}</td>
                       <td>{producto.nombre}</td>
                       <td>{producto.descripcion}</td>
                       <td>{producto.cantidad}</td>
                       <td>{producto.precio}</td>
-                      <td>
-                        <button onClick={() => handleDelete(producto.id)}>Eliminar</button>
-                        <button onClick={() => handleUpdate(producto.id)}>Actualizar</button>
+                      <td className="botones">
+                        <button onClick={() => handleDelete(producto.id)} className="button borrar">
+                          <Delete />
+                        </button>
+                        <button
+                          onClick={() => handleUpdate(producto.id)}
+                          className="button actualizar"
+                        >
+                          <Update />
+                        </button>
                       </td>
                     </tr>
                   );

@@ -41,16 +41,34 @@ const ReporteriaHistorialPacienteView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <ul>
-          <Link to="/dashboard/reporteria/historialpaciente">
-            <li>Reportería</li>
-          </Link>
-        </ul>
-        <h1>Reporteria Historial View</h1>
+        <h3 className="titulo">Reportería</h3>
+        <div className="navegacion">
+          <nav>
+            <ul>
+              <li>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
+              </li>
+              <li> / </li>
+              <li>
+                <Link to="/dashboard/reporteria/historialpaciente" className="navegacion__redirect">
+                  Reporte de Historial Paciente
+                </Link>
+              </li>
+              <li> / </li>
+              <li>
+                <b>Historial Paciente</b>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <h1>Reporteria Historial Medico</h1>
         <div></div>
-        <table>
+        <table className="paleBlueRows">
           <thead>
             <tr>
+              <th>#</th>
               <th>Sintomas</th>
               <th>Asistencia</th>
               <th>Observaciones</th>
@@ -62,7 +80,8 @@ const ReporteriaHistorialPacienteView = () => {
             ) : cita ? (
               cita.map((item, index) => {
                 return (
-                  <tr key={index}>
+                  <tr key={index} className="rowData">
+                    <td>{index + 1}</td>
                     <td>{item.sintomas}</td>
                     <td>${item.asistencia}</td>
                     <td>${item.observaciones}</td>

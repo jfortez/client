@@ -1,15 +1,15 @@
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import "./DashboardView.css";
-import NavigationVentas from "../../components/layouts/ventaComponents/NavigationVentas";
 import ventaServices from "../../services/venta";
 import { useEffect, useState } from "react";
 import { Loader } from "../../elements/Loader";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import jsPDFInvoiceTemplate from "jspdf-invoice-template";
 import empresaServices from "../../services/empresa";
+import { Print } from "@material-ui/icons";
 
-const VentasReporteView = () => {
+const ReporteriaVentasReporte = () => {
   const { isCollapsed } = useValues();
   const [reporteDetalleVentas, setReporteDetalleVentas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -133,12 +133,32 @@ const VentasReporteView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <NavigationVentas />
-        <h1>Venta No: {reporteDetalleVentas[0]?.num_venta}</h1>
+        <h3 className="titulo">Reportería</h3>
+        <div className="navegacion">
+          <nav>
+            <ul>
+              <li>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
+              </li>
+              <li> / </li>
+              <li>
+                <Link to="/dashboard/reporteria/ventas" className="navegacion__redirect">
+                  Reporte de Ventas
+                </Link>
+              </li>
+              <li> / </li>
+              <li>
+                <b>Venta No.</b>
+                {reporteDetalleVentas[0]?.num_venta}
+              </li>
+            </ul>
+          </nav>
+        </div>
         <div>
-          <h3>Fecha: {fecha.toLocaleDateString()}</h3>
+          <h3>Fecha de Emisión: {fecha.toLocaleString()}</h3>
           <h4>Datos del Recibo</h4>
-
           <ul>
             <li>
               <strong>Facturacion No.: </strong>
@@ -166,10 +186,19 @@ const VentasReporteView = () => {
             <strong>Responsable:</strong> {reporteDetalleVentas[0]?.usuario}
           </p>
         </div>
+        <div className="crear-item">
+          <button className="button crear" onClick={handleCreatePdf}>
+            <span className="button__icon">
+              <Print className="icon" />
+            </span>
+            <span className="button__text">Imprimir Detalle</span>
+          </button>
+        </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Cod. Producto</th>
                 <th>Nombre del Producto</th>
                 <th>Categoría</th>
@@ -182,9 +211,10 @@ const VentasReporteView = () => {
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : reporteDetalleVentas ? (
-                reporteDetalleVentas.map((item) => {
+                reporteDetalleVentas.map((item, index) => {
                   return (
-                    <tr key={item.idDetalleVenta}>
+                    <tr key={item.idDetalleVenta} className="rowData">
+                      <td>{index + 1}</td>
                       <td>{item.cod_producto}</td>
                       <td>{item.nombre}</td>
                       <td>{item.cat_nombre}</td>
@@ -197,11 +227,10 @@ const VentasReporteView = () => {
               ) : null}
             </tbody>
           </table>
-          <button onClick={handleCreatePdf}>Imprimir</button>
         </div>
       </div>
     </>
   );
 };
 
-export default VentasReporteView;
+export default ReporteriaVentasReporte;

@@ -3,6 +3,7 @@ import { useState } from "react";
 import services from "../../services/caja";
 import { Loader } from "../../elements/Loader";
 import { useHistory } from "react-router";
+import { Visibility } from "@material-ui/icons";
 
 const ReporteriaCaja = () => {
   const [caja, setCaja] = useState([]);
@@ -39,33 +40,38 @@ const ReporteriaCaja = () => {
   };
   return (
     <div>
-      <h1>Reporteria Caja</h1>
-      <table>
+      <h3 className="titulo">Caja</h3>
+      <table className="paleBlueRows">
         <thead>
           <tr>
+            <th>#</th>
             <th>Fecha y Hora Apertura</th>
             <th>Apertura Caja</th>
             <th>Fecha y Hora Cierre</th>
             <th>Cierre Caja</th>
             <th>Estado Caja</th>
             <th>Vendedor</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {isLoading ? (
             <Loader loading={isLoading} />
           ) : caja ? (
-            caja.map((item) => {
+            caja.map((item, index) => {
               return (
-                <tr key={item.id}>
+                <tr key={item.id} className="rowData">
+                  <td>{index + 1}</td>
                   <td>{new Date(item.fecha).toLocaleString()}</td>
                   <td>${item.caja_inicio}</td>
                   <td>{new Date(item.fecha_cierre).toLocaleString()}</td>
                   <td>${item.caja_inicio}</td>
                   <td>{item.estado_caja}</td>
                   <td>{item.id_Usuario}</td>
-                  <td>
-                    <button onClick={() => showCaja(item.id)}>Visualizar</button>
+                  <td className="botones">
+                    <button onClick={() => showCaja(item.id)} className="button show">
+                      <Visibility />
+                    </button>
                   </td>
                 </tr>
               );

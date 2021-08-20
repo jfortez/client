@@ -3,6 +3,7 @@ import services from "../../services/venta";
 import clienteServices from "../../services/cliente";
 import { useHistory } from "react-router";
 import { Loader } from "../../elements/Loader";
+import { Visibility } from "@material-ui/icons";
 
 const ReporteriaVentas = () => {
   const [ventas, setVentas] = useState([]);
@@ -39,7 +40,7 @@ const ReporteriaVentas = () => {
     };
   }, []);
   const showVenta = (id) => {
-    history.push(`/dashboard/ventas/reporte/${id}`);
+    history.push(`/dashboard/reporteria/ventas/reporte/${id}`);
   };
   const switchFilter = () => {
     setIsFilter(!isFilter);
@@ -60,7 +61,7 @@ const ReporteriaVentas = () => {
   }, [test, ventas]);
   return (
     <div>
-      <h1>Reporteria Ventas</h1>
+      <h3 className="titulo">Ventas</h3>
       <button onClick={switchFilter}>Filtrar</button>
       {isFilter ? (
         <div>
@@ -106,9 +107,10 @@ const ReporteriaVentas = () => {
           </div>
         </div>
       ) : null}
-      <table>
+      <table className="paleBlueRows">
         <thead>
           <tr>
+            <th>#</th>
             <th>No. Venta</th>
             <th>No. Factura</th>
             <th>Fecha</th>
@@ -116,15 +118,17 @@ const ReporteriaVentas = () => {
             <th>Cantidad de Productos</th>
             <th>Total de Venta</th>
             <th>Realizado Por</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {isLoading ? (
             <Loader loading={isLoading} />
           ) : ventas ? (
-            ventas.map((item) => {
+            ventas.map((item, index) => {
               return (
-                <tr key={item.idVenta}>
+                <tr key={item.idVenta} className="rowData">
+                  <td>{index + 1}</td>
                   <td>{item.num_venta}</td>
                   <td>{item.num_recibo}</td>
                   <td>{new Date(item.fecha).toLocaleString()}</td>
@@ -134,8 +138,10 @@ const ReporteriaVentas = () => {
                   <td>{item.cantidad}</td>
                   <td>{item.total}</td>
                   <td>{item.usuario}</td>
-                  <td>
-                    <button onClick={() => showVenta(item.idVenta)}>Visualizar</button>
+                  <td className="botones">
+                    <button onClick={() => showVenta(item.idVenta)} className="button show">
+                      <Visibility />
+                    </button>
                   </td>
                 </tr>
               );

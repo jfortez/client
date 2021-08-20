@@ -4,6 +4,7 @@ import useValues from "../../provider/useValues";
 import { useHistory, Link } from "react-router-dom";
 import services from "../../services/compras";
 import { Loader } from "../../elements/Loader";
+import { Delete, Update, Add } from "@material-ui/icons";
 
 const ComprasView = () => {
   const { isCollapsed } = useValues();
@@ -11,9 +12,6 @@ const ComprasView = () => {
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const history = useHistory();
-  const nuevoItem = () => {
-    history.push("/dashboard/compras/create");
-  };
   const handleBaja = async (id) => {
     setIsLoading(true);
     const item = await services.bajaCompras(id);
@@ -55,26 +53,37 @@ const ComprasView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Compras</h1>
-        <div>
+        <h3 className="titulo">Compras</h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
                 <b>Compras</b>
               </li>
             </ul>
           </nav>
         </div>
-        <div>
-          <button onClick={nuevoItem}>Nueva Compras</button>
+        <div className="crear-item">
+          <Link to="/dashboard/compras/create" className="button__link">
+            <button className="button crear">
+              <span className="button__icon">
+                <Add className="icon" />
+              </span>
+              <span className="button__text">Nuevo Compra</span>
+            </button>
+          </Link>
         </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Fecha</th>
                 <th>No. Factura</th>
                 <th>RUC Proveedor</th>
@@ -87,19 +96,23 @@ const ComprasView = () => {
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : compras ? (
-                compras.map((item) => {
+                compras.map((item, index) => {
                   return (
-                    <tr key={item.id}>
+                    <tr key={item.id} className="rowData">
+                      <td>{index + 1}</td>
                       <td>{item.fecha}</td>
                       <td>{item.num_factura}</td>
                       <td>{item.ruc}</td>
                       <td>{item.nombre}</td>
                       <td>{item.cantidad}</td>
                       <td>{item.total}</td>
-                      {/* <td>{new Date(item.fecha_registro).toLocaleDateString()}</td> */}
-                      <td>
-                        <button onClick={() => handleBaja(item.id)}>Dar de Baja</button>
-                        <button onClick={() => handleShow(item.id)}>Visualizar</button>
+                      <td className="botones">
+                        <button onClick={() => handleBaja(item.id)} className="button borrar">
+                          <Delete />
+                        </button>
+                        <button onClick={() => handleShow(item.id)} className="button actualizar">
+                          <Update />
+                        </button>
                       </td>
                     </tr>
                   );

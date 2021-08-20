@@ -5,6 +5,7 @@ import useValues from "../../provider/useValues";
 import services from "../../services/categoria";
 import { Link, useHistory } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
+import { Delete, Update, Add } from "@material-ui/icons";
 
 const CategoryView = () => {
   const { isCollapsed } = useValues();
@@ -39,9 +40,6 @@ const CategoryView = () => {
       source.cancel("Cancelling in Cleanup");
     };
   }, [isListed]);
-  const newCategory = () => {
-    history.push("/dashboard/productos/categoria/create");
-  };
   const handleDelete = async (id) => {
     setIsLoading(true);
     const deleteid = await services.bajaCategoria(id);
@@ -56,28 +54,43 @@ const CategoryView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Nueva Categoría</h1>
-        <div>
+        <h3 className="titulo">Categorías de Productos</h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
-                <Link to="/dashboard/productos">Productos</Link>
+                <Link to="/dashboard/productos" className="navegacion__redirect">
+                  Productos
+                </Link>
               </li>
+              <li> / </li>
               <li>
-                <b>Categoría</b>
+                <b>Categorías de Productos</b>
               </li>
             </ul>
           </nav>
-          <button onClick={newCategory}>Nueva Categoría</button>
+        </div>
+        <div className="crear-item">
+          <Link to="/dashboard/productos/categoria/create" className="button__link">
+            <button className="button crear">
+              <span className="button__icon">
+                <Add className="icon" />
+              </span>
+              <span className="button__text">Nueva Categoría</span>
+            </button>
+          </Link>
         </div>
         <div>
-          <table>
+          <table className="paleBlueRows">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>Nombre</th>
                 <th>Descripción</th>
                 <th>Acciones</th>
@@ -87,15 +100,25 @@ const CategoryView = () => {
               {isLoading ? (
                 <Loader loading={isLoading} />
               ) : categorias ? (
-                categorias.map((categoria) => {
+                categorias.map((categoria, index) => {
                   return (
                     <tr key={categoria.id}>
-                      <td>{categoria.id}</td>
+                      <td>{index + 1}</td>
                       <td>{categoria.nombre}</td>
                       <td>{categoria.descripcion}</td>
-                      <td>
-                        <button onClick={() => handleDelete(categoria.id)}>Eliminar</button>
-                        <button onClick={() => handleUpdate(categoria.id)}>Actualizar</button>
+                      <td className="botones">
+                        <button
+                          onClick={() => handleDelete(categoria.id)}
+                          className="button borrar"
+                        >
+                          <Delete />
+                        </button>
+                        <button
+                          onClick={() => handleUpdate(categoria.id)}
+                          className="button actualizar"
+                        >
+                          <Update />
+                        </button>
                       </td>
                     </tr>
                   );

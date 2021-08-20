@@ -3,6 +3,7 @@ import { useState } from "react";
 import services from "../../services/agenda";
 import { useHistory } from "react-router";
 import { Loader } from "../../elements/Loader";
+import { Visibility } from "@material-ui/icons";
 
 const ReporteriaHistoriaPaciente = () => {
   const [historial, sethistorial] = useState([]);
@@ -40,12 +41,13 @@ const ReporteriaHistoriaPaciente = () => {
   };
   return (
     <div>
-      <h1>Reporteria Historial Paciente</h1>
-      <table>
+      <h3 className="titulo">Historial Paciente</h3>
+      <table className="paleBlueRows">
         <thead>
           <tr>
+            <th>#</th>
             <th>Paciente</th>
-            <th>Odontologo Encargado</th>
+            <th>Odontologo</th>
             <th>Servicio</th>
             <th>Estado</th>
             <th>Hora y Fecha Cita</th>
@@ -56,9 +58,10 @@ const ReporteriaHistoriaPaciente = () => {
           {isLoading ? (
             <Loader loading={isLoading} />
           ) : historial ? (
-            historial.map((item) => {
+            historial.map((item, index) => {
               return (
-                <tr key={item.id}>
+                <tr key={item.id} className="rowData">
+                  <td>{index + 1}</td>
                   <td>
                     {item.nombres_paciente} {item.apellidos_paciente}
                   </td>
@@ -70,8 +73,10 @@ const ReporteriaHistoriaPaciente = () => {
                   <td>
                     {new Date(item.fechainicio_agenda).toLocaleDateString()} {item.hora_agenda}
                   </td>
-                  <td>
-                    <button onClick={() => showDetalles(item.id)}>Visualizar</button>
+                  <td className="botones">
+                    <button onClick={() => showDetalles(item.id)} className="button show">
+                      <Visibility />
+                    </button>
                   </td>
                 </tr>
               );
