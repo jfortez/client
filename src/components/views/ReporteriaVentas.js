@@ -10,8 +10,9 @@ const ReporteriaVentas = () => {
   const [clientes, setClientes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFilter, setIsFilter] = useState(false);
-  const [test, setTest] = useState("");
   const [filtroValues, setFiltroValues] = useState({ cliente: "", fecha: "", factura: "" });
+  const [ventasByClienteFiltro, setVentasByClienteFiltro] = useState([]);
+  const [ventasByFactFiltro, setVentasByFactFiltro] = useState([]);
   const history = useHistory();
   useEffect(() => {
     let source = services.Axios.CancelToken.source();
@@ -57,8 +58,33 @@ const ReporteriaVentas = () => {
   };
 
   useEffect(() => {
-    // setVentas(ventas.filter((item) => item.ruc === test));
-  }, [test, ventas]);
+    const filtro_cliente = ventas.filter((item) => {
+      return item.ruc === filtroValues.cliente;
+    });
+    if (filtro_cliente.length > 0) {
+      setVentasByClienteFiltro(filtro_cliente);
+    } else {
+      setVentasByClienteFiltro(ventas);
+    }
+  }, [filtroValues.cliente, ventas]);
+  useEffect(() => {
+    const filtro_factura = ventasByClienteFiltro.filter((item) => {
+      return item.num_recibo === parseInt(filtroValues.factura);
+    });
+    if (isFilter) {
+      if (filtro_factura.length > 0) {
+        setVentasByFactFiltro(filtro_factura);
+      } else {
+        setVentasByFactFiltro(ventasByClienteFiltro);
+        if (filtro_factura.length === 0 && !ventasByClienteFiltro) {
+          setVentasByFactFiltro([]);
+        }
+      }
+    } else {
+      setVentasByFactFiltro(ventasByClienteFiltro);
+    }
+  }, [ventasByClienteFiltro, filtroValues.factura, isFilter]);
+  console.log(ventasByFactFiltro);
   return (
     <div>
       <h3 className="titulo">Ventas</h3>
@@ -70,10 +96,8 @@ const ReporteriaVentas = () => {
             <label htmlFor="">Cliente</label>
             <select
               type="text"
-              value={test}
-              onChange={(e) => setTest(e.target.value)}
-              // value={filtroValues.cliente}
-              // onChange={(e) => setFiltroValues({ ...filtroValues, cliente: e.target.value })}
+              value={filtroValues.cliente}
+              onChange={(e) => setFiltroValues({ ...filtroValues, cliente: e.target.value })}
             >
               <option value="0"></option>
               {clientes
@@ -125,7 +149,7 @@ const ReporteriaVentas = () => {
           {isLoading ? (
             <Loader loading={isLoading} />
           ) : ventas ? (
-            ventas.map((item, index) => {
+            ventasByFactFiltro.map((item, index) => {
               return (
                 <tr key={item.idVenta} className="rowData">
                   <td>{index + 1}</td>
