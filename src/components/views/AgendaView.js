@@ -7,6 +7,8 @@ import serviciosServices from "../../services/servicios";
 import services from "../../services/agenda";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import notificacion from "../../utils/Notificaciones";
+
 const AgendaView = () => {
   const { isCollapsed, setId_agenda } = useValues();
   const history = useHistory();
@@ -56,15 +58,17 @@ const AgendaView = () => {
     setServicio([]);
   };
   const handleSubmit = async () => {
-    if (
-      entradas.paciente === "" ||
-      entradas.odontologo === "" ||
-      entradas.servicio === "" ||
-      entradas.descripcion === "" ||
-      entradas.fecha_inicio === "" ||
-      entradas.hora === ""
-    ) {
-      return null;
+    if (!paciente.length > 0) {
+      return notificacion("Agenda", "Debe Ingresar un paciente", "warning");
+    }
+    if (!odontologo.length > 0) {
+      return notificacion("Agenda", "Debe Ingresar un Odontologo", "warning");
+    }
+    if (!servicio.length > 0) {
+      return notificacion("Agenda", "Debe Ingresar un Servicio", "warning");
+    }
+    if (entradas.descripcion === "" || entradas.fecha_inicio === "" || entradas.hora === "") {
+      return notificacion("Agenda", "Debe rellenar los campos para proceder a crear", "warning");
     }
     const nuevo = {
       descripcion: entradas.descripcion,
@@ -84,6 +88,7 @@ const AgendaView = () => {
         id_agenda: nuevaAgenda,
       };
       await services.createColaAgenda(cola_agenda);
+      notificacion("Agenda", "Se ha añadido Agenda Satisfatoriamente", "success");
       handleClean();
       history.push("/dashboard/agenda/ventaservicio");
       setId_agenda(nuevaAgenda);

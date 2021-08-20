@@ -8,6 +8,7 @@ import ComponentInput from "../layouts/forms/ComponentInput";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Icon } from "@material-ui/core";
 import { Save, SystemUpdateAlt } from "@material-ui/icons";
+import notificacion from "../../utils/Notificaciones";
 
 const ClienteCreate = () => {
   const { isCollapsed } = useValues();
@@ -20,7 +21,6 @@ const ClienteCreate = () => {
   const [direccion, setDireccion] = useState({ campo: "", valido: null });
   const [ciudad, setCiudad] = useState({ campo: "", valido: null });
   const [email, setEmail] = useState({ campo: "", valido: null });
-  const [formValid, setFormValid] = useState(null);
   const { id } = useParams();
   const idCliente = id;
   const { pathname } = useLocation();
@@ -54,6 +54,7 @@ const ClienteCreate = () => {
       ciudad: ciudad.campo,
     };
     await services.updateCliente(updateCliente, elementId);
+    notificacion("Actualizar Cliente", "Se ha actualizado Cliente satisfatoriamente", "info");
     setRuc({ ...ruc, valido: null });
     setNombres({ ...nombres, valido: null });
     setApellidos({ ...apellidos, valido: null });
@@ -87,7 +88,7 @@ const ClienteCreate = () => {
       if (nuevo.message === "el ruc ya existe" && nuevo.response[0].active === 1) {
         return console.log("ruc ya existe"); //codigo para la alerta
       }
-      setFormValid(true);
+      notificacion("Añadir Cliente", "Se ha creado Cliente satisfatoriamente", "success");
       setRuc({ campo: "", valido: null });
       setNombres({ campo: "", valido: null });
       setApellidos({ campo: "", valido: null });
@@ -96,7 +97,7 @@ const ClienteCreate = () => {
       setCiudad({ campo: "", valido: null });
       setEmail({ campo: "", valido: null });
     } else {
-      setFormValid(false);
+      notificacion("Añadir Cliente", "Debe rellenar los campos para proceder", "warning");
     }
   };
   return (
@@ -104,7 +105,6 @@ const ClienteCreate = () => {
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h3 className="titulo">{isEditing ? "Editar Cliente" : "Nuevo Cliente"}</h3>
-        {formValid ? "ok" : "nom"}
         <div>
           <div className="navegacion">
             <nav>

@@ -8,12 +8,12 @@ import { Formulario } from "../../elements/Formularios";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import { Icon } from "@material-ui/core";
 import { Save, SystemUpdateAlt } from "@material-ui/icons";
+import notificacion from "../../utils/Notificaciones";
 
 const ProveedoresCreate = () => {
   const { isCollapsed } = useValues();
   const [elementId, setElementId] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
-  const [formValid, setFormValid] = useState(null);
   const [ruc, setRuc] = useState({ campo: "", valido: null });
   const [nombre, setNombre] = useState({ campo: "", valido: null });
   const [direccion, setDireccion] = useState({ campo: "", valido: null });
@@ -63,7 +63,7 @@ const ProveedoresCreate = () => {
       if (nuevo.message === "el ruc ya existe" && nuevo.rucExiste[0].active === 1) {
         return console.log("ruc ya existe"); //codigo para la alerta
       }
-      setFormValid(true);
+      notificacion("Añadir Proveedor", "Se ha creado Proveedor satisfatoriamente", "success");
       setRuc({ campo: "", valido: null });
       setNombre({ campo: "", valido: null });
       setTelefono({ campo: "", valido: null });
@@ -71,7 +71,7 @@ const ProveedoresCreate = () => {
       setCiudad({ campo: "", valido: null });
       setEmail({ campo: "", valido: null });
     } else {
-      setFormValid(false);
+      notificacion("Añadir Proveedor", "Debe rellenar los campos para proceder", "warning");
     }
   };
   const handleUpdate = async (evt) => {
@@ -85,6 +85,8 @@ const ProveedoresCreate = () => {
       email: email.campo,
     };
     await services.updateProveedor(updateData, elementId);
+    notificacion("Actualizar Proveedor", "Se ha actualizado Proveedor satisfatoriamente", "info");
+
     setRuc({ ...ruc, valido: null });
     setNombre({ ...nombre, valido: null });
     setTelefono({ ...telefono, valido: null });
@@ -97,7 +99,6 @@ const ProveedoresCreate = () => {
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h3 className="titulo">{isEditing ? "Editar Proveedor" : "Nuevo Proveedor"}</h3>
-        {formValid ? "ok" : "nom"}
         <div className="navegacion">
           <nav>
             <ul>

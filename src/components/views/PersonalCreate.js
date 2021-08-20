@@ -10,6 +10,8 @@ import cargoServices from "../../services/cargo";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Icon } from "@material-ui/core";
 import { Save, SystemUpdateAlt } from "@material-ui/icons";
+//Notificaciones
+import notificacion from "../../utils/Notificaciones";
 
 const PersonalCreate = () => {
   const { isCollapsed } = useValues();
@@ -26,7 +28,6 @@ const PersonalCreate = () => {
   const [idCargo, setIdCargo] = useState({ campo: "", valido: null });
   // const [active, setActive] = useState({ campo: "", valido: null });
   const [cargo, setCargo] = useState([]);
-  const [formValid, setFormValid] = useState(null);
   const listCargos = async () => {
     const cargos = await cargoServices.optionCargo();
     setCargo(cargos);
@@ -82,6 +83,7 @@ const PersonalCreate = () => {
       // active: active.campo,
     };
     await services.updatePersonal(updatePersonal, elementId);
+    notificacion("Actualizar Personal", "Se ha actualizado Personal satisfatoriamente", "info");
     setNombres({ ...nombres, valido: null });
     setApellidos({ ...apellidos, valido: null });
     setCedula({ ...cedula, valido: null });
@@ -129,7 +131,7 @@ const PersonalCreate = () => {
       if (nuevoPersonal.message === "Dato ya existe") {
         return console.log("El dato ya existe en la base de datos global");
       }
-      setFormValid(true);
+      notificacion("Añadir Personal", "Se ha añadido personal Satisfatoriamente", "success");
       setNombres({ campo: "", valido: null });
       setApellidos({ campo: "", valido: null });
       setCedula({ campo: "", valido: null });
@@ -140,15 +142,15 @@ const PersonalCreate = () => {
       setEmail({ campo: "", valido: null });
       setIdCargo({ campo: "", valido: null });
     } else {
-      setFormValid(false);
+      notificacion("Añadir Personal", "Debe rellenar los campos para proceder a crear", "warning");
     }
   };
+
   return (
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h3 className="titulo">{isEditing ? "Editar Personal" : "Nuevo Personal"}</h3>
-        {formValid ? "ok" : "nom"}
         <div className="navegacion">
           <nav>
             <ul>
@@ -275,22 +277,6 @@ const PersonalCreate = () => {
             </Select>
             <br />
           </GrupoInput>
-          {/* Validacion */}
-          {/* {formValid === false && (
-            <MensajeError>
-              <p>
-                <Error />
-                <b>Error: </b> Por favor rellene el formulario correctamente
-              </p>
-            </MensajeError>
-          )}
-          <ContenedorBotonCentrado>
-            {isEditing ? (
-              <Boton type="submit">Actualizar</Boton>
-            ) : (
-              <Boton type="submit">Crear</Boton>
-            )}
-          </ContenedorBotonCentrado> */}
         </Formulario>
       </div>
     </>

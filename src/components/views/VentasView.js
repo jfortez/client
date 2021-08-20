@@ -14,6 +14,8 @@ import jsPDFInvoiceTemplate from "jspdf-invoice-template";
 import empresaServices from "../../services/empresa";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import notificacion from "../../utils/Notificaciones";
+import swal from "sweetalert";
 
 const VentasView = () => {
   const {
@@ -46,8 +48,14 @@ const VentasView = () => {
   }, []);
   const fecha = new Date();
   const nuevaVenta = async () => {
+    if (!datosVentas.cliente.length > 0) {
+      return notificacion("Nueva Venta", "Debe Ingresar un Cliente para continuar", "danger");
+    }
+    if (!detalleVenta.length > 0) {
+      return notificacion("Nueva Venta", "Debe Ingresar al menos un producto", "danger");
+    }
     if (types.importe === 0) {
-      return console.log("debe ingresar un importe");
+      return notificacion("Nueva Venta", "Debe Ingresar un Importe para continuar", "danger");
     }
     const totCantidad = detalleVenta.reduce((acc, acv) => {
       return acc + acv.cantidad;
@@ -70,12 +78,15 @@ const VentasView = () => {
     if (venta) {
       const caja = await cajaServices.getCajaByMaxId();
       if (!caja.length > 0) {
-        return console.log("no hay una caja activa, debe ingresar");
+        return notificacion("Nueva Venta", "No hay una caja activa", "danger");
       }
       if (caja[0]?.estado_caja === "CERRADO") {
-        return console.log("debe abrir una caja para proceder");
+        return notificacion("Nueva Venta", "Debe abrir una caja para proceder", "danger");
       }
       newVenta(caja, venta, venta.total, venta.num_recibo);
+      swal("Venta generada satisfatoriamente", {
+        icon: "success",
+      });
       updateProducto();
       handleCreatePdf();
       setTypes({ ...types, ruc: "", cod_producto: "", cantidad: 1, importe: 0 });

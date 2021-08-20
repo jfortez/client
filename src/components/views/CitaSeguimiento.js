@@ -6,6 +6,7 @@ import agendaServices from "../../services/agenda";
 import recetaServices from "../../services/receta";
 import services from "../../services/cita.js";
 import permisosServices from "../../services/permisos";
+import notificacion from "../../utils/Notificaciones";
 
 const CitaSeguimiento = () => {
   const { isCollapsed } = useValues();
@@ -55,6 +56,13 @@ const CitaSeguimiento = () => {
     obtenerRecetas();
   }, [isListed, infoAgenda]);
   const handleSeguimiento = async () => {
+    if (infoCita.sintomas === "") {
+      return notificacion(
+        "Seguimiento de Cita",
+        "Debe rellenar los campos para proceder",
+        "warning"
+      );
+    }
     const cita = {
       id_agenda: infoAgenda[0].id,
       sintomas: infoCita.sintomas,
@@ -63,8 +71,14 @@ const CitaSeguimiento = () => {
     };
     if (isUpdate) {
       await services.updateCita(cita, id);
+      notificacion(
+        "Seguimiento de Cita",
+        "Se ha  Actualizado los Datos satisfatoriamente",
+        "default"
+      );
     } else {
       await services.createCita(cita);
+      notificacion("Seguimiento de Cita", "Se ha creado Seguimiento satisfatoriamente", "success");
       setIsUpdate(true);
     }
   };
@@ -88,6 +102,11 @@ const CitaSeguimiento = () => {
       colaAgenda: "FINALIZADO",
     };
     await agendaServices.estadoAgenda(estado, id);
+    notificacion(
+      "Seguimiento de Cita",
+      "Se han guardados los cambios y finalizado el seguimiento",
+      "success"
+    );
     history.push("/dashboard/cita");
   };
   const handleGenerarPermisos = async () => {
@@ -100,6 +119,7 @@ const CitaSeguimiento = () => {
       dias_permiso: permisoMedico.dias,
     };
     permisosServices.createPermisos(nuevoPermiso);
+    notificacion("Permiso Medico", "Se Generó permiso medico Satisfatoriamente", "success");
     setSwitchPermiso(!switchPermiso);
     setPermisoMedico({ motivo: "", dias: 0 });
   };

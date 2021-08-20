@@ -9,12 +9,12 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Icon } from "@material-ui/core";
 import { Save, SystemUpdateAlt } from "@material-ui/icons";
+import notificacion from "../../utils/Notificaciones";
 
 const ServiciosCreate = () => {
   const { isCollapsed } = useValues();
   const [elementId, setElementId] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
-  const [formValid, setFormValid] = useState(null);
   const [cod_servicio, setCod_servicio] = useState({ campo: "", valido: null });
   const [nombre, setNombre] = useState({ campo: "", valido: null });
   const [descripcion, setDescripcion] = useState({ campo: "", valido: null });
@@ -53,13 +53,13 @@ const ServiciosCreate = () => {
       if (nuevo.message === "el Servicio ya existe" && nuevo.codExiste[0].active === 1) {
         return console.log("ruc ya existe"); //codigo para la alerta
       }
-      setFormValid(true);
+      notificacion("Añadir Servicio", "Se ha creado Servicio satisfatoriamente", "success");
       setCod_servicio({ campo: "", valido: null });
       setNombre({ campo: "", valido: null });
       setDescripcion({ campo: "", valido: null });
       setPrecio({ campo: "", valido: null });
     } else {
-      setFormValid(false);
+      notificacion("Añadir Servicio", "Debe rellenar los campos para proceder", "warning");
     }
   };
   const handleUpdate = async (evt) => {
@@ -71,6 +71,7 @@ const ServiciosCreate = () => {
       precio: precio.campo,
     };
     await services.updateServicios(updateData, elementId);
+    notificacion("Actualizar Servicio", "Se ha actualizado Servicio satisfatoriamente", "info");
     setCod_servicio({ ...cod_servicio, valido: null });
     setNombre({ ...nombre, valido: null });
     setDescripcion({ ...descripcion, valido: null });
@@ -81,7 +82,6 @@ const ServiciosCreate = () => {
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h3 className="titulo">{isEditing ? "Editar Servicio" : "Nuevo Servicio"}</h3>
-        {formValid ? "ok" : "nom"}
         <div className="navegacion">
           <nav>
             <ul>

@@ -6,6 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 import services from "../../services/usuarios";
 import { Loader } from "../../elements/Loader";
 import { Cancel, CheckCircle, Update, Add } from "@material-ui/icons";
+import swal from "sweetalert";
 
 const UsuariosView = () => {
   const { isCollapsed, user } = useValues();
@@ -17,16 +18,37 @@ const UsuariosView = () => {
   const handeActive = async (id) => {
     setIsLoading(true);
     const deleteUser = await services.activarUsuario(id);
+    swal("Se ha Activó el Usuario satisfatoriamente", {
+      icon: "success",
+    });
     if (deleteUser) {
       setIsListed(!isListed);
     }
   };
   const handleDelete = async (id) => {
-    setIsLoading(true);
-    const deleteUser = await services.bajaUsuarios(id);
-    if (deleteUser) {
-      setIsListed(!isListed);
+    const mensaje = await swal({
+      title: "Confirmar Desactivar Usuario",
+      // text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: {
+        cancel: "Cancelar",
+        confirm: "Confirmar",
+      },
+      dangerMode: true,
+    });
+    if (mensaje) {
+      setIsLoading(true);
+      const deleteUser = await services.bajaUsuarios(id);
+      swal("Se ha Inactivó el Usuario satisfatoriamente", {
+        icon: "success",
+      });
+      if (deleteUser) {
+        setIsListed(!isListed);
+      }
+    } else {
+      return null;
     }
+
     // const usersInUse = await services.getUsersInUse();
     // let idValue = 0;
     // const finInPersonal = usersInUse.personal;

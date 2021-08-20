@@ -10,6 +10,8 @@ import { Formulario, GrupoInput, Select, Option, Label } from "../../elements/Fo
 import { Icon } from "@material-ui/core";
 import { Save, SystemUpdateAlt } from "@material-ui/icons";
 import ComponentInput from "../layouts/forms/ComponentInput";
+import notificacion from "../../utils/Notificaciones";
+
 const ProductCreate = () => {
   const { isCollapsed } = useValues();
   const [elementId, setElementId] = useState(0);
@@ -22,7 +24,6 @@ const ProductCreate = () => {
   const [costo, setCosto] = useState({ campo: "", valido: null });
   const [precio, setPrecio] = useState({ campo: "", valido: null });
   const [idCategoria, setIdCategoria] = useState({ campo: "", valido: null });
-  const [formValid, setFormValid] = useState(null);
   const { id } = useParams();
   const productoId = id;
   const { pathname } = useLocation();
@@ -64,6 +65,7 @@ const ProductCreate = () => {
       id_categoria: idCategoria.campo,
     };
     await services.updateProductos(updtProducto, elementId);
+    notificacion("Actualizar Producto", "Se ha actualizado Producto satisfatoriamente", "info");
     setCod_Producto({ ...cod_Producto, valido: null });
     setNombre({ ...nombre, valido: null });
     setDescripcion({ ...descripcion, valido: null });
@@ -99,7 +101,7 @@ const ProductCreate = () => {
       if (nuevo.message === "el dato existe" && nuevo.codExiste[0].active === 1) {
         return console.log("Producto ya existe"); //codigo para la alerta
       }
-      setFormValid(true);
+      notificacion("Añadir Producto", "Se ha creado Producto satisfatoriamente", "success");
       setCod_Producto({ campo: "", valido: null });
       setNombre({ campo: "", valido: null });
       setDescripcion({ campo: "", valido: null });
@@ -108,7 +110,7 @@ const ProductCreate = () => {
       setPrecio({ campo: "", valido: null });
       setIdCategoria({ campo: "", valido: null });
     } else {
-      setFormValid(false);
+      notificacion("Añadir Producto", "Debe rellenar los campos para proceder", "warning");
     }
   };
   return (
@@ -116,7 +118,6 @@ const ProductCreate = () => {
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h3 className="titulo">{isEditing ? "Editar Producto" : "Nuevo Producto"}</h3>
-        {formValid ? "ok" : "nom"}
         <div className="navegacion">
           <nav>
             <ul>

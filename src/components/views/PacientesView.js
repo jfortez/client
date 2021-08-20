@@ -5,6 +5,7 @@ import useValues from "../../provider/useValues";
 import services from "../../services/paciente";
 import { Loader } from "../../elements/Loader";
 import { Delete, Update, Add } from "@material-ui/icons";
+import swal from "sweetalert";
 
 const PacientesView = () => {
   const { isCollapsed } = useValues();
@@ -13,10 +14,27 @@ const PacientesView = () => {
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const handleDelete = async (id) => {
-    setIsLoading(true);
-    const item = await services.bajaPacientes(id);
-    if (item) {
-      setIsListed(!isListed);
+    const mensaje = await swal({
+      title: "¿Estás seguro de eliminar la Fila?",
+      // text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: {
+        cancel: "Cancelar",
+        confirm: "Aceptar",
+      },
+      dangerMode: true,
+    });
+    if (mensaje) {
+      setIsLoading(true);
+      const item = await services.bajaPacientes(id);
+      swal("Se ha eliminado la fila satisfatoriamente", {
+        icon: "success",
+      });
+      if (item) {
+        setIsListed(!isListed);
+      }
+    } else {
+      return null;
     }
   };
   const handleUpdate = (id) => {

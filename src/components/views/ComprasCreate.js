@@ -6,6 +6,8 @@ import proveedorServices from "../../services/proveedores";
 import categoriaServices from "../../services/categoria";
 import productoServices from "../../services/productos";
 import services from "../../services/compras";
+import notificacion from "../../utils/Notificaciones";
+
 const ComprasCreate = () => {
   const {
     isCollapsed,
@@ -107,6 +109,12 @@ const ComprasCreate = () => {
     history.push("/dashboard/productos/createCategory");
   };
   const handleSave = async () => {
+    if (!proveedor.length > 0) {
+      return notificacion("Añadir Compra", "Debe ingresar un proveedor", "warning");
+    }
+    if (!compraDetalle.length > 0) {
+      return notificacion("Añadir Compra", "Debe ingresar al menos un producto", "danger");
+    }
     const costoTotal = compraDetalle.reduce((acc, acv) => {
       return acc + acv.totalCompra;
     }, 0);
@@ -122,6 +130,7 @@ const ComprasCreate = () => {
     };
     const nuevaCompra = await services.createCompras(compras);
     if (nuevaCompra) {
+      notificacion("Añadir Compra", "Se ha creado Compra satisfatoriamente", "success");
       addProductos();
       newDetalleCompra(nuevaCompra);
       limpiar();

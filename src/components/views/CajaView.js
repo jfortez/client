@@ -4,6 +4,7 @@ import useValues from "../../provider/useValues";
 import { Link } from "react-router-dom";
 import services from "../../services/caja";
 import { Loader } from "../../elements/Loader";
+import notificacion from "../../utils/Notificaciones";
 
 const CajaView = () => {
   const { isCollapsed, user } = useValues();
@@ -73,7 +74,7 @@ const CajaView = () => {
   };
   const cerrarCaja = async () => {
     if (cajaActual.caja_cierre === "" || cajaActual.caja_cierre === "0") {
-      return console.log("debe ingresar un valor");
+      return notificacion("Caja", "Debe ingresar al menos un valor y mayor a 0", "danger");
     }
     const cierre = {
       caja_cierre: cajaActual.caja_cierre,
@@ -88,7 +89,7 @@ const CajaView = () => {
   };
   const abrirCaja = async () => {
     if (cajaActual.caja_inicio === "") {
-      return console.log("debe ingresar un valor");
+      return notificacion("Caja", "Debe ingresar al menos un valor y mayor a 0", "danger");
     }
     const nuevo = {
       caja_inicio: cajaActual.caja_inicio,
@@ -96,6 +97,7 @@ const CajaView = () => {
       id_Usuario: user.id,
     };
     await services.createCaja(nuevo);
+    notificacion("Caja", "Se ha Aperturado Caja satisfatoriamente", "success");
     limpiar();
     setIsListed(!isListed);
     setIsOpen(!isOpen);

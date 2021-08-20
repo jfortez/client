@@ -8,6 +8,7 @@ import ComponentInput from "../layouts/forms/ComponentInput";
 import services from "../../services/odontologos";
 import { Icon } from "@material-ui/core";
 import { Save, SystemUpdateAlt } from "@material-ui/icons";
+import notificacion from "../../utils/Notificaciones";
 
 const OdontologoCreate = () => {
   const { isCollapsed } = useValues();
@@ -21,7 +22,6 @@ const OdontologoCreate = () => {
   const [ciudad, setCiudad] = useState({ campo: "", valido: null });
   const [fecha_nacimiento, setFecha_nacimiento] = useState({ campo: "", valido: null });
   const [email, setEmail] = useState({ campo: "", valido: null });
-  const [formValid, setFormValid] = useState(null);
 
   const { id } = useParams();
   const { pathname } = useLocation();
@@ -67,6 +67,7 @@ const OdontologoCreate = () => {
       email: email.campo,
     };
     await services.updateOdontologo(updateData, elementId);
+    notificacion("Actualizar Odontologo", "Se ha actualizado Odontologo satisfatoriamente", "info");
     setNombres({ ...nombres, valido: null });
     setApellidos({ ...apellidos, valido: null });
     setCedula({ ...cedula, valido: null });
@@ -114,7 +115,7 @@ const OdontologoCreate = () => {
       if (nuevoOdontologo.message === "Dato ya existe") {
         return console.log("El dato ya existe en la base de datos global");
       }
-      setFormValid(true);
+      notificacion("Añadir Odontologo", "Se ha creado Odontologo satisfatoriamente", "success");
       setNombres({ campo: "", valido: null });
       setApellidos({ campo: "", valido: null });
       setCedula({ campo: "", valido: null });
@@ -124,7 +125,7 @@ const OdontologoCreate = () => {
       setFecha_nacimiento({ campo: "", valido: null });
       setEmail({ campo: "", valido: null });
     } else {
-      setFormValid(false);
+      notificacion("Añadir Odontologo", "Debe rellenar los campos para proceder", "warning");
     }
   };
   return (
@@ -132,7 +133,6 @@ const OdontologoCreate = () => {
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h3 className="titulo">{isEditing ? "Editar Odontologo" : "Nuevo Odontologo"}</h3>
-        {formValid ? "ok" : "nom"}
         <div className="navegacion">
           <nav>
             <ul>

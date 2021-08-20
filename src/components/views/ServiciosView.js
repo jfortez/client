@@ -6,6 +6,7 @@ import services from "../../services/servicios";
 import { useEffect, useState } from "react";
 import { Loader } from "../../elements/Loader";
 import { Delete, Update, Add } from "@material-ui/icons";
+import swal from "sweetalert";
 
 const ServiciosView = () => {
   const { isCollapsed } = useValues();
@@ -13,10 +14,27 @@ const ServiciosView = () => {
   const [isListed, setIsListed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const handleDelete = async (id) => {
-    setIsLoading(true);
-    const servicio = await services.bajaServicios(id);
-    if (servicio) {
-      setIsListed(true);
+    const mensaje = await swal({
+      title: "¿Estás seguro de eliminar la Fila?",
+      // text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: {
+        cancel: "Cancelar",
+        confirm: "Aceptar",
+      },
+      dangerMode: true,
+    });
+    if (mensaje) {
+      setIsLoading(true);
+      const servicio = await services.bajaServicios(id);
+      swal("Se ha eliminado la fila satisfatoriamente", {
+        icon: "success",
+      });
+      if (servicio) {
+        setIsListed(!isListed);
+      }
+    } else {
+      return null;
     }
   };
   const history = useHistory();

@@ -9,6 +9,7 @@ import services from "../../services/paciente";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Icon } from "@material-ui/core";
 import { Save, SystemUpdateAlt } from "@material-ui/icons";
+import notificacion from "../../utils/Notificaciones";
 
 const PacientesCreate = () => {
   const { isCollapsed } = useValues();
@@ -23,7 +24,6 @@ const PacientesCreate = () => {
   const [fecha_nacimiento, setFecha_nacimiento] = useState({ campo: "", valido: null });
   const [edad, setEdad] = useState({ campo: "", valido: null });
   const [genero, setGenero] = useState({ campo: "", valido: null });
-  const [formValid, setFormValid] = useState(null);
   const { id } = useParams();
   const pacienteId = id;
   const { pathname } = useLocation();
@@ -73,6 +73,7 @@ const PacientesCreate = () => {
       // active: active.campo,
     };
     await services.updatePacientes(updtPaciente, elementId);
+    notificacion("Actualizar Paciente", "Se ha actualizado Paciente satisfatoriamente", "info");
     setNombres({ ...nombres, valido: null });
     setApellidos({ ...apellidos, valido: null });
     setCedula({ ...cedula, valido: null });
@@ -94,7 +95,6 @@ const PacientesCreate = () => {
       edad.valido === "true" &&
       (genero.campo === "Masculino" || genero.campo === "Femenino")
     ) {
-      setFormValid(true);
       const newItem = {
         nombres: nombres.campo,
         apellidos: apellidos.campo,
@@ -113,6 +113,7 @@ const PacientesCreate = () => {
       if (nuevo.message === "dato ya existe" && nuevo.result[0].active === 1) {
         return console.log("dato ya existe"); //codigo para la alerta
       }
+      notificacion("Añadir Paciente", "Se ha creado Paciente satisfatoriamente", "success");
       setNombres({ campo: "", valido: null });
       setApellidos({ campo: "", valido: null });
       setCedula({ campo: "", valido: null });
@@ -123,7 +124,7 @@ const PacientesCreate = () => {
       setEdad({ campo: "", valido: null });
       setGenero({ campo: "", valido: null });
     } else {
-      setFormValid(false);
+      notificacion("Añadir Paciente", "Debe rellenar los campos para proceder", "warning");
     }
   };
   return (
@@ -131,7 +132,6 @@ const PacientesCreate = () => {
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h3 className="titulo">{isEditing ? "Editar Paciente" : "Nuevo Paciente"}</h3>
-        {formValid ? "ok" : "nom"}
         <div className="navegacion">
           <nav>
             <ul>

@@ -10,6 +10,8 @@ import personalServices from "../../services/personal";
 import personas from "../../services/personas";
 import odontologoServices from "../../services/odontologos";
 import services from "../../services/usuarios";
+import notificacion from "../../utils/Notificaciones";
+
 const UsuarioCreate = () => {
   const { isCollapsed } = useValues();
   const [ci, setCi] = useState({ campo: "", valido: null });
@@ -19,7 +21,6 @@ const UsuarioCreate = () => {
   const [usuario, setUsuario] = useState({ campo: "", valido: null });
   const [contraseña, setContraseña] = useState({ campo: "", valido: null });
   const [previlegios, setPrevilegios] = useState({ campo: "", valido: null });
-  const [formValid, setFormValid] = useState(null);
   const expresiones = {
     usuario: /^[a-zA-Z0-9_-]{4,16}$/, // Letras, numeros, guion y guion_bajo
     password: /^.{4,12}$/, // 4 a 12 digitos.
@@ -66,13 +67,13 @@ const UsuarioCreate = () => {
           await odontologoServices.setIdUsuario(newUsuario); //da id_Usuario al Odontologo
         }
       }
-      setFormValid(true);
+      notificacion("Añadir Usuario", "Se ha añadido Usuario Satisfatoriamente", "success");
       setUsuario({ campo: "", valido: null });
       setCi({ campo: "", valido: null });
       setContraseña({ campo: "", valido: null });
       setPrevilegios({ campo: "", valido: null });
     } else {
-      setFormValid(false);
+      notificacion("Añadir Usuario", "Debe rellenar los campos para proceder a crear", "warning");
     }
   };
   const handleUpdate = async (evt) => {
@@ -83,6 +84,7 @@ const UsuarioCreate = () => {
       previlegios: previlegios.campo,
     };
     await services.updateUsuarios(updateData, elementId);
+    notificacion("Actualizar Usuario", "Se ha actualizado Usuario satisfatoriamente", "info");
     setUsuario({ ...usuario, valido: null });
     setContraseña({ ...contraseña, valido: null });
     setPrevilegios({ ...previlegios, valido: null });
@@ -112,7 +114,6 @@ const UsuarioCreate = () => {
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
         <h3 className="titulo">{isEditing ? "Editar Usuario" : "Nuevo Usuario"}</h3>
-        {formValid ? "ok" : "nom"}
         <div className="navegacion">
           <nav>
             <ul>

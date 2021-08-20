@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import agendaServices from "../../services/agenda";
 import clienteServices from "../../services/cliente";
 import valuesServices from "../../services/values";
@@ -9,6 +9,7 @@ import services from "../../services/servicios";
 import cajaServices from "../../services/caja";
 import jsPDFInvoiceTemplate from "jspdf-invoice-template";
 import empresaServices from "../../services/empresa";
+import notificacion from "../../utils/Notificaciones";
 
 const AgendaServicioVenta = () => {
   const { isCollapsed, id_agenda, values, setId_agenda, setValues, user } = useValues();
@@ -16,6 +17,7 @@ const AgendaServicioVenta = () => {
   const [entradasVenta, setEntradasVenta] = useState({ ruc: "", importe: 0 });
   const [cliente, setCliente] = useState([]);
   const [empresa, setEmpresa] = useState([]);
+  const history = useHistory();
   useEffect(() => {
     const getEmpresa = async () => {
       const compañia = await empresaServices.optionEmpresa();
@@ -38,10 +40,10 @@ const AgendaServicioVenta = () => {
   const fecha = new Date();
   const handleVenta = async () => {
     if (!cliente.length > 0) {
-      return console.log("debe ingresar un cliente");
+      return notificacion("Venta de Servicio", "Debe ingresar un Cliente", "danger");
     }
     if (entradasVenta.importe === 0) {
-      return console.log("debe ingresar un importe");
+      return notificacion("Venta de Servicio", "Debe ingresar un Importe", "danger");
     }
     const total = agendaInfo[0].precio_servicio;
     const venta_servicio = {
@@ -72,6 +74,12 @@ const AgendaServicioVenta = () => {
         total,
       };
       await services.createFactServicios(fact_serv);
+      notificacion(
+        "Venta de Servicio",
+        "Se ha creado Venta de Servicio Satisfatoriamente",
+        "success"
+      );
+      history.push("/dashboard/agenda");
     }
     updateValues();
     clean();
