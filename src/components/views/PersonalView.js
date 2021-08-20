@@ -5,7 +5,7 @@ import useValues from "../../provider/useValues";
 import services from "../../services/personal";
 import { Link, useHistory } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
-import { Delete, Update } from "@material-ui/icons";
+import { Delete, Update, Add } from "@material-ui/icons";
 const PersonalView = () => {
   const { isCollapsed } = useValues();
   const history = useHistory();
@@ -67,9 +67,14 @@ const PersonalView = () => {
             </ul>
           </nav>
         </div>
-        <div>
-          <Link to="/dashboard/personal/create">
-            <button>Nuevo Personal</button>
+        <div className="crear-item">
+          <Link to="/dashboard/personal/create" className="button__link">
+            <button className="button crear">
+              <span className="button__icon">
+                <Add className="icon" />
+              </span>
+              <span className="button__text">Nuevo Personal</span>
+            </button>
           </Link>
         </div>
         <div>
