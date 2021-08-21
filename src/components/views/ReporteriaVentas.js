@@ -84,7 +84,6 @@ const ReporteriaVentas = () => {
       setVentasByFactFiltro(ventasByClienteFiltro);
     }
   }, [ventasByClienteFiltro, filtroValues.factura, isFilter]);
-  console.log(ventasByFactFiltro);
   return (
     <div>
       <h3 className="titulo">Ventas</h3>

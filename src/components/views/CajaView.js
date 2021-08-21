@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import services from "../../services/caja";
 import { Loader } from "../../elements/Loader";
 import notificacion from "../../utils/Notificaciones";
+import { AttachMoney, MoneyOff, CancelPresentation } from "@material-ui/icons";
+import swal from "sweetalert";
 
 const CajaView = () => {
   const { isCollapsed, user } = useValues();
@@ -65,21 +67,35 @@ const CajaView = () => {
   }, [isOpen]);
   const switchCierre = () => {
     setIsCierre(!isCierre);
+    setCajaActual({ ...cajaActual, caja_cierre: 0 });
   };
   const switchIngreso = () => {
+    if (isOpen) {
+      //false default
+      return notificacion("Error", "Debe Abrir una caja para proceder", "danger");
+    }
     setIsIngreso(!isIngreso);
+    setMovimientos({ ...movimientos, ingreso: 0, descripcion_ingreso: "" });
   };
   const switchEgreso = () => {
+    if (isOpen) {
+      //false
+      return notificacion("Error", "Debe Abrir una caja para proceder", "danger");
+    }
     setIsEgreso(!isEgreso);
+    setMovimientos({ ...movimientos, egreso: 0, descripcion_egreso: "" });
   };
   const cerrarCaja = async () => {
-    if (cajaActual.caja_cierre === "" || cajaActual.caja_cierre === "0") {
+    if (cajaActual.caja_cierre === "" || cajaActual.caja_cierre === 0) {
       return notificacion("Caja", "Debe ingresar al menos un valor y mayor a 0", "danger");
     }
     const cierre = {
       caja_cierre: cajaActual.caja_cierre,
     };
     await services.cierreCaja(cierre);
+    swal("Se ha Cerrado al Caja con Exito", {
+      icon: "success",
+    });
     limpiar();
     setIsListed(!isListed);
     setIsCierre(!isCierre);
@@ -103,8 +119,8 @@ const CajaView = () => {
     setIsOpen(!isOpen);
   };
   const addIngreso = async () => {
-    if (movimientos.ingreso === 0 || movimientos.descripcion_ingreso === "") {
-      return console.log("debe ingresar un valor");
+    if (movimientos.ingreso === 0) {
+      return notificacion("Error", "Debe Ingresar un valor en los campos", "danger");
     }
     const ingreso = {
       id_caja: caja[0].id,
@@ -115,16 +131,23 @@ const CajaView = () => {
     };
     await services.nuevoMovimiento(ingreso);
     await services.updateCaja({ caja_actual: ingreso.caja_actual }, ingreso.id_caja);
+    swal("Se ha Ingresado un  valor a Caja Satisfatoriamente", {
+      icon: "success",
+    });
     setIsListed(!isListed);
     setIsIngreso(!isIngreso);
     setMovimientos({ ...movimientos, ingreso: 0, descripcion_ingreso: "" });
   };
   const addEgreso = async () => {
+    if (movimientos.egreso === 0) {
+      return notificacion("Error", "Debe Ingresar un valor en los campos", "danger");
+    }
     const invalid = Number(movimientos.egreso).toFixed(2) > caja[0].caja_inicio;
     if (invalid) {
-      return console.log(
-        "el valor ingresado supera a la caja Actual, Caja Actual: ",
-        caja[0].caja_inicio
+      return notificacion(
+        "Error",
+        `el valor ingresado supera a la caja Actual, Caja Actual`,
+        "danger"
       );
     }
     const egreso = {
@@ -136,6 +159,9 @@ const CajaView = () => {
     };
     await services.nuevoMovimiento(egreso);
     await services.updateCaja({ caja_actual: egreso.caja_actual }, egreso.id_caja);
+    swal("Se ha Egreasdo un valor a Caja Satisfatoriamente", {
+      icon: "success",
+    });
     setIsListed(!isListed);
     setIsEgreso(!isEgreso);
     setMovimientos({ ...movimientos, egreso: 0, descripcion_egreso: "" });
@@ -147,6 +173,26 @@ const CajaView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
+        <div className="venta__manual">
+          <div className="venta__btns">
+            {!isEgreso ? (
+              <button className="button crear crear_venta" onClick={switchIngreso}>
+                <span className="button__icon">
+                  <AttachMoney className="icon" />
+                </span>
+                <span className="button__text">Ingreso</span>
+              </button>
+            ) : null}
+            {!isIngreso ? (
+              <button className="button limpiar" onClick={switchEgreso}>
+                <span className="button__icon">
+                  <MoneyOff className="icon" />
+                </span>
+                <span className="button__text">Egreso</span>
+              </button>
+            ) : null}
+          </div>
+        </div>
         <h1>Caja</h1>
         <div className="navegacion">
           <nav>
@@ -195,78 +241,105 @@ const CajaView = () => {
                 </button>
               </div>
             </div>
-          ) : !isCierre ? (
-            <button onClick={switchCierre}>Cerrar Caja</button>
           ) : null}
         </div>
-        {/* Cerrar Caja */}
-        {isCierre ? (
-          <div>
-            <label htmlFor="cierre">Cierre de Caja</label>
-            <input
-              type="text"
-              value={cajaActual.caja_cierre}
-              onChange={(e) => setCajaActual({ ...cajaActual, caja_cierre: e.target.value })}
-            />
-            <button onClick={cerrarCaja}>Cerrar Caja</button>
-            <button onClick={switchCierre}>Cancelar</button>
+        {isIngreso || isEgreso ? (
+          <div className="caja__abrir">
+            <div className="caja__ingresar">
+              <h4 className="caja__title">{isIngreso ? "Ingresar Caja" : "Egresar Caja"}</h4>
+              <label htmlFor="caja_inicio" className="caja__input">
+                {isIngreso ? "Ingresar Caja" : "Egresar Caja"}
+              </label>
+              <input
+                className="caja__input input"
+                type="text"
+                id="caja_inicio"
+                value={isIngreso ? movimientos.ingreso : isEgreso ? movimientos.egreso : null}
+                onChange={(e) =>
+                  isIngreso
+                    ? setMovimientos({ ...movimientos, ingreso: e.target.value })
+                    : isEgreso
+                    ? setMovimientos({ ...movimientos, egreso: e.target.value })
+                    : null
+                }
+              />
+              <label htmlFor="caja_inicio" className="caja__input">
+                {isIngreso ? "Descripción o Motivo de Ingreso" : "Descripción o Motivo Egreso"}
+              </label>
+              <input
+                className="caja__input input"
+                type="text"
+                id="caja_inicio"
+                value={
+                  isIngreso
+                    ? movimientos.descripcion_ingreso
+                    : isEgreso
+                    ? movimientos.descripcion_egreso
+                    : null
+                }
+                onChange={(e) =>
+                  isIngreso
+                    ? setMovimientos({ ...movimientos, descripcion_ingreso: e.target.value })
+                    : isEgreso
+                    ? setMovimientos({ ...movimientos, descripcion_egreso: e.target.value })
+                    : null
+                }
+              />
+              <div className="grp_bttn">
+                <button
+                  onClick={isIngreso ? switchIngreso : isEgreso ? switchEgreso : null}
+                  className="button cancel abrir"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={isIngreso ? addIngreso : isEgreso ? addEgreso : null}
+                  className="button crear abrir"
+                >
+                  {isIngreso ? "Ingresar Caja" : "Egresar Caja"}
+                </button>
+              </div>
+            </div>
           </div>
         ) : null}
-        {/* Añadir Ingresos */}
-        {isOpen ? null : (
-          <div>
-            <h4>Movimientos</h4>
-            <button onClick={switchIngreso}>Añadir Ingresos</button>
-            {isIngreso ? (
-              <div>
-                {/* Añadir Ingresos */}
-                <label htmlFor="cierre">Añadir un Valor</label>
-                <input
-                  type="text"
-                  value={movimientos.ingreso}
-                  onChange={(e) => setMovimientos({ ...movimientos, ingreso: e.target.value })}
-                />
-                <label htmlFor="cierre">Descripción del Ingreso</label>
-                <input
-                  type="text"
-                  value={movimientos.descripcion_ingreso}
-                  onChange={(e) =>
-                    setMovimientos({ ...movimientos, descripcion_ingreso: e.target.value })
-                  }
-                />
-                <button onClick={addIngreso}>Ingresar</button>
+        {isCierre ? (
+          <div className="caja__abrir">
+            <div className="caja__ingresar">
+              <h4 className="caja__title">Cierre de Caja</h4>
+              <label htmlFor="caja_inicio" className="caja__input">
+                ¿Cuanto dinero hay en Caja?
+              </label>
+              <input
+                className="caja__input input"
+                type="text"
+                id="caja_inicio"
+                value={cajaActual.caja_cierre}
+                onChange={(e) => setCajaActual({ ...cajaActual, caja_cierre: e.target.value })}
+              />
+              <div className="grp_bttn">
+                <button onClick={switchCierre} className="button cancel abrir">
+                  Cancelar
+                </button>
+                <button onClick={cerrarCaja} className="button crear abrir">
+                  Cerrar Caja
+                </button>
               </div>
-            ) : null}
-            {/* Añadir Egresos */}
-            <button onClick={switchEgreso}>Añadir Egresos</button>
-            {isEgreso ? (
-              <div>
-                <label htmlFor="cierre">Añadir un Valor</label>
-                <input
-                  type="text"
-                  value={movimientos.egreso}
-                  onChange={(e) => setMovimientos({ ...movimientos, egreso: e.target.value })}
-                />
-                <label htmlFor="cierre">Descripción del Egreso</label>
-                <input
-                  type="text"
-                  value={movimientos.descripcion_egreso}
-                  onChange={(e) =>
-                    setMovimientos({ ...movimientos, descripcion_egreso: e.target.value })
-                  }
-                />
-                <button onClick={addEgreso}>Egresar</button>
-              </div>
-            ) : null}
+            </div>
           </div>
-        )}
+        ) : null}
+        {!isCierre ? (
+          <button
+            className="button close"
+            disabled={isEgreso || isIngreso ? true : false}
+            onClick={switchCierre}
+          >
+            <span className="button__icon">
+              <CancelPresentation className="icon" />
+            </span>
+            <span className="button__text">Cerrar Caja</span>
+          </button>
+        ) : null}
         <div>
-          <h3>Movimientos en Caja</h3>
-          {caja[0]?.estado_caja === "ABIERTO" ? (
-            <>
-              <strong>Valor Inicial a la Caja: </strong>${caja[0]?.caja_inicio}
-            </>
-          ) : null}
           <table className="paleBlueRows">
             <thead>
               <tr>

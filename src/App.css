@@ -162,6 +162,31 @@ table.venta td {
 .crear:active {
   background-color: #27ae60; /* Green */
 }
+.cancel {
+  background-color: #e5e7e9; /* Green */
+  align-items: center;
+  color: #040405;
+}
+.cancel:hover {
+  background-color: #f2f3f4; /* Green */
+}
+.cancel:active {
+  background-color: #e5e7e9; /* Green */
+}
+.close {
+  background-color: #2874a6; /* Green */
+  align-items: center;
+  margin: 10px 0;
+}
+.close:hover {
+  background-color: #3498db; /* Green */
+}
+.close:active {
+  background-color: #2874a6; /* Green */
+}
+.grp_bttn {
+  display: flex;
+}
 .borrar {
   background-color: #b03a2e;
   height: auto;
@@ -256,7 +281,7 @@ table.venta td {
   background-color: rgba(0, 0, 0, 0.1);
 }
 .caja__abrir {
-  margin-top: 15px;
+  margin: 25px 0;
   display: flex;
   align-items: center;
   justify-content: center;
