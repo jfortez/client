@@ -3,7 +3,7 @@ import services from "../../services/venta";
 import clienteServices from "../../services/cliente";
 import { useHistory } from "react-router";
 import { Loader } from "../../elements/Loader";
-import { Visibility } from "@material-ui/icons";
+import { FilterList, Visibility } from "@material-ui/icons";
 
 const ReporteriaVentas = () => {
   const [ventas, setVentas] = useState([]);
@@ -87,7 +87,14 @@ const ReporteriaVentas = () => {
   return (
     <div>
       <h3 className="titulo">Ventas</h3>
-      <button onClick={switchFilter}>Filtrar</button>
+      <div className="crear-item">
+        <button className="button crear" onClick={switchFilter}>
+          <span className="button__icon">
+            <FilterList className="icon" />
+          </span>
+          <span className="button__text">Filtrar</span>
+        </button>
+      </div>
       {isFilter ? (
         <div>
           {/* Filtrar por Cliente */}
