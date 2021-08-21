@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Formulario, ContenedorBotonCentrado, Boton } from "../../elements/Formularios";
+import { Formulario } from "../../elements/Formularios";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import services from "../../services/empresa";
 import expresiones from "../../utils/Expresiones";
 import notificacion from "../../utils/Notificaciones";
+import { Icon } from "@material-ui/core";
+import { Save } from "@material-ui/icons";
 const EmpresaView = () => {
   const [id, setId] = useState(0);
   const [ruc, setRuc] = useState({ campo: "", valido: null });
@@ -45,7 +47,16 @@ const EmpresaView = () => {
   return (
     <>
       <div>
-        <h2>Información de la Empresa</h2>
+        <h3 className="titulo">Información de la Empresa</h3>
+        <div className="crear-item">
+          <button className="button actualizar" onClick={onSubmit}>
+            <span className="button__icon">
+              <Icon component={Save} className="icon" />
+            </span>
+            <span className="button__text">Guardar</span>
+          </button>
+        </div>
+
         <Formulario onSubmit={onSubmit}>
           <ComponentInput
             state={ruc} //value
@@ -103,9 +114,6 @@ const EmpresaView = () => {
             error="El Campo es requerido"
             expresion={expresiones.nombre}
           />
-          <ContenedorBotonCentrado>
-            <Boton type="submit">Guardar</Boton>
-          </ContenedorBotonCentrado>
         </Formulario>
       </div>
     </>

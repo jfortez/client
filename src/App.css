@@ -100,6 +100,12 @@ table.paleBlueRows thead th:first-child {
 table.paleBlueRows tfoot td {
   font-size: 14px;
 }
+table.vercliente th {
+  height: 20px;
+}
+table.vercliente td {
+  height: 30px;
+}
 .botones,
 .button {
   text-align: center;
@@ -191,6 +197,21 @@ table.paleBlueRows tfoot td {
 }
 .show:active {
   background-color: #5dade2; /* Green */
+}
+.limpiar {
+  background-color: #e74c3c;
+  /* height: auto;
+  padding: 10px 10px;
+  margin: 0;
+  display: flex;
+  margin-top: 10px; */
+}
+
+.limpiar:hover {
+  background-color: #f1948a; /* Green */
+}
+.limpiar:active {
+  background-color: #e74c3c; /* Green */
 }
 .activeuser {
   background-color: #239b56;
@@ -319,4 +340,80 @@ table.paleBlueRows tfoot td {
 }
 .contenido {
   padding: 15px 30px 0 30px;
+}
+.row__ventaActual {
+  width: 100%;
+  display: flex;
+  margin-top: 25px;
+  justify-content: space-between;
+  font-size: 18px;
+}
+.venta__title {
+  font-weight: 600;
+}
+.venta__dato {
+  font-weight: 400;
+}
+.venta__cliente {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  margin-top: 25px;
+}
+.search__info {
+  width: 350px;
+}
+.search__info input[type="text"] {
+  padding: 10px;
+  height: auto;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  width: 220px;
+}
+
+.search__info button {
+  float: left;
+  width: auto;
+  height: auto;
+  padding: 6px;
+  background: #2196f3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none;
+  cursor: pointer;
+}
+
+.search__info button:hover {
+  background: #0b7dda;
+}
+
+.search__info::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+.search__info span {
+  font-size: 20px;
+  font-weight: 600;
+}
+.form__icon {
+  font-size: 1.5em !important;
+  padding: 0;
+  margin: 0;
+}
+.info__cliente {
+  background: #f8f9f9;
+  width: 100%;
+  height: 100px;
+  box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
+}
+.title__info {
+  font-size: 20px;
+  text-align: center;
+  font-weight: 300;
+  margin: auto;
+  padding: 20px;
+  border: 2px dashed #0b7dda;
 }

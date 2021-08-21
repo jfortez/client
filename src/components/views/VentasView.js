@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import notificacion from "../../utils/Notificaciones";
 import swal from "sweetalert";
+import { ClearAll } from "@material-ui/icons";
 
 const VentasView = () => {
   const {
@@ -198,30 +199,7 @@ const VentasView = () => {
       ]),
       invTotalLabel: "Total:",
       invTotal: `$${Number(totalCuenta).toFixed(2)}`,
-      // invCurrency: "ALL",
-      // row1: {
-      //   col1: "VAT:",
-      //   col2: "20",
-      //   col3: "%",
-      //   style: {
-      //     fontSize: 10, //optional, default 12
-      //   },
-      // },
-      // row2: {
-      //   col1: "SubTotal:",
-      //   col2: "116,199.90",
-      //   col3: "ALL",
-      //   style: {
-      //     fontSize: 10, //optional, default 12
-      //   },
-      // },
-      // invDescLabel: "Invoice Note",
-      // invDesc:
-      // "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.",
     },
-    // footer: {
-    //   text: "The invoice is created on a computer and is valid without the signature and stamp.",
-    // },
     pageEnable: true,
     pageLabel: "Page ",
   };
@@ -246,15 +224,21 @@ const VentasView = () => {
             </Link>
           </div>
         </nav>
-        <p>
-          <strong>Fecha:</strong> {fecha.toLocaleDateString()}
-        </p>
-        <p>
-          <strong>Venta No: {values?.num_venta}</strong>
-          <br />
+        <div className="row__ventaActual">
+          <div>
+            <span className="venta__title">
+              VENTA No.: <span className="venta__dato">{values?.num_venta}</span>
+            </span>
+          </div>
+          <div>
+            <span className="venta__title">
+              FECHA: <span className="venta__dato">{fecha.toLocaleDateString()}</span>
+            </span>
+          </div>
+        </div>
+        {/* <p>
           <strong>Factura No: {values?.num_recibo}</strong>
-        </p>
-        <button onClick={limpiar}>Limpiar</button>
+        </p> */}
         <RucInput
           types={types}
           setTypes={setTypes}
@@ -293,6 +277,14 @@ const VentasView = () => {
           />
         </div>
         <button onClick={nuevaVenta}>Venta</button>
+        <div className="limpiar-item">
+          <button className="button limpiar" onClick={limpiar}>
+            <span className="button__icon">
+              <ClearAll className="icon" />
+            </span>
+            <span className="button__text">Limpiar</span>
+          </button>
+        </div>
       </div>
     </>
   );
