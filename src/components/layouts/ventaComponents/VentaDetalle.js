@@ -36,7 +36,7 @@ const VentaDetalle = ({ productosVenta, detalleVenta, setDetalleVenta }) => {
           {detalleVenta
             ? detalleVenta.map((item, index) => {
                 return (
-                  <tr key={index}>
+                  <tr key={index} className="rowData">
                     <td>{item.cod_producto}</td>
                     <td>{item.nombre}</td>
                     <td>{item.cantidad}</td>

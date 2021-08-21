@@ -105,9 +105,8 @@ const ComprasView = () => {
                 <th>#</th>
                 <th>Fecha</th>
                 <th>No. Factura</th>
-                <th>RUC Proveedor</th>
                 <th>Proveedor</th>
-                <th>Cantidad Productos</th>
+                <th># Productos</th>
                 <th>Total</th>
                 <th>Acciones</th>
               </tr>
@@ -122,10 +121,9 @@ const ComprasView = () => {
                       <td>{index + 1}</td>
                       <td>{item.fecha}</td>
                       <td>{item.num_factura}</td>
-                      <td>{item.ruc}</td>
                       <td>{item.nombre}</td>
                       <td>{item.cantidad}</td>
-                      <td>{item.total}</td>
+                      <td>${Number(item.total).toFixed(2)}</td>
                       <td className="botones">
                         <button onClick={() => handleBaja(item.id)} className="button borrar">
                           <Delete />

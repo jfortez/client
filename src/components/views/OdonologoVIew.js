@@ -70,7 +70,7 @@ const OdontologoView = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h3 className="titulo">Odontologos</h3>
+        <h3 className="titulo">Odontólogos</h3>
         <div className="navegacion">
           <nav>
             <ul>
@@ -81,7 +81,7 @@ const OdontologoView = () => {
               </li>
               <li> / </li>
               <li>
-                <b>Odontologos</b>
+                <b>Odontólogos</b>
               </li>
             </ul>
           </nav>
@@ -92,7 +92,7 @@ const OdontologoView = () => {
               <span className="button__icon">
                 <Add className="icon" />
               </span>
-              <span className="button__text">Nuevo Odontologo</span>
+              <span className="button__text">Nuevo Odontólogo</span>
             </button>
           </Link>
         </div>

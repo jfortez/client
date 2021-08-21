@@ -5,12 +5,10 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import services from "../../services/productos";
 import categoriaServices from "../../services/categoria";
-import expresiones from "../../utils/Expresiones";
-import { Formulario, GrupoInput, Select, Option, Label } from "../../elements/Formularios";
 import { Icon } from "@material-ui/core";
 import { Save, SystemUpdateAlt } from "@material-ui/icons";
-import ComponentInput from "../layouts/forms/ComponentInput";
 import notificacion from "../../utils/Notificaciones";
+import ProductosCreateForm from "./ProductosCreateForm";
 
 const ProductCreate = () => {
   const { isCollapsed } = useValues();
@@ -147,90 +145,26 @@ const ProductCreate = () => {
             <span className="button__text">{isEditing ? "Actualizar" : "Guardar"}</span>
           </button>
         </div>
-        <Formulario onSubmit={isEditing ? handleUpdate : onSubmit}>
-          <ComponentInput
-            state={cod_Producto} //value
-            setState={setCod_Producto} //onChange
-            title="Codigo"
-            type="text"
-            name="codigo"
-            placeholder="Codigo"
-            error="El campo está incompleto"
-            expresion={expresiones.cod}
-          />
-          <ComponentInput
-            state={nombre} //value
-            setState={setNombre} //onChange
-            title="Nombre"
-            type="text"
-            name="nombre"
-            placeholder="Nombre"
-            error="El campo está incompleto"
-            expresion={expresiones.nombre}
-          />
-          <ComponentInput
-            state={descripcion} //value
-            setState={setDescripcion} //onChange
-            title="Descripcion"
-            type="text"
-            name="descripcion"
-            placeholder="Descripcion"
-            error="El campo está incompleto"
-            expresion={expresiones.nombre}
-          />
-          <ComponentInput
-            state={cantidad} //value
-            setState={setCantidad} //onChange
-            title="Cantidad"
-            type="text"
-            name="cantidad"
-            placeholder="Cantidad"
-            error="El campo está incompleto"
-            expresion={expresiones.numero}
-          />
-          <ComponentInput
-            state={costo} //value
-            setState={setCosto} //onChange
-            title="Costo"
-            type="text"
-            name="costo"
-            placeholder="Costo"
-            error="El campo está incompleto"
-            expresion={expresiones.numero}
-          />
-          <ComponentInput
-            state={precio} //value
-            setState={setPrecio} //onChange
-            title="Precio"
-            type="text"
-            name="precio"
-            placeholder="Precio"
-            error="El campo está incompleto"
-            expresion={expresiones.numero}
-          />
-          <GrupoInput>
-            <Label>Categoría</Label>
-            <Select
-              value={idCategoria.campo}
-              name="id_Categoria"
-              onChange={(e) => setIdCategoria({ campo: e.target.value })}
-            >
-              <Option value="0">Seleccione</Option>
-              {categorias ? (
-                categorias.map((item) => {
-                  return (
-                    <Option value={item.id} key={item.id}>
-                      {item.nombre}
-                    </Option>
-                  );
-                })
-              ) : (
-                <Option>taco</Option>
-              )}
-            </Select>
-            <br />
-          </GrupoInput>
-        </Formulario>
+        <ProductosCreateForm
+          isEditing={isEditing}
+          handleUpdate={handleUpdate}
+          onSubmit={onSubmit}
+          cod_Producto={cod_Producto}
+          setCod_Producto={setCod_Producto}
+          nombre={nombre}
+          setNombre={setNombre}
+          descripcion={descripcion}
+          setDescripcion={setDescripcion}
+          cantidad={cantidad}
+          setCantidad={setCantidad}
+          costo={costo}
+          setCosto={setCosto}
+          precio={precio}
+          setPrecio={setPrecio}
+          idCategoria={idCategoria}
+          setIdCategoria={setIdCategoria}
+          categorias={categorias}
+        />
       </div>
     </>
   );

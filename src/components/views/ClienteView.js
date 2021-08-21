@@ -94,7 +94,7 @@ const ClienteView = () => {
               <span className="button__icon">
                 <Add className="icon" />
               </span>
-              <span className="button__text">Nuevo Clente</span>
+              <span className="button__text">Nuevo Cliente</span>
             </button>
           </Link>
         </div>

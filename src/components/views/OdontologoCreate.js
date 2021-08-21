@@ -132,7 +132,7 @@ const OdontologoCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h3 className="titulo">{isEditing ? "Editar Odontologo" : "Nuevo Odontologo"}</h3>
+        <h3 className="titulo">{isEditing ? "Editar Odontólogo" : "Nuevo Odontólogo"}</h3>
         <div className="navegacion">
           <nav>
             <ul>
@@ -144,12 +144,12 @@ const OdontologoCreate = () => {
               <li> / </li>
               <li>
                 <Link to="/dashboard/odontologos" className="navegacion__redirect">
-                  Odontologo
+                  Odontólogos
                 </Link>
               </li>
               <li> / </li>
               <li>
-                <b>{isEditing ? "Editar Odontologo" : "Nuevo Odontologo"}</b>
+                <b>{isEditing ? "Editar Odontólogo" : "Nuevo Odontólogo"}</b>
               </li>
             </ul>
           </nav>

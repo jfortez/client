@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import proveedorServices from "../../services/proveedores";
 import categoriaServices from "../../services/categoria";
 import productoServices from "../../services/productos";
 import services from "../../services/compras";
 import notificacion from "../../utils/Notificaciones";
+import { ClearAll, LocalMall, Search } from "@material-ui/icons";
+import ProductosCreateForm from "./ProductosCreateForm";
 
 const ComprasCreate = () => {
   const {
@@ -20,28 +22,33 @@ const ComprasCreate = () => {
     proveedor,
     setProveedor,
   } = useValues();
-  const history = useHistory();
   const [categorias, setCategorias] = useState([]);
-  const [productos, setProductos] = useState({
-    cod_producto: "",
-    nombre: "",
-    descripcion: "",
-    cantidad: 0,
-    costo: 0.0,
-    precio: 0.0,
-    id_categoria: 0,
-  });
-  const onSubmit = async (event) => {
-    event.preventDefault();
-    const proveedor = await proveedorServices.getProveedorByRUC({
-      ruc: comprasValues.ruc_proveedor,
-    });
-    setProveedor(proveedor);
-  };
+  const [cod_Producto, setCod_Producto] = useState({ campo: "", valido: null });
+  const [nombre, setNombre] = useState({ campo: "", valido: null });
+  const [descripcion, setDescripcion] = useState({ campo: "", valido: null });
+  const [cantidad, setCantidad] = useState({ campo: "", valido: null });
+  const [costo, setCosto] = useState({ campo: "", valido: null });
+  const [precio, setPrecio] = useState({ campo: "", valido: null });
+  const [idCategoria, setIdCategoria] = useState({ campo: "", valido: null });
   const listCategorias = async () => {
     const categorias = await categoriaServices.optionCategorias();
     setCategorias(categorias);
   };
+  useEffect(() => {
+    listCategorias();
+  }, []);
+  const onSubmitGetProveedor = async (event) => {
+    event.preventDefault();
+    const proveedor = await proveedorServices.getProveedorByRUC({
+      ruc: comprasValues.ruc_proveedor,
+    });
+    if (!proveedor.message) {
+      setProveedor(proveedor);
+    } else {
+      return notificacion("Error", "Proveedor no Existe", "danger");
+    }
+  };
+
   useEffect(() => {
     const notaCompras = productosCompras.reduce((acc, acv) => {
       const elementoYaExiste = acc.find((elemento) => elemento.cod_producto === acv.cod_producto);
@@ -50,11 +57,11 @@ const ComprasCreate = () => {
           if (elemento.cod_producto === acv.cod_producto) {
             return {
               ...elemento,
-              cantidad: elemento.cantidad + acv.cantidad,
-              totalCompra: (
-                (elemento.cantidad + acv.cantidad) *
-                parseFloat(elemento.costo)
-              ).toFixed(2),
+              cantidad: Number(elemento.cantidad) + Number(acv.cantidad),
+              totalCompra: Number(
+                (Number(elemento.cantidad) + Number(acv.cantidad)) *
+                  Number(elemento.costo).toFixed(2)
+              ),
             };
           }
           return elemento;
@@ -64,49 +71,78 @@ const ComprasCreate = () => {
     }, []);
     setCompraDetalle(notaCompras);
   }, [productosCompras, setCompraDetalle]);
-  useEffect(() => {
-    listCategorias();
-  }, []);
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    if (
+      cod_Producto.valido === "true" &&
+      nombre.valido === "true" &&
+      descripcion.valido === "true" &&
+      cantidad.valido === "true" &&
+      costo.valido === "true" &&
+      precio.valido === "true" &&
+      idCategoria.campo > 0
+    ) {
+      const nuevoProducto = {
+        cod_producto: cod_Producto.campo,
+        nombre: nombre.campo,
+        descripcion: descripcion.campo,
+        cantidad: cantidad.campo,
+        costo: costo.campo,
+        precio: precio.campo,
+        id_categoria: idCategoria.campo,
+      };
+      await services.createProductos(nuevoProducto);
+      notificacion("Añadir Producto", "Se ha creado Producto satisfatoriamente", "success");
+      setCod_Producto({ campo: "", valido: null });
+      setNombre({ campo: "", valido: null });
+      setDescripcion({ campo: "", valido: null });
+      setCantidad({ campo: "", valido: null });
+      setCosto({ campo: "", valido: null });
+      setPrecio({ campo: "", valido: null });
+      setIdCategoria({ campo: "", valido: null });
+    } else {
+      notificacion("Añadir Producto", "Debe rellenar los campos para proceder", "warning");
+    }
+  };
   const handleAddProductos = async (event) => {
     event.preventDefault();
-    const total = Number((productos.cantidad * productos.costo).toFixed(2));
-    if (!productos.id_categoria > 0) {
-      return console.log("debe ingresar una categoria");
+    const total = Number((Number(cantidad.campo) * Number(costo.campo)).toFixed(2));
+    if (!idCategoria.campo > 0) {
+      return notificacion("Añadir Producto", "Debe rellenar los campos para proceder", "warning");
     }
-    const categoriaNombre = await categoriaServices.getCategoriasById(productos.id_categoria);
+    const categoriaNombre = await categoriaServices.getCategoriasById(idCategoria.campo);
     const productoIngresado = {
-      ...productos,
+      cod_producto: cod_Producto.campo,
+      nombre: nombre.campo,
+      descripcion: descripcion.campo,
+      cantidad: parseInt(cantidad.campo),
+      costo: Number(costo.campo).toFixed(2),
+      precio: Number(precio.campo).toFixed(2),
+      id_categoria: idCategoria.campo,
       categoria: categoriaNombre[0].nombre,
       totalCompra: total,
     };
     setProductosCompras([...productosCompras, productoIngresado]);
-    setProductos({
-      cod_producto: "",
-      nombre: "",
-      descripcion: "",
-      cantidad: 0,
-      costo: 0.0,
-      precio: 0.0,
-      id_categoria: "",
-    });
+    setCod_Producto({ campo: "", valido: null });
+    setNombre({ campo: "", valido: null });
+    setDescripcion({ campo: "", valido: null });
+    setCantidad({ campo: "", valido: null });
+    setCosto({ campo: "", valido: null });
+    setPrecio({ campo: "", valido: null });
+    setIdCategoria({ campo: "", valido: null });
   };
   const limpiar = () => {
     setComprasValues({ ruc_proveedor: "", fecha: "", num_factura: "" });
-    setProductos({
-      cod_producto: "",
-      nombre: "",
-      descripcion: "",
-      cantidad: 0,
-      costo: 0.0,
-      precio: 0.0,
-      id_categoria: "",
-    });
+    setCod_Producto({ campo: "", valido: null });
+    setNombre({ campo: "", valido: null });
+    setDescripcion({ campo: "", valido: null });
+    setCantidad({ campo: "", valido: null });
+    setCosto({ campo: "", valido: null });
+    setPrecio({ campo: "", valido: null });
+    setIdCategoria({ campo: "", valido: null });
     setProductosCompras([]);
     setCompraDetalle([]);
     setProveedor([]);
-  };
-  const handleCategoria = () => {
-    history.push("/dashboard/productos/createCategory");
   };
   const handleSave = async () => {
     if (!proveedor.length > 0) {
@@ -119,8 +155,9 @@ const ComprasCreate = () => {
       return acc + acv.totalCompra;
     }, 0);
     const cantidadTotal = compraDetalle.reduce((acc, acv) => {
-      return acc + acv.cantidad;
+      return acc + Number(acv.cantidad);
     }, 0);
+    console.log("compras total: ", costoTotal);
     const compras = {
       id_proveedor: proveedor[0].id,
       num_factura: comprasValues.num_factura,
@@ -151,9 +188,9 @@ const ComprasCreate = () => {
           cod_producto,
           nombre,
           descripcion,
-          cantidad,
-          costo,
-          precio,
+          parseInt(cantidad),
+          Number(costo),
+          Number(precio),
           id_categoria,
           active,
         ];
@@ -165,10 +202,10 @@ const ComprasCreate = () => {
     for (const prd in productos) {
       for (const dtl in compraDetalle) {
         if (productos[prd].cod_producto === compraDetalle[dtl].cod_producto) {
-          let total = productos[prd].cantidad + compraDetalle[dtl].cantidad;
+          let total = productos[prd].cantidad + Number(compraDetalle[dtl].cantidad);
           const { id } = productos[prd];
           const { costo, precio } = compraDetalle[dtl];
-          const rs = [id, Number(costo), Number(precio), total];
+          const rs = [id, Number(costo).toFixed(2), Number(precio).toFixed(2), total];
           existente.push(rs);
         }
       }
@@ -189,7 +226,7 @@ const ComprasCreate = () => {
           if (productos[prd].cod_producto === compraDetalle[dtl].cod_producto) {
             const { id } = productos[prd];
             const { cantidad, costo, totalCompra } = compraDetalle[dtl];
-            const arr = [compraId, id, cantidad, Number(costo), totalCompra];
+            const arr = [compraId, id, cantidad, Number(costo), Number(totalCompra).toFixed(2)];
             dtlleCompra.push(arr);
           }
         }
@@ -201,160 +238,150 @@ const ComprasCreate = () => {
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Nueva Compra</h1>
-        <div>
+        <h3 className="titulo">Nueva Compra</h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
-                <Link to="/dashboard/compras">Compras</Link>
+                <Link to="/dashboard/compras" className="navegacion__redirect">
+                  Compras
+                </Link>
               </li>
+              <li> / </li>
               <li>
                 <b>Nueva Compra</b>
               </li>
             </ul>
           </nav>
         </div>
-        <button onClick={limpiar}>Limpiar</button>
         <h4>Datos de Facturación</h4>
-        <form onSubmit={onSubmit}>
-          <div>
-            <label htmlFor="ruc_proveedor">RUC Proveedor</label>
-            <input
-              type="text"
-              id="ruc_proveedor"
-              name="ruc_proveedor"
-              value={comprasValues.ruc_proveedor}
-              onChange={(e) =>
-                setComprasValues({ ...comprasValues, ruc_proveedor: e.target.value })
-              }
-            />
-            <button>Buscar</button>
+        <form onSubmit={onSubmitGetProveedor}>
+          <div className="venta__cliente">
+            <div className="search__info">
+              <label htmlFor="ruc_proveedor" className="label__info">
+                Proveedor
+              </label>
+              <input
+                type="text"
+                id="ruc_proveedor"
+                name="ruc_proveedor"
+                value={comprasValues.ruc_proveedor}
+                onChange={(e) =>
+                  setComprasValues({ ...comprasValues, ruc_proveedor: e.target.value })
+                }
+              />
+              <button>
+                <Search />
+              </button>
+            </div>
+            <div className="info__cliente">
+              <div className="contenido">
+                {proveedor.length > 0 ? (
+                  <table className="paleBlueRows venta">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Proveedor</th>
+                        <th>Dirección</th>
+                        <th>Telefono</th>
+                        <th>Email</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {proveedor.length > 0
+                        ? proveedor.map((item, index) => {
+                            return (
+                              <tr key={index} className="rowData">
+                                <td>{index + 1}</td>
+                                <td>{item.nombre}</td>
+                                <td>{item.direccion}</td>
+                                <td>{item.telefono}</td>
+                                <td>{item.email}</td>
+                              </tr>
+                            );
+                          })
+                        : null}
+                    </tbody>
+                  </table>
+                ) : (
+                  <h1 className="title__info">Ingrese un RUC para visualizar</h1>
+                )}
+              </div>
+            </div>
           </div>
         </form>
-        {!proveedor.message ? (
-          proveedor.map((item) => {
-            return (
-              <ul key={item.id}>
-                <li>
-                  <b>Nombre Proveedor:</b>
-                  {item.nombre}
-                </li>
-                <li>
-                  <b>Dirección:</b> {item.direccion}
-                </li>
-                <li>
-                  <b>Telefono:</b> {item.telefono}
-                </li>
-              </ul>
-            );
-          })
-        ) : (
-          <p>Proveedor no existe</p>
-        )}
-        <div>
-          <label htmlFor="fecha">Fecha</label>
-          <input
-            type="date"
-            id="fecha"
-            value={comprasValues.fecha}
-            onChange={(e) => setComprasValues({ ...comprasValues, fecha: e.target.value })}
-          />
+        <div className="venta__manual">
+          <div className="venta__importe">
+            <label htmlFor="fecha_emision" className="label__info">
+              Fecha Emisión
+            </label>
+            <input
+              type="date"
+              id="fecha_emision"
+              value={comprasValues.fecha}
+              onChange={(e) => setComprasValues({ ...comprasValues, fecha: e.target.value })}
+            />
+          </div>
+          <div className="venta__importe devolucion">
+            <label htmlFor="num_factura" className="label__info">
+              Factura No.
+            </label>
+            <input
+              type="text"
+              name="num_factura"
+              id="num_factura"
+              value={comprasValues.num_factura}
+              onChange={(e) => setComprasValues({ ...comprasValues, num_factura: e.target.value })}
+            />
+          </div>
+          <div className="venta__btns">
+            <button className="button crear crear_venta" onClick={handleSave}>
+              <span className="button__icon">
+                <LocalMall className="icon" />
+              </span>
+              <span className="button__text">Guardar Compra</span>
+            </button>
+            <button className="button limpiar" onClick={limpiar}>
+              <span className="button__icon">
+                <ClearAll className="icon" />
+              </span>
+              <span className="button__text">Limpiar</span>
+            </button>
+          </div>
         </div>
-        <div>
-          <label htmlFor="num_factura">Numero Factura</label>
-          <input
-            type="text"
-            id="num_factura"
-            value={comprasValues.num_factura}
-            onChange={(e) => setComprasValues({ ...comprasValues, num_factura: e.target.value })}
+        <div className="ingresar__productos">
+          <ProductosCreateForm
+            onSubmit={onSubmit}
+            cod_Producto={cod_Producto}
+            setCod_Producto={setCod_Producto}
+            nombre={nombre}
+            setNombre={setNombre}
+            descripcion={descripcion}
+            setDescripcion={setDescripcion}
+            cantidad={cantidad}
+            setCantidad={setCantidad}
+            costo={costo}
+            setCosto={setCosto}
+            precio={precio}
+            setPrecio={setPrecio}
+            idCategoria={idCategoria}
+            setIdCategoria={setIdCategoria}
+            categorias={categorias}
+            handleAddProductos={handleAddProductos}
           />
-        </div>
-        <br />
-        <div>
-          <h4>Añadir Productos de la Compra</h4>
-          <div>
-            <label htmlFor="cod_producto">Codigo del Producto</label>
-            <input
-              type="text"
-              id="cod_producto"
-              value={productos.cod_producto}
-              onChange={(e) => setProductos({ ...productos, cod_producto: e.target.value })}
-            />
-          </div>
-          <div>
-            <label htmlFor="nombre">Nombre del Producto</label>
-            <input
-              type="text"
-              id="nombre"
-              value={productos.nombre}
-              onChange={(e) => setProductos({ ...productos, nombre: e.target.value })}
-            />
-          </div>
-          <div>
-            <label htmlFor="descripcion">Descripción del Producto</label>
-            <input
-              type="text"
-              id="descripcion"
-              value={productos.descripcion}
-              onChange={(e) => setProductos({ ...productos, descripcion: e.target.value })}
-            />
-          </div>
-          <div>
-            <label htmlFor="cantidad">Cantidad del Producto</label>
-            <input
-              type="number"
-              id="cantidad"
-              value={parseInt(productos.cantidad)}
-              onChange={(e) => setProductos({ ...productos, cantidad: Number(e.target.value) })}
-            />
-          </div>
-          <div>
-            <label htmlFor="costo">Costo del Producto</label>
-            <input
-              type="text"
-              id="costo"
-              value={productos.costo}
-              onChange={(e) => setProductos({ ...productos, costo: e.target.value })}
-            />
-          </div>
-          <div>
-            <label htmlFor="precio">Precio Venta</label>
-            <input
-              type="text"
-              id="precio"
-              value={productos.precio}
-              onChange={(e) => setProductos({ ...productos, precio: e.target.value })}
-            />
-          </div>
-          <div>
-            <label htmlFor="categoria">Categoría</label>
-            <select
-              value={productos.id_categoria}
-              onChange={(e) => setProductos({ ...productos, id_categoria: Number(e.target.value) })}
-            >
-              <option value="0">Seleccione</option>
-              {categorias
-                ? categorias.map((item) => {
-                    return (
-                      <option value={item.id} key={item.id}>
-                        {item.nombre}
-                      </option>
-                    );
-                  })
-                : null}
-            </select>
-            <button onClick={handleCategoria}>Añadir Categoría</button>
-          </div>
-          <button onClick={handleAddProductos}>Añadir</button>
         </div>
         <div>
           <h4>Productos Ingresados</h4>
-          <table>
+          <table className="paleBlueRows venta">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Codigo</th>
                 <th>Nombre del Producto</th>
                 <th>Cantidad</th>
@@ -368,7 +395,8 @@ const ComprasCreate = () => {
               {compraDetalle
                 ? compraDetalle.map((item, index) => {
                     return (
-                      <tr key={index}>
+                      <tr key={index} className="rowData">
+                        <td>{index + 1}</td>
                         <td>{item.cod_producto}</td>
                         <td>{item.nombre}</td>
                         <td>{item.cantidad}</td>
@@ -382,7 +410,6 @@ const ComprasCreate = () => {
                 : null}
             </tbody>
           </table>
-          <button onClick={handleSave}>Guardar</button>
         </div>
       </div>
     </>
