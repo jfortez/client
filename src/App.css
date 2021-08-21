@@ -574,10 +574,16 @@ table.venta td {
   flex-wrap: nowrap;
   margin-top: 25px;
   background: #f8f9f9;
-  height: 425px;
+  height: 450px;
   box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
   padding: 30px 40px 0 40px;
 }
+.cita__med {
+  height: 180px;
+}
 .add__compra {
   font-weight: 600;
+}
+.cita__btn {
+  margin-top: 0;
 }
