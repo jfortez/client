@@ -276,3 +276,47 @@ table.paleBlueRows tfoot td {
   outline: none;
   box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
 }
+/* prueba */
+.vertical-menu {
+  width: 180px; /* Set a width if you like */
+}
+
+.vertical-menu .link {
+  /* background-color: #eee; */
+  color: #909497;
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Remove underline from links */
+  padding-bottom: 0.5rem;
+  font-size: 17px;
+}
+.navlink__icon__icon {
+  font-size: 1.6em !important;
+}
+.navlink__icon,
+.navlink__title {
+  padding: 0 5px;
+}
+
+.vertical-menu .link.active {
+  color: #579adc;
+  font-weight: 600;
+}
+.row__config {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  margin-top: 25px;
+}
+.col-left {
+  margin-right: 20px;
+}
+.col-right {
+  background: #f8f9f9;
+  width: 100%;
+  height: 560px;
+  box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
+}
+.contenido {
+  padding: 15px 30px 0 30px;
+}
