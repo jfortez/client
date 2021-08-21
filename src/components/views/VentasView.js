@@ -258,9 +258,6 @@ const VentasView = () => {
             </span>
           </div>
         </div>
-        {/* <p>
-          <strong>Factura No: {values?.num_recibo}</strong>
-        </p> */}
         <RucInput
           types={types}
           setTypes={setTypes}

@@ -493,6 +493,20 @@ table.venta td {
   height: auto;
   width: 250px;
 }
+.vista__1,
+.vista__2 {
+  width: 50%;
+  padding: 15px 30px 15px 30px;
+  background: #f8f9f9;
+  height: 125px;
+  box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
+}
+.vista__1 {
+  margin-right: 7px;
+}
+.vista__2 {
+  margin-left: 7px;
+}
 .cant__producto {
   padding-left: 10px;
 }
@@ -586,4 +600,7 @@ table.venta td {
 }
 .cita__btn {
   margin-top: 0;
+}
+.pdg__ag {
+  margin-top: 10px;
 }

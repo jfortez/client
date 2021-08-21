@@ -10,6 +10,8 @@ import cajaServices from "../../services/caja";
 import jsPDFInvoiceTemplate from "jspdf-invoice-template";
 import empresaServices from "../../services/empresa";
 import notificacion from "../../utils/Notificaciones";
+import { LocalMall, Search } from "@material-ui/icons";
+import swal from "sweetalert";
 
 const AgendaServicioVenta = () => {
   const { isCollapsed, id_agenda, values, setId_agenda, setValues, user } = useValues();
@@ -17,6 +19,7 @@ const AgendaServicioVenta = () => {
   const [entradasVenta, setEntradasVenta] = useState({ ruc: "", importe: 0 });
   const [cliente, setCliente] = useState([]);
   const [empresa, setEmpresa] = useState([]);
+  console.log(agendaInfo);
   const history = useHistory();
   useEffect(() => {
     const getEmpresa = async () => {
@@ -34,8 +37,15 @@ const AgendaServicioVenta = () => {
   }, [id_agenda]);
   const handleSearch = async (event) => {
     event.preventDefault();
+    if (entradasVenta.ruc === "") {
+      return notificacion("Campo Vacio", "Debe Ingresar un Cliente", "warning");
+    }
     const clienteData = await clienteServices.getRUC({ ruc: entradasVenta.ruc });
-    setCliente(clienteData);
+    if (!clienteData.message) {
+      setCliente(clienteData);
+    } else {
+      return notificacion("Error", "Cliente no Existe", "danger");
+    }
   };
   const fecha = new Date();
   const handleVenta = async () => {
@@ -74,12 +84,10 @@ const AgendaServicioVenta = () => {
         total,
       };
       await services.createFactServicios(fact_serv);
-      notificacion(
-        "Venta de Servicio",
-        "Se ha creado Venta de Servicio Satisfatoriamente",
-        "success"
-      );
       history.push("/dashboard/agenda");
+      swal("Venta generada satisfatoriamente", {
+        icon: "success",
+      });
     }
     updateValues();
     clean();
@@ -186,31 +194,55 @@ const AgendaServicioVenta = () => {
   const handleCreatePdf = () => {
     jsPDFInvoiceTemplate(props);
   };
+  const devolucion = (Number(entradasVenta.importe) - agendaInfo[0]?.precio_servicio).toFixed(2);
   return (
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Página de Servicio Venta</h1>
-        <div>
+        <h3 className="titulo">Venta de Servicio</h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Home
+                </Link>
               </li>
+              <li> / </li>
               <li>
-                <b>Pagina Servicio Venta</b>
+                <Link to="/dashboard/agenda" className="navegacion__redirect">
+                  Agenda
+                </Link>
+              </li>
+              <li> / </li>
+              <li>
+                <b>Venta de Servicio</b>
               </li>
             </ul>
           </nav>
         </div>
-        <h3>Venta No: {values.num_venta}</h3>
-        <h3>Recibo No: {values.num_recibo}</h3>
-        <h3>Fecha: {fecha.toLocaleDateString()}</h3>
-        <div>
+        <div className="row__ventaActual">
           <div>
-            <h4>Datos de Facturación</h4>
-            <form onSubmit={handleSearch}>
-              <label htmlFor="ruc">RUC:</label>
+            <span className="venta__title">
+              VENTA No.: <span className="venta__dato">{values?.num_venta} </span>
+            </span>
+            /{" "}
+            <span className="venta__title">
+              FACTURA No.: <span className="venta__dato">{values?.num_venta}</span>
+            </span>
+          </div>
+          <div>
+            <span className="venta__title">
+              FECHA: <span className="venta__dato">{fecha.toLocaleDateString()}</span>
+            </span>
+          </div>
+        </div>
+        <form onSubmit={handleSearch}>
+          <div className="venta__cliente">
+            <div className="search__info">
+              <label htmlFor="ruc" className="label__info">
+                Clientes
+              </label>
               <input
                 type="text"
                 name="ruc"
@@ -218,53 +250,167 @@ const AgendaServicioVenta = () => {
                 value={entradasVenta.ruc}
                 onChange={(e) => setEntradasVenta({ ...entradasVenta, ruc: e.target.value })}
               />
-              <button>Buscar</button>
-              {!cliente.message ? (
-                cliente.map((data) => {
-                  return (
-                    <ul key={data.id}>
-                      <li>
-                        <b>Nombres:</b>
-                        {data.nombres} {data.apellidos}
-                      </li>
-                      <li>
-                        <b>Dirección:</b> {data.direccion}
-                      </li>
-                      <li>
-                        <b>Telefono:</b> {data.telefono}
-                      </li>
-                      <li>
-                        <b>email:</b> {data.email}
-                      </li>
-                    </ul>
-                  );
-                })
-              ) : (
-                <p>Cliente no existe</p>
-              )}
-            </form>
+              <button>
+                <Search />
+              </button>
+            </div>
+            <div className="info__cliente">
+              <div className="contenido">
+                {cliente.length > 0 ? (
+                  <table className="paleBlueRows venta">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Nombres</th>
+                        <th>Dirección</th>
+                        <th>Telefono</th>
+                        <th>Email</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cliente.length > 0
+                        ? cliente.map((item, index) => {
+                            return (
+                              <tr key={index} className="rowData">
+                                <td>{index + 1}</td>
+                                <td>
+                                  {item.nombres} {item.apellidos}
+                                </td>
+                                <td>{item.direccion}</td>
+                                <td>{item.telefono}</td>
+                                <td>{item.email}</td>
+                              </tr>
+                            );
+                          })
+                        : null}
+                    </tbody>
+                  </table>
+                ) : (
+                  <h1 className="title__info">Ingrese un RUC para visualizar</h1>
+                )}
+              </div>
+            </div>
           </div>
-          <div>
-            <h4>Datos del Paciente</h4>
-            <ul>
-              <li>
-                <strong>Cedula: </strong>
-                {agendaInfo[0]?.cedula_paciente}
-              </li>
-              <li>
-                <strong>Nombres: </strong>
-                {agendaInfo[0]?.nombres_paciente}
-              </li>
-              <li>
-                <strong>Apellidos: </strong>
-                {agendaInfo[0]?.apellidos_paciente}
-              </li>
-            </ul>
+        </form>
+        <div class="container">
+          <div class="item-1 vista__1">
+            <span>Datos del Paciente</span>
+            {agendaInfo.length > 0 ? (
+              <table className="paleBlueRows venta">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Cedula</th>
+                    <th>Nombres</th>
+                    <th>Telefono</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {agendaInfo.length > 0
+                    ? agendaInfo.map((item, index) => {
+                        return (
+                          <tr key={index} className="rowData">
+                            <td>{index + 1}</td>
+                            <td>{item.cedula_paciente}</td>
+                            <td>
+                              {item.nombres_paciente} {item.apellidos_paciente}
+                            </td>
+                            <td>{item.email}</td>
+                          </tr>
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
+            ) : (
+              <h1 className="title__info">Ingrese un RUC para visualizar</h1>
+            )}
           </div>
+
+          <div class="item-2 vista__2">
+            <span>Datos del Servicio</span>
+            {agendaInfo.length > 0 ? (
+              <table className="paleBlueRows venta">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Cod Servicio</th>
+                    <th>Nombre Servicio</th>
+                    <th>Descripción Servicio</th>
+                    <th>Precio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {agendaInfo.length > 0
+                    ? agendaInfo.map((item, index) => {
+                        return (
+                          <tr key={index} className="rowData">
+                            <td>{index + 1}</td>
+                            <td>{item.cod_servicio}</td>
+                            <td>{item.nombre_servicio}</td>
+                            <td>{item.descripcion_servicio}</td>
+                            <td>${Number(item.precio_servicio).toFixed(2)}</td>
+                          </tr>
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
+            ) : (
+              <h1 className="title__info">Ingrese un RUC para visualizar</h1>
+            )}
+          </div>
+        </div>
+        <div className="venta__manual">
+          <div className="venta__importe">
+            <label htmlFor="importe" className="label__info">
+              Importe
+            </label>
+            <input
+              type="text"
+              name="importe"
+              id="importe"
+              value={entradasVenta.importe}
+              onChange={(e) => setEntradasVenta({ ...entradasVenta, importe: e.target.value })}
+            />
+          </div>
+          <div className="venta__importe devolucion">
+            <label htmlFor="cambio" className="label__info">
+              Cambio
+            </label>
+            <input
+              type="text"
+              name="cambio"
+              id="cambio"
+              disabled
+              value={
+                entradasVenta.importe >= Number(agendaInfo[0]?.precio_servicio)
+                  ? devolucion
+                  : "0.00"
+              }
+            />
+          </div>
+          <div className="venta__btns">
+            <button className="button crear crear_venta" onClick={handleVenta}>
+              <span className="button__icon">
+                <LocalMall className="icon" />
+              </span>
+              <span className="button__text">Generar Venta</span>
+            </button>
+            {/* <button className="button limpiar" onClick={limpiar}>
+              <span className="button__icon">
+                <ClearAll className="icon" />
+              </span>
+              <span className="button__text">Limpiar</span>
+            </button> */}
+          </div>
+        </div>
+        <div>
           <div>
-            <table>
+            <table className="paleBlueRows venta">
               <thead>
                 <tr>
+                  <th>#</th>
                   <th>Codigo del Servicio</th>
                   <th>Nombre del Servicio</th>
                   <th>Decripción del Servicio</th>
@@ -274,7 +420,8 @@ const AgendaServicioVenta = () => {
               <tbody>
                 {agendaInfo.map((item, index) => {
                   return (
-                    <tr key={index}>
+                    <tr key={index} className="rowData">
+                      <td>{index + 1}</td>
                       <td>{item.cod_servicio}</td>
                       <td>{item.nombre_servicio}</td>
                       <td>{item.descripcion_servicio}</td>
@@ -286,17 +433,6 @@ const AgendaServicioVenta = () => {
             </table>
           </div>
           <br />
-          <div>
-            <label htmlFor="importe">Importe</label>
-            <input
-              type="text"
-              name="importe"
-              id="importe"
-              value={entradasVenta.importe}
-              onChange={(e) => setEntradasVenta({ ...entradasVenta, importe: e.target.value })}
-            />
-          </div>
-          <button onClick={handleVenta}>Venta</button>
         </div>
       </div>
     </>
