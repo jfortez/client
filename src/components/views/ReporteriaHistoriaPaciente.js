@@ -3,11 +3,13 @@ import { useState } from "react";
 import services from "../../services/agenda";
 import { useHistory } from "react-router";
 import { Loader } from "../../elements/Loader";
-import { Visibility } from "@material-ui/icons";
+import { FilterList, Visibility } from "@material-ui/icons";
 
 const ReporteriaHistoriaPaciente = () => {
   const [historial, sethistorial] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFilter, setIsFilter] = useState(false);
+
   const history = useHistory();
 
   useEffect(() => {
@@ -39,9 +41,20 @@ const ReporteriaHistoriaPaciente = () => {
   const showDetalles = (id) => {
     history.push(`/dashboard/reporteria/historialpaciente/${id}/view`);
   };
+  const switchFilter = () => {
+    setIsFilter(!isFilter);
+  };
   return (
     <div>
-      <h3 className="titulo">Historial Paciente</h3>
+      {/* <h3 className="titulo">Historial Paciente</h3> */}
+      <div className="crear-item">
+        <button className="button crear" onClick={switchFilter}>
+          <span className="button__icon">
+            <FilterList className="icon" />
+          </span>
+          <span className="button__text">Filtrar</span>
+        </button>
+      </div>
       <table className="paleBlueRows">
         <thead>
           <tr>

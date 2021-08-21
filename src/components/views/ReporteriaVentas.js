@@ -86,7 +86,7 @@ const ReporteriaVentas = () => {
   }, [ventasByClienteFiltro, filtroValues.factura, isFilter]);
   return (
     <div>
-      <h3 className="titulo">Ventas</h3>
+      {/* <h3 className="titulo">Ventas</h3> */}
       <div className="crear-item">
         <button className="button crear" onClick={switchFilter}>
           <span className="button__icon">

@@ -3,11 +3,12 @@ import { useState } from "react";
 import services from "../../services/caja";
 import { Loader } from "../../elements/Loader";
 import { useHistory } from "react-router";
-import { Visibility } from "@material-ui/icons";
+import { FilterList, Visibility } from "@material-ui/icons";
 
 const ReporteriaCaja = () => {
   const [caja, setCaja] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFilter, setIsFilter] = useState(false);
   const history = useHistory();
   useEffect(() => {
     let source = services.Axios.CancelToken.source();
@@ -38,9 +39,20 @@ const ReporteriaCaja = () => {
   const showCaja = (id) => {
     history.push(`/dashboard/reporteria/caja/${id}/view`);
   };
+  const switchFilter = () => {
+    setIsFilter(!isFilter);
+  };
   return (
     <div>
-      <h3 className="titulo">Caja</h3>
+      {/* <h3 className="titulo">Caja</h3> */}
+      <div className="crear-item">
+        <button className="button crear" onClick={switchFilter}>
+          <span className="button__icon">
+            <FilterList className="icon" />
+          </span>
+          <span className="button__text">Filtrar</span>
+        </button>
+      </div>
       <table className="paleBlueRows">
         <thead>
           <tr>
