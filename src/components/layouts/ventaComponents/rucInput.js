@@ -1,12 +1,18 @@
 import { Search } from "@material-ui/icons";
 import clienteServices from "../../../services/cliente";
+import notificacion from "../../../utils/Notificaciones";
 
 const RucInput = ({ types, setTypes, setDatosVentas, datosVentas }) => {
   const getClienteByRUC = async (event) => {
     event.preventDefault();
+    if (types.ruc === "") {
+      return notificacion("Campo Vacio", "Debe Ingresar un Cliente", "warning");
+    }
     const clienteData = await clienteServices.getRUC({ ruc: types.ruc });
     if (!clienteData.message) {
       setDatosVentas({ ...datosVentas, cliente: clienteData });
+    } else {
+      return notificacion("Error", "Cliente no Existe", "danger");
     }
   };
   return (
@@ -14,7 +20,9 @@ const RucInput = ({ types, setTypes, setDatosVentas, datosVentas }) => {
       <form onSubmit={getClienteByRUC}>
         <div className="venta__cliente">
           <div className="search__info">
-            <span>Clientes</span>
+            <label htmlFor="ruc" className="label__info">
+              Clientes
+            </label>
             <input
               type="text"
               name="ruc"
@@ -30,13 +38,15 @@ const RucInput = ({ types, setTypes, setDatosVentas, datosVentas }) => {
           <div className="info__cliente">
             <div className="contenido">
               {datosVentas.cliente.length > 0 ? (
-                <table className="paleBlueRows vercliente">
+                <table className="paleBlueRows venta">
                   <thead>
-                    <th>#</th>
-                    <th>Nombres</th>
-                    <th>Dirección</th>
-                    <th>Telefono</th>
-                    <th>Email</th>
+                    <tr>
+                      <th>#</th>
+                      <th>Nombres</th>
+                      <th>Dirección</th>
+                      <th>Telefono</th>
+                      <th>Email</th>
+                    </tr>
                   </thead>
                   <tbody>
                     {datosVentas.cliente.length > 0

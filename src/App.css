@@ -100,10 +100,10 @@ table.paleBlueRows thead th:first-child {
 table.paleBlueRows tfoot td {
   font-size: 14px;
 }
-table.vercliente th {
+table.venta th {
   height: 20px;
 }
-table.vercliente td {
+table.venta td {
   height: 30px;
 }
 .botones,
@@ -394,7 +394,7 @@ table.vercliente td {
   clear: both;
   display: table;
 }
-.search__info span {
+.search__info .label__info {
   font-size: 20px;
   font-weight: 600;
 }
