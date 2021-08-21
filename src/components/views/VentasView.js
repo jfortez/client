@@ -3,7 +3,6 @@ import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
 import RucInput from "../layouts/ventaComponents/rucInput";
 import CodInput from "../layouts/ventaComponents/CodInput";
-import CantidadInput from "../layouts/ventaComponents/CantidadInput";
 import VentaDetalle from "../layouts/ventaComponents/VentaDetalle";
 import valuesServices from "../../services/values";
 import ventaValues from "../../services/venta";
@@ -16,7 +15,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import notificacion from "../../utils/Notificaciones";
 import swal from "sweetalert";
-import { ClearAll } from "@material-ui/icons";
+import { ClearAll, LocalMall } from "@material-ui/icons";
 
 const VentasView = () => {
   const {
@@ -149,6 +148,10 @@ const VentasView = () => {
   const totalCuenta = detalleVenta.reduce((acc, acv) => {
     return acc + Number(acv.total);
   }, 0);
+  const totCantidad = detalleVenta.reduce((acc, acv) => {
+    return acc + acv.cantidad;
+  }, 0);
+  const devolucion = Number(Number(types.importe) - Number(totalCuenta)).toFixed(2);
   var props = {
     outputType: "save",
     returnJsPDFDocObject: true,
@@ -199,6 +202,22 @@ const VentasView = () => {
       ]),
       invTotalLabel: "Total:",
       invTotal: `$${Number(totalCuenta).toFixed(2)}`,
+      row1: {
+        col1: "Importe:",
+        col2: `$${Number(types.importe).toFixed(2)}`,
+        col3: "",
+        style: {
+          fontSize: 10, //OPTIONAL, DEFAULT 12
+        },
+      },
+      row2: {
+        col1: "Devolución:",
+        col2: `$${Number(devolucion).toFixed(2)}`,
+        col3: "",
+        style: {
+          fontSize: 10, //optional, default 12
+        },
+      },
     },
     pageEnable: true,
     pageLabel: "Page ",
@@ -206,7 +225,6 @@ const VentasView = () => {
   const handleCreatePdf = () => {
     jsPDFInvoiceTemplate(props);
   };
-
   return (
     <>
       <Topbar />
@@ -227,7 +245,11 @@ const VentasView = () => {
         <div className="row__ventaActual">
           <div>
             <span className="venta__title">
-              VENTA No.: <span className="venta__dato">{values?.num_venta}</span>
+              VENTA No.: <span className="venta__dato">{values?.num_venta} </span>
+            </span>
+            /{" "}
+            <span className="venta__title">
+              FACTURA No.: <span className="venta__dato">{values?.num_venta}</span>
             </span>
           </div>
           <div>
@@ -250,40 +272,63 @@ const VentasView = () => {
           setTypes={setTypes}
           setDatosVentas={setDatosVentas}
           datosVentas={datosVentas}
-        />
-        <CantidadInput
-          types={types}
-          setTypes={setTypes}
-          setDatosVentas={setDatosVentas}
-          datosVentas={datosVentas}
           setProductosVenta={setProductosVenta}
           productosVenta={productosVenta}
         />
+        <div className="venta__manual">
+          <div className="venta__importe">
+            <label htmlFor="importe" className="label__info">
+              Importe
+            </label>
+            <input
+              type="text"
+              name="importe"
+              id="importe"
+              value={types.importe}
+              onChange={(e) => setTypes({ ...types, importe: e.target.value })}
+            />
+          </div>
+          <div className="venta__importe devolucion">
+            <label htmlFor="cambio" className="label__info">
+              Cambio
+            </label>
+            <input
+              type="text"
+              name="cambio"
+              id="cambio"
+              disabled
+              value={types.importe >= Number(totalCuenta) ? devolucion : "0.00"}
+            />
+          </div>
+          <div className="venta__btns">
+            <button className="button crear crear_venta" onClick={nuevaVenta}>
+              <span className="button__icon">
+                <LocalMall className="icon" />
+              </span>
+              <span className="button__text">Generar Venta</span>
+            </button>
+            <button className="button limpiar" onClick={limpiar}>
+              <span className="button__icon">
+                <ClearAll className="icon" />
+              </span>
+              <span className="button__text">Limpiar</span>
+            </button>
+          </div>
+        </div>
         <VentaDetalle
           productosVenta={productosVenta}
           detalleVenta={detalleVenta}
           setDetalleVenta={setDetalleVenta}
         />
-        <h4>Total Venta: {Number(totalCuenta).toFixed(2)}</h4>
-        <div>
-          <h4>Importe Cliente</h4>
-          <label htmlFor="importe">Importe:</label>
-          <input
-            type="text"
-            name="importe"
-            id="importe"
-            value={types.importe}
-            onChange={(e) => setTypes({ ...types, importe: e.target.value })}
-          />
-        </div>
-        <button onClick={nuevaVenta}>Venta</button>
-        <div className="limpiar-item">
-          <button className="button limpiar" onClick={limpiar}>
-            <span className="button__icon">
-              <ClearAll className="icon" />
-            </span>
-            <span className="button__text">Limpiar</span>
-          </button>
+        <div className="test__1">
+          <div className="venta__total">
+            <span className="venta__total__title"># Productos</span>
+            <span className="venta__total__total">{totCantidad}</span>
+          </div>
+          <div className="venta__total">
+            <span className="venta__total__title">Total Venta</span>
+            <span className="venta__total__total">${Number(totalCuenta).toFixed(2)}</span>
+          </div>
         </div>
       </div>
     </>

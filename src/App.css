@@ -358,7 +358,7 @@ table.venta td {
   width: 100%;
   display: flex;
   flex-wrap: nowrap;
-  margin-top: 25px;
+  margin-top: 15px;
 }
 .search__info {
   width: 350px;
@@ -370,8 +370,12 @@ table.venta td {
   border: 1px solid grey;
   float: left;
   width: 220px;
+  border-radius: 5px;
 }
-
+.search__info input[type="text"]:focus {
+  border: 3px solid #0075ff;
+  outline: none;
+}
 .search__info button {
   float: left;
   width: auto;
@@ -383,6 +387,8 @@ table.venta td {
   border: 1px solid grey;
   border-left: none;
   cursor: pointer;
+  margin-left: 2px;
+  border-radius: 5px;
 }
 
 .search__info button:hover {
@@ -394,7 +400,7 @@ table.venta td {
   clear: both;
   display: table;
 }
-.search__info .label__info {
+.label__info {
   font-size: 20px;
   font-weight: 600;
 }
@@ -409,6 +415,7 @@ table.venta td {
   height: 100px;
   box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
 }
+
 .title__info {
   font-size: 20px;
   text-align: center;
@@ -416,4 +423,115 @@ table.venta td {
   margin: auto;
   padding: 20px;
   border: 2px dashed #0b7dda;
+}
+.venta__manual {
+  /* display: flex; */
+  margin: 15px 0;
+}
+.venta__btns {
+  float: right;
+  margin: 15px 0;
+}
+.venta__importe {
+  display: flex;
+  flex-direction: column;
+  float: left;
+  margin: 15px 0;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: unset;
+  align-content: space-between;
+  margin-top: 15px;
+}
+
+.item-0 {
+  flex: 0 1 auto;
+  align-self: auto;
+  height: auto;
+  width: 425px;
+}
+
+.item-1 {
+  flex: 0 1 auto;
+  align-self: auto;
+  height: 100px;
+  width: 100%;
+}
+
+.item-2 {
+  flex: 0 1 auto;
+  align-self: auto;
+  height: auto;
+  width: 250px;
+}
+.cant__producto {
+  padding-left: 10px;
+}
+.cant__producto input[type="number"] {
+  padding: 5px;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  width: 150px;
+}
+.cant__producto input[type="number"]:focus {
+  border: 3px solid #0075ff;
+  outline: none;
+}
+.cant__producto button {
+  float: left;
+  width: auto;
+  height: auto;
+  padding: 6px;
+  background: #2196f3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none;
+  cursor: pointer;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+.venta__importe input[type="text"] {
+  padding: 5px;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  width: 150px;
+}
+.crear_venta {
+  margin-right: 10px;
+}
+.test__1 {
+  display: flex;
+  justify-content: flex-end;
+}
+.venta__total {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-content: flex-end;
+  justify-content: flex-end;
+  font-size: 23px;
+  margin-left: 15px;
+}
+.venta__total__title {
+  border: 2px solid #0b6fa4;
+  background: #0b6fa4;
+  color: #fff;
+  font-weight: 600;
+  padding: 3px;
+}
+.venta__total__total {
+  text-align: end;
+  margin-top: 3px;
+  font-weight: normal;
+}
+.devolucion {
+  margin-left: 10px;
 }
