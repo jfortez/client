@@ -5,8 +5,6 @@ import useValues from "../../provider/useValues";
 
 const Dashboard = () => {
   const { isCollapsed, user } = useValues();
-  var img = new Image();
-  img.src = "/img/logo.png";
   return (
     <>
       <Topbar />

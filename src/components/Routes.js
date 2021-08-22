@@ -5,7 +5,6 @@ import ErrorPage from "./pages/ErrorPage";
 // import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import PacientesView from "./views/PacientesView";
-import PageTest from "./views/PageTest";
 import PersonalView from "./views/PersonalView";
 import UsuariosView from "./views/UsuariosView";
 import PublicRoute from "../utils/PublicRoute";
@@ -54,10 +53,8 @@ const Routes = () => {
         <Route exact path="/" component={() => <Redirect to="/login" />} />
         <PublicRoute exact path="/login" component={LoginPage} />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
-        <PrivateRoute exact path="/dashboard/test" component={PageTest} />
         <PrivateRoute exact path="/dashboard/ventas" component={VentasView} />
         <PrivateRoute exact path="/dashboard/ventas/caja" component={CajaView} />
-        {/* <PrivateRoute exact path="/dashboard/ventas/detalle" component={Viewer} /> */}
         <PrivateRoute exact path="/dashboard/personal" component={PersonalView} />
         <PrivateRoute exact path="/dashboard/personal/create" component={PersonalCreate} />
         <PrivateRoute exact path="/dashboard/personal/:id/edit" component={PersonalCreate} />

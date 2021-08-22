@@ -3,7 +3,6 @@ import "./Topbar.css";
 import { Menu, ExitToApp, Settings } from "@material-ui/icons";
 import Sidebar from "../sidebar/Sidebar";
 import { Link } from "react-router-dom";
-import img from "../../../img/pic.jpg";
 import { removeUserSession } from "../../../utils/Common";
 import useValues from "../../../provider/useValues";
 import notificacion from "../../../utils/Notificaciones";
@@ -38,10 +37,15 @@ const Topbar = () => {
         <ul className="navbar-nav nav-right">
           <li className="nav-item avt-wrapper">
             <div className="avt dropdown">
-              <img src={img} alt="a" className="dropdown-toggle" onClick={handleDropDown} />
+              <img
+                src={`${process.env.PUBLIC_URL + "/img/logo.png"}`}
+                alt="a"
+                className="dropdown-toggle"
+                onClick={handleDropDown}
+              />
               <ul className={`dropdown-menu ${isDropDown ? "dropdown-expand" : null}`}>
                 <li className="dropdown-menu-item">
-                  <Link to="/dashboard/settings" className="dropdown-menu-link">
+                  <Link to="/dashboard/settings/empresa" className="dropdown-menu-link">
                     <div>
                       <Settings className="dropdown-icon" />
                     </div>
