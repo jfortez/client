@@ -14,13 +14,13 @@ const Dashboard = () => {
         </div>
         <div className="home__img"></div>
 
-        {/* <div className="row">
+        <div className="row">
           <div className="col-12">
             <div className="home__page home__header">
               <h2>Bienvenido {user?.usuario}</h2>
             </div>
           </div>
-        </div> */}
+        </div>
         {/* <div className="row">
           <div className="col-12">
             <div className="home__page home__body"></div>

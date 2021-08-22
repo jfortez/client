@@ -11,6 +11,9 @@ import { Cancel, EventAvailable, PostAdd } from "@material-ui/icons";
 import { Formulario } from "../../elements/Formularios";
 import ComponentInput from "../layouts/forms/ComponentInput";
 import expresiones from "../../utils/Expresiones";
+import empresaServices from "../../services/empresa";
+import jsPDF from "jspdf";
+
 const CitaSeguimiento = () => {
   const { isCollapsed } = useValues();
   const { id } = useParams();
@@ -27,6 +30,14 @@ const CitaSeguimiento = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const [isListed, setIsListed] = useState(false);
   const [recetas, setRecetas] = useState([]);
+  const [empresa, setEmpresa] = useState([]);
+  useEffect(() => {
+    const getEmpresa = async () => {
+      const compañia = await empresaServices.optionEmpresa();
+      setEmpresa(compañia);
+    };
+    getEmpresa();
+  }, []);
   useEffect(() => {
     const obtenerCitaByIdAgenda = async () => {
       const datosCita = await services.getCitasByIdAgenda(id);
@@ -124,6 +135,7 @@ const CitaSeguimiento = () => {
     );
     history.push("/dashboard/cita");
   };
+  const fecha = new Date();
   const handleGenerarPermisos = async () => {
     if (motivoPermiso.campo === "") {
       setMotivoPermiso({ ...recetasmed, valido: "false" });
@@ -133,7 +145,6 @@ const CitaSeguimiento = () => {
       setDiasReposo({ ...descripcion, valido: "false" });
       return notificacion("Campos Incompletos", "Debe Rellenar los Campos", "warning");
     }
-    const fecha = new Date();
     const nuevoPermiso = {
       id_Paciente: infoAgenda[0].id_Paciente,
       id_Odontologo: infoAgenda[0].id_Odontologo,
@@ -141,8 +152,9 @@ const CitaSeguimiento = () => {
       motivo_permiso: motivoPermiso.campo,
       dias_permiso: diasReposo.campo,
     };
-    permisosServices.createPermisos(nuevoPermiso);
+    await permisosServices.createPermisos(nuevoPermiso);
     notificacion("Permiso Medico", "Se Generó permiso medico Satisfatoriamente", "success");
+    generarDocumento();
     setSwitchPermiso(!switchPermiso);
     setMotivoPermiso({ campo: "", valido: null });
     setDiasReposo({ campo: "", valido: null });
@@ -151,6 +163,31 @@ const CitaSeguimiento = () => {
     setSwitchPermiso(!switchPermiso);
     setMotivoPermiso({ campo: "", valido: null });
     setDiasReposo({ campo: "", valido: null });
+  };
+  var options = { year: "numeric", month: "long", day: "numeric" };
+  const generarDocumento = () => {
+    var doc = new jsPDF();
+    var img = new Image();
+    img.src = "/img/logo.png";
+    let pageWidth = doc.internal.pageSize.getWidth();
+    doc.addImage(img, 12, 15, 40, 25);
+    doc.setFontSize(20);
+    doc.text("Centro Odontológico VitaSmile", pageWidth / 2, 25, "center");
+    doc.text("CERTIFICADO MÉDICO", pageWidth / 2, 85, "center");
+    doc.setFontSize(13);
+    doc.text(empresa[0]?.direccion, pageWidth / 2, 30, "center");
+    doc.text(empresa[0]?.telefono, pageWidth / 2, 35, "center");
+
+    doc.setFontSize(11);
+    doc.text(15, 55, `Guayaquil, ${fecha.toLocaleDateString("es-ES", options)}`);
+    const reportTitle = `Por medio de la presente yo ${infoAgenda[0].nombres_odontologo.toUpperCase()} ${infoAgenda[0].apellidos_odontologo.toUpperCase()}, Doctor del Centro Odontológico VitaSmile ortoga permiso medico para el/la Sr.(a) ${infoAgenda[0].nombres_paciente.toUpperCase()} ${infoAgenda[0].apellidos_paciente.toUpperCase()} con CI: ${
+      infoAgenda[0].cedula_paciente
+    } por el motivo de ${motivoPermiso.campo} donde certifico que dicho procedimiento requiere de ${
+      diasReposo.campo
+    } días de descanso a partir de la fecha de hoy`;
+    var splitTitle = doc.splitTextToSize(reportTitle, 180);
+    doc.text(15, 105, splitTitle);
+    doc.save("Test.pdf");
   };
   return (
     <>
