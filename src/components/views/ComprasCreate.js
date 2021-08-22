@@ -157,7 +157,6 @@ const ComprasCreate = () => {
     const cantidadTotal = compraDetalle.reduce((acc, acv) => {
       return acc + Number(acv.cantidad);
     }, 0);
-    console.log("compras total: ", costoTotal);
     const compras = {
       id_proveedor: proveedor[0].id,
       num_factura: comprasValues.num_factura,
@@ -244,7 +243,7 @@ const ComprasCreate = () => {
             <ul>
               <li>
                 <Link to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </Link>
               </li>
               <li> / </li>

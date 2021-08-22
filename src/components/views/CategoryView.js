@@ -6,6 +6,7 @@ import services from "../../services/categoria";
 import { Link, useHistory } from "react-router-dom";
 import { Loader } from "../../elements/Loader";
 import { Delete, Update, Add } from "@material-ui/icons";
+import swal from "sweetalert";
 
 const CategoryView = () => {
   const { isCollapsed } = useValues();
@@ -41,10 +42,28 @@ const CategoryView = () => {
     };
   }, [isListed]);
   const handleDelete = async (id) => {
-    setIsLoading(true);
-    const deleteid = await services.bajaCategoria(id);
-    if (deleteid) {
-      setIsListed(true);
+    const mensaje = await swal({
+      title: "¿Estás seguro de eliminar la Fila?",
+      // text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: {
+        cancel: "Cancelar",
+        confirm: "Aceptar",
+      },
+      dangerMode: true,
+    });
+    if (mensaje) {
+      setIsLoading(true);
+      const deleteid = await services.bajaCategoria(id);
+
+      swal("Se ha eliminado la fila satisfatoriamente", {
+        icon: "success",
+      });
+      if (deleteid) {
+        setIsListed(!isListed);
+      }
+    } else {
+      return null;
     }
   };
   const handleUpdate = (id) => {
@@ -60,7 +79,7 @@ const CategoryView = () => {
             <ul>
               <li>
                 <Link to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </Link>
               </li>
               <li> / </li>

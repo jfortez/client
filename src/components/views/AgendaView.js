@@ -96,7 +96,7 @@ const AgendaView = () => {
     if (!servicio.length > 0) {
       return notificacion("Agenda", "Debe Ingresar un Servicio", "warning");
     }
-    if (entradas.descripcion === "" || entradas.fecha_inicio === "" || entradas.hora === "") {
+    if (descripcion.campo === "" || fecha_inicio.campo === "" || hora.campo === "") {
       return notificacion("Agenda", "Debe rellenar los campos para proceder a crear", "warning");
     }
     const nuevo = {
@@ -139,7 +139,7 @@ const AgendaView = () => {
             <ul>
               <li>
                 <Link to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </Link>
               </li>
               <li> / </li>
@@ -323,7 +323,7 @@ const AgendaView = () => {
                     </tbody>
                   </table>
                 ) : (
-                  <h1 className="title__info">Ingrese número de Cedula para visualizar</h1>
+                  <h1 className="title__info">Ingrese un Servicio para visualizar</h1>
                 )}
               </div>
             </div>

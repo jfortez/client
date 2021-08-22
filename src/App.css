@@ -105,6 +105,7 @@ table.venta th {
 }
 table.venta td {
   height: 30px;
+  text-align: center;
 }
 .botones,
 .button {
@@ -162,6 +163,16 @@ table.venta td {
 .crear:active {
   background-color: #27ae60; /* Green */
 }
+.egresar {
+  background-color: #b03a2e; /* Green */
+  align-items: center;
+}
+.egresar:hover {
+  background-color: #e74c3c; /* Green */
+}
+.egresar:active {
+  background-color: #b03a2e; /* Green */
+}
 .cancel {
   background-color: #e5e7e9; /* Green */
   align-items: center;
@@ -182,6 +193,17 @@ table.venta td {
   background-color: #3498db; /* Green */
 }
 .close:active {
+  background-color: #2874a6; /* Green */
+}
+.permiso {
+  background-color: #2874a6; /* Green */
+  align-items: center;
+  margin: 10px 0;
+}
+.permiso:hover {
+  background-color: #3498db; /* Green */
+}
+.permiso:active {
   background-color: #2874a6; /* Green */
 }
 .grp_bttn {
@@ -470,9 +492,11 @@ table.venta td {
   justify-content: space-between;
   align-items: unset;
   align-content: space-between;
+  /* margin-top: 15px; */
+}
+.c__venta {
   margin-top: 15px;
 }
-
 .item-0 {
   flex: 0 1 auto;
   align-self: auto;
@@ -493,6 +517,10 @@ table.venta td {
   height: auto;
   width: 250px;
 }
+.item-1 span,
+.item-2 span {
+  font-weight: 600;
+}
 .vista__1,
 .vista__2 {
   width: 50%;
@@ -506,6 +534,10 @@ table.venta td {
 }
 .vista__2 {
   margin-left: 7px;
+}
+.agenda {
+  width: 100%;
+  margin: 15px 0;
 }
 .cant__producto {
   padding-left: 10px;
@@ -588,12 +620,22 @@ table.venta td {
   flex-wrap: nowrap;
   margin-top: 25px;
   background: #f8f9f9;
-  height: 450px;
+  height: auto;
   box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
   padding: 30px 40px 0 40px;
 }
+
 .cita__med {
   height: 180px;
+}
+.filtro__busqueda {
+  height: 100%;
+  margin: 25px 0;
+  padding: 30px;
+  background: rgba(237, 242, 247, 1);
+  box-shadow: 3px 5px 18px rgba(163, 163, 163, 0.4);
+
+  border-radius: 0.5em;
 }
 .add__compra {
   font-weight: 600;
@@ -603,4 +645,32 @@ table.venta td {
 }
 .pdg__ag {
   margin-top: 10px;
+}
+.receta {
+  width: 30%;
+  height: auto;
+}
+.ingreso {
+  width: 70%;
+  height: auto;
+}
+.permed {
+  display: flex;
+  justify-content: flex-end;
+}
+.permisoMedico {
+  width: 70%;
+  margin: 15px 0;
+  height: auto;
+}
+.motpermiso {
+  margin: 15px 0 0 0;
+}
+.reporteventa {
+  width: 100%;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.btnprod {
+  margin: 25px 0;
 }

@@ -86,7 +86,11 @@ const ClienteCreate = () => {
         await services.updateCliente(newCliente, nuevo.response[0].id);
       }
       if (nuevo.message === "el ruc ya existe" && nuevo.response[0].active === 1) {
-        return console.log("ruc ya existe"); //codigo para la alerta
+        return notificacion(
+          "Error, Item Duplicado",
+          "El Item que intenta crear ya existe, no es posiblie duplicar",
+          "danger"
+        );
       }
       notificacion("Añadir Cliente", "Se ha creado Cliente satisfatoriamente", "success");
       setRuc({ campo: "", valido: null });
@@ -111,7 +115,7 @@ const ClienteCreate = () => {
               <ul>
                 <li>
                   <Link to="/dashboard" className="navegacion__redirect">
-                    Home
+                    Inicio
                   </Link>
                 </li>
                 <li> / </li>

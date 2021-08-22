@@ -51,7 +51,11 @@ const ServiciosCreate = () => {
         await services.updateServicios(newItem, nuevo.codExiste[0].id);
       }
       if (nuevo.message === "el Servicio ya existe" && nuevo.codExiste[0].active === 1) {
-        return console.log("ruc ya existe"); //codigo para la alerta
+        return notificacion(
+          "Error, Item Duplicado",
+          "El Item que intenta crear ya existe, no es posiblie duplicar",
+          "danger"
+        );
       }
       notificacion("Añadir Servicio", "Se ha creado Servicio satisfatoriamente", "success");
       setCod_servicio({ campo: "", valido: null });
@@ -87,7 +91,7 @@ const ServiciosCreate = () => {
             <ul>
               <li>
                 <Link to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </Link>
               </li>
               <li> / </li>
@@ -148,7 +152,7 @@ const ServiciosCreate = () => {
             name="precio"
             placeholder="Precio"
             error="el campo es requerible"
-            expresion={expresiones.numero}
+            expresion={expresiones.decimal}
           />
         </Formulario>
       </div>

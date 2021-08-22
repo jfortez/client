@@ -19,7 +19,6 @@ const AgendaServicioVenta = () => {
   const [entradasVenta, setEntradasVenta] = useState({ ruc: "", importe: 0 });
   const [cliente, setCliente] = useState([]);
   const [empresa, setEmpresa] = useState([]);
-  console.log(agendaInfo);
   const history = useHistory();
   useEffect(() => {
     const getEmpresa = async () => {
@@ -68,13 +67,17 @@ const AgendaServicioVenta = () => {
     };
     const caja = await cajaServices.getCajaByMaxId();
     if (!caja.length > 0) {
-      return console.log("no hay una caja activa, debe ingresar");
+      return notificacion("Nueva Venta", "No hay una caja activa", "danger");
     }
     if (caja[0]?.estado_caja === "CERRADO") {
-      return console.log("debe abrir una caja para proceder");
+      return notificacion("Nueva Venta", "Debe abrir una caja para proceder", "danger");
     }
     const ventaserv = await services.createVentaServicios(venta_servicio);
     if (ventaserv) {
+      history.push("/dashboard/agenda");
+      swal("Venta generada satisfatoriamente", {
+        icon: "success",
+      });
       handleCreatePdf();
       ingresoACaja(caja, total, venta_servicio.num_recibo, ventaserv);
       const fact_serv = {
@@ -84,10 +87,6 @@ const AgendaServicioVenta = () => {
         total,
       };
       await services.createFactServicios(fact_serv);
-      history.push("/dashboard/agenda");
-      swal("Venta generada satisfatoriamente", {
-        icon: "success",
-      });
     }
     updateValues();
     clean();
@@ -205,7 +204,7 @@ const AgendaServicioVenta = () => {
             <ul>
               <li>
                 <Link to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </Link>
               </li>
               <li> / </li>
@@ -292,8 +291,8 @@ const AgendaServicioVenta = () => {
             </div>
           </div>
         </form>
-        <div class="container">
-          <div class="item-1 vista__1">
+        <div className="container">
+          <div className="item-1 vista__1">
             <span>Datos del Paciente</span>
             {agendaInfo.length > 0 ? (
               <table className="paleBlueRows venta">
@@ -327,7 +326,7 @@ const AgendaServicioVenta = () => {
             )}
           </div>
 
-          <div class="item-2 vista__2">
+          <div className="item-2 vista__2">
             <span>Datos del Servicio</span>
             {agendaInfo.length > 0 ? (
               <table className="paleBlueRows venta">

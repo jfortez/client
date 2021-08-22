@@ -111,7 +111,11 @@ const PacientesCreate = () => {
         await services.updatePacientes(newItem, nuevo.result[0].id);
       }
       if (nuevo.message === "dato ya existe" && nuevo.result[0].active === 1) {
-        return console.log("dato ya existe"); //codigo para la alerta
+        return notificacion(
+          "Error, Item Duplicado",
+          "El Item que intenta crear ya existe, no es posiblie duplicar",
+          "danger"
+        );
       }
       notificacion("Añadir Paciente", "Se ha creado Paciente satisfatoriamente", "success");
       setNombres({ campo: "", valido: null });
@@ -137,7 +141,7 @@ const PacientesCreate = () => {
             <ul>
               <li>
                 <Link to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </Link>
               </li>
               <li> / </li>

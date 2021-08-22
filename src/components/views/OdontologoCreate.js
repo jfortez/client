@@ -110,10 +110,18 @@ const OdontologoCreate = () => {
         nuevoOdontologo.message === "cedula ya existe" &&
         nuevoOdontologo.cedulaExiste[0].active === 1
       ) {
-        return console.log("El dato ya existe"); //codigo para la alerta
+        return notificacion(
+          "Error, Item Duplicado",
+          "El Item que intenta crear ya existe, no es posiblie duplicar",
+          "danger"
+        );
       }
       if (nuevoOdontologo.message === "Dato ya existe") {
-        return console.log("El dato ya existe en la base de datos global");
+        return notificacion(
+          "Error, Personal Ya Existe",
+          "El Item que intenta crear ya se encuentra registrado",
+          "danger"
+        );
       }
       notificacion("Añadir Odontologo", "Se ha creado Odontologo satisfatoriamente", "success");
       setNombres({ campo: "", valido: null });
@@ -138,7 +146,7 @@ const OdontologoCreate = () => {
             <ul>
               <li>
                 <Link to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </Link>
               </li>
               <li> / </li>

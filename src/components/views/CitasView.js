@@ -71,7 +71,7 @@ const CitasView = () => {
             <ul>
               <li>
                 <Link to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </Link>
               </li>
               <li> / </li>
@@ -103,7 +103,7 @@ const CitasView = () => {
                 <th>Fecha Cita</th>
                 <th>Hora Cita</th>
                 <th>Estado</th>
-                <th>Creado el</th>
+                <th>Fecha Emisión</th>
                 <th>Acciones</th>
               </tr>
             </thead>

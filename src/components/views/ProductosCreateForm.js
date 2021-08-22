@@ -82,7 +82,7 @@ const ProductosCreateForm = ({
           name="costo"
           placeholder="Costo"
           error="El campo está incompleto"
-          expresion={expresiones.numero}
+          expresion={expresiones.decimal}
         />
         <ComponentInput
           state={precio} //value
@@ -92,7 +92,7 @@ const ProductosCreateForm = ({
           name="precio"
           placeholder="Precio"
           error="El campo está incompleto"
-          expresion={expresiones.numero}
+          expresion={expresiones.decimal}
         />
         <GrupoInput>
           <Label>Categoría</Label>
@@ -118,7 +118,7 @@ const ProductosCreateForm = ({
         </GrupoInput>
       </Formulario>
       {pathname === "/dashboard/compras/create" ? (
-        <div className="crear-item">
+        <div className="crear-item btnprod">
           <button className="button actualizar" onClick={handleAddProductos}>
             <span className="button__icon">
               <Icon component={PostAdd} className="icon" />

@@ -39,7 +39,6 @@ import CitaSeguimiento from "./views/CitaSeguimiento";
 import AgendaServicioVenta from "./views/AgendaServicioVenta";
 import CajaView from "./views/CajaView";
 import CategoryView from "./views/CategoryView";
-// import Viewer from "./views/Viewer";
 import ReporteriaCajaView from "./views/ReporteriaCajaView";
 import ReporteriaHistorialPacienteView from "./views/ReporteriaHistorialPacienteView";
 import ReporteriaVentasReporte from "./views/ReporteriaVentasReporte";

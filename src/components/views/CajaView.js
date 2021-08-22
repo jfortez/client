@@ -74,7 +74,11 @@ const CajaView = () => {
       //false default
       return notificacion("Error", "Debe Abrir una caja para proceder", "danger");
     }
-    setIsIngreso(!isIngreso);
+    if (!isCierre) {
+      setIsIngreso(!isIngreso);
+    } else {
+      setIsIngreso(isIngreso);
+    }
     setMovimientos({ ...movimientos, ingreso: 0, descripcion_ingreso: "" });
   };
   const switchEgreso = () => {
@@ -82,7 +86,11 @@ const CajaView = () => {
       //false
       return notificacion("Error", "Debe Abrir una caja para proceder", "danger");
     }
-    setIsEgreso(!isEgreso);
+    if (!isCierre) {
+      setIsEgreso(!isEgreso);
+    } else {
+      setIsEgreso(isEgreso);
+    }
     setMovimientos({ ...movimientos, egreso: 0, descripcion_egreso: "" });
   };
   const cerrarCaja = async () => {
@@ -199,7 +207,7 @@ const CajaView = () => {
             <ul>
               <li>
                 <Link to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </Link>
               </li>
               <li> / </li>
@@ -247,13 +255,13 @@ const CajaView = () => {
           <div className="caja__abrir">
             <div className="caja__ingresar">
               <h4 className="caja__title">{isIngreso ? "Ingresar Caja" : "Egresar Caja"}</h4>
-              <label htmlFor="caja_inicio" className="caja__input">
+              <label htmlFor="caja_movimiento" className="caja__input">
                 {isIngreso ? "Ingresar Caja" : "Egresar Caja"}
               </label>
               <input
                 className="caja__input input"
                 type="text"
-                id="caja_inicio"
+                id="caja_movimiento"
                 value={isIngreso ? movimientos.ingreso : isEgreso ? movimientos.egreso : null}
                 onChange={(e) =>
                   isIngreso
@@ -294,7 +302,7 @@ const CajaView = () => {
                 </button>
                 <button
                   onClick={isIngreso ? addIngreso : isEgreso ? addEgreso : null}
-                  className="button crear abrir"
+                  className={`button ${isIngreso ? "crear" : "egresar"} abrir`}
                 >
                   {isIngreso ? "Ingresar Caja" : "Egresar Caja"}
                 </button>
@@ -327,10 +335,10 @@ const CajaView = () => {
             </div>
           </div>
         ) : null}
-        {!isCierre ? (
+        {!isOpen && !isCierre ? (
           <button
             className="button close"
-            disabled={isEgreso || isIngreso ? true : false}
+            style={{ display: isEgreso || isIngreso ? "none" : "" }}
             onClick={switchCierre}
           >
             <span className="button__icon">

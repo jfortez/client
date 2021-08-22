@@ -32,7 +32,7 @@ const CodInput = ({
     if (datosVentas.producto.length > 0) {
       //verificamos que la cantidad no exceda al stock del producto
       if (cantidad > productoAñadido.cantidad) {
-        return console.log("that is so big to me");
+        return notificacion("Limite Stock", "La cantidad supera el stock del prducto", "warning");
       }
       //obtenemos el producto que se buscó y insertó, le añadimos una propiedad al objeto
       const prodSelected = {
@@ -49,7 +49,7 @@ const CodInput = ({
   };
   return (
     <div>
-      <div className="container">
+      <div className="container c__venta">
         <div className="item-0 search__info">
           <form action="" onSubmit={getProductosByCod}>
             <label htmlFor="cod_producto" className="label__info">

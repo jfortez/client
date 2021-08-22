@@ -7,37 +7,34 @@ import recetaServices from "../../services/receta";
 import services from "../../services/cita.js";
 import permisosServices from "../../services/permisos";
 import notificacion from "../../utils/Notificaciones";
-
+import { Cancel, EventAvailable, PostAdd } from "@material-ui/icons";
+import { Formulario } from "../../elements/Formularios";
+import ComponentInput from "../layouts/forms/ComponentInput";
+import expresiones from "../../utils/Expresiones";
 const CitaSeguimiento = () => {
   const { isCollapsed } = useValues();
   const { id } = useParams();
   const history = useHistory();
   const [infoAgenda, setInfoAgenda] = useState([]);
+  const [asistencia, setAsistencia] = useState({ campo: "", valido: null });
+  const [motivo, setMotivo] = useState({ campo: "", valido: null });
+  const [recetasmed, setRecetasMed] = useState({ campo: "", valido: null });
+  const [descripcion, setDescripcion] = useState({ campo: "", valido: null });
+  const [Observaciones, setObersvaciones] = useState({ campo: "", valido: null });
+  const [motivoPermiso, setMotivoPermiso] = useState({ campo: "", valido: null });
+  const [diasReposo, setDiasReposo] = useState({ campo: "", valido: null });
   const [switchPermiso, setSwitchPermiso] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isListed, setIsListed] = useState(false);
   const [recetas, setRecetas] = useState([]);
-  const [infoCita, setInfoCita] = useState({
-    sintomas: "",
-    id_receta: 0,
-    receta: "",
-    asistencia: "",
-    observaciones: "",
-    nombre_receta: "",
-    descripcion_receta: "",
-  });
-  const [permisoMedico, setPermisoMedico] = useState({ motivo: "", dias: 0 });
   useEffect(() => {
     const obtenerCitaByIdAgenda = async () => {
       const datosCita = await services.getCitasByIdAgenda(id);
       if (datosCita.length > 0) {
-        setInfoCita({
-          sintomas: datosCita[0].sintomas,
-          asistencia: datosCita[0].asistencia,
-          observaciones: datosCita[0].observaciones,
-          nombre_receta: "",
-          descripcion_receta: "",
-        });
+        const { asistencia, sintomas, observaciones } = datosCita[0];
+        setAsistencia({ campo: asistencia, valido: null });
+        setObersvaciones({ campo: observaciones, valido: null });
+        setMotivo({ campo: sintomas, valido: null });
         setIsUpdate(true);
       }
     };
@@ -56,7 +53,7 @@ const CitaSeguimiento = () => {
     obtenerRecetas();
   }, [isListed, infoAgenda]);
   const handleSeguimiento = async () => {
-    if (infoCita.sintomas === "") {
+    if (motivo.campo === "") {
       return notificacion(
         "Seguimiento de Cita",
         "Debe rellenar los campos para proceder",
@@ -65,9 +62,9 @@ const CitaSeguimiento = () => {
     }
     const cita = {
       id_agenda: infoAgenda[0].id,
-      sintomas: infoCita.sintomas,
-      asistencia: infoCita.asistencia,
-      observaciones: infoCita.observaciones,
+      sintomas: motivo.campo,
+      asistencia: asistencia.campo,
+      observaciones: Observaciones.campo,
     };
     if (isUpdate) {
       await services.updateCita(cita, id);
@@ -86,17 +83,35 @@ const CitaSeguimiento = () => {
   const handleAddReceta = async () => {
     const nuevaReceta = {
       id_agenda: infoAgenda[0].id,
-      nombre: infoCita.nombre_receta,
-      descripcion: infoCita.descripcion_receta,
+      nombre: recetasmed.campo,
+      descripcion: descripcion.campo,
     };
-    if (nuevaReceta.nombre === "" || nuevaReceta.descripcion === "") {
-      return console.log("los campos deben estar completos");
+    if (nuevaReceta.nombre === "") {
+      setRecetasMed({ ...recetasmed, valido: "false" });
+      return notificacion("Campos Incompletos", "Debe Rellenar los Campos", "warning");
+    }
+    if (nuevaReceta.descripcion === "") {
+      setDescripcion({ ...descripcion, valido: "false" });
+      return notificacion("Campos Incompletos", "Debe Rellenar los Campos", "warning");
     }
     await recetaServices.createReceta(nuevaReceta);
     setIsListed(!isListed);
-    setInfoCita({ ...infoCita, nombre_receta: "", descripcion_receta: "" });
+    setRecetasMed({ campo: "", valido: null });
+    setDescripcion({ campo: "", valido: null });
   };
   const handleSeguimientoFinal = async () => {
+    if (asistencia.campo === "" || motivo.campo === "" || Observaciones.campo === "") {
+      if (asistencia.campo === "") {
+        setAsistencia({ ...asistencia, valido: "false" });
+      }
+      if (motivo.campo === "") {
+        setMotivo({ ...asistencia, valido: "false" });
+      }
+      if (Observaciones.campo === "") {
+        setObersvaciones({ ...asistencia, valido: "false" });
+      }
+      return notificacion("Campos Incompletos", "Debe Rellenar los Campos", "warning");
+    }
     const estado = {
       estadoAgenda: "FINALIZADO",
       colaAgenda: "FINALIZADO",
@@ -110,36 +125,53 @@ const CitaSeguimiento = () => {
     history.push("/dashboard/cita");
   };
   const handleGenerarPermisos = async () => {
+    if (motivoPermiso.campo === "") {
+      setMotivoPermiso({ ...recetasmed, valido: "false" });
+      return notificacion("Campos Incompletos", "Debe Rellenar los Campos", "warning");
+    }
+    if (diasReposo.campo === "") {
+      setDiasReposo({ ...descripcion, valido: "false" });
+      return notificacion("Campos Incompletos", "Debe Rellenar los Campos", "warning");
+    }
     const fecha = new Date();
     const nuevoPermiso = {
       id_Paciente: infoAgenda[0].id_Paciente,
       id_Odontologo: infoAgenda[0].id_Odontologo,
       fecha_permiso: fecha,
-      motivo_permiso: permisoMedico.motivo,
-      dias_permiso: permisoMedico.dias,
+      motivo_permiso: motivoPermiso.campo,
+      dias_permiso: diasReposo.campo,
     };
     permisosServices.createPermisos(nuevoPermiso);
     notificacion("Permiso Medico", "Se Generó permiso medico Satisfatoriamente", "success");
     setSwitchPermiso(!switchPermiso);
-    setPermisoMedico({ motivo: "", dias: 0 });
+    setMotivoPermiso({ campo: "", valido: null });
+    setDiasReposo({ campo: "", valido: null });
   };
   const switchPermisos = () => {
     setSwitchPermiso(!switchPermiso);
+    setMotivoPermiso({ campo: "", valido: null });
+    setDiasReposo({ campo: "", valido: null });
   };
   return (
     <>
       <Topbar />
       <div className={`wrapper ${isCollapsed ? "sidebar-collapsed" : ""}`}>
-        <h1>Seguimiento de Cita</h1>
-        <div>
+        <h3 className="titulo">Seguimiento de Citas</h3>
+        <div className="navegacion">
           <nav>
             <ul>
               <li>
-                <Link to="/dashboard">Home</Link>
+                <Link to="/dashboard" className="navegacion__redirect">
+                  Inicio
+                </Link>
               </li>
+              <li> / </li>
               <li>
-                <Link to="/dashboard/cita">Cita</Link>
+                <Link to="/dashboard/cita" className="navegacion__redirect">
+                  Cita
+                </Link>
               </li>
+              <li> / </li>
               <li>
                 <b>Seguimiento de Cita</b>
               </li>
@@ -147,115 +179,208 @@ const CitaSeguimiento = () => {
           </nav>
         </div>
         <div>
-          {switchPermiso ? (
-            <div>
-              <h4>Permiso Médico</h4>
-              <label htmlFor="">Motivo Permiso</label>
-              <input
-                type="text"
-                value={permisoMedico.motivo}
-                onChange={(e) => setPermisoMedico({ ...permisoMedico, motivo: e.target.value })}
-              />
-              <label htmlFor="">Días De Reposo</label>
-              <input
-                type="text"
-                value={permisoMedico.dias}
-                onChange={(e) => setPermisoMedico({ ...permisoMedico, dias: e.target.value })}
-              />
-              <button onClick={handleGenerarPermisos}>Generar</button>
-              <button onClick={switchPermisos}>Cancelar</button>
+          <div className="container">
+            <div className="item-1 vista__1 agenda ">
+              <span>Información de la Cita</span>
+              {infoAgenda.length > 0 ? (
+                <table className="paleBlueRows venta">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Paciente</th>
+                      <th>Servicio</th>
+                      <th>Descripción Servicio</th>
+                      <th>Odontologo Asignado</th>
+                      <th>Hora y Fecha Agenda</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {infoAgenda.length > 0
+                      ? infoAgenda.map((item, index) => {
+                          return (
+                            <tr key={index} className="rowData">
+                              <td>{index + 1}</td>
+                              <td>
+                                {item.nombres_paciente} {item.apellidos_paciente}
+                              </td>
+                              <td>{item.nombre_servicio}</td>
+                              <td>{item.descripcion_servicio}</td>
+                              <td>
+                                {item.nombres_odontologo} {item.apellidos_odontologo}
+                              </td>
+                              <td>
+                                {new Date(item.fechainicio_agenda).toLocaleDateString()}{" "}
+                                {item.hora_agenda}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : null}
+                  </tbody>
+                </table>
+              ) : (
+                <h1 className="title__info">Ingrese un RUC para visualizar</h1>
+              )}
             </div>
-          ) : (
-            <button onClick={switchPermisos}>Permiso Medico</button>
-          )}
-          <h4>Información de la Cita</h4>
-          <ul>
-            <li>
-              <strong>Nombres Completos del Paciente: </strong>
-              {infoAgenda[0]?.nombres_paciente} {infoAgenda[0]?.apellidos_paciente}
-            </li>
-            <li>
-              <strong>Servicio: </strong>
-              {infoAgenda[0]?.nombre_servicio}
-            </li>
-            <li>
-              <strong>Descripción del Servicio: </strong>
-              {infoAgenda[0]?.descripcion_servicio}
-            </li>
-            <li>
-              <strong>Odontólogo Responsable: </strong>
-              {infoAgenda[0]?.nombres_odontologo} {infoAgenda[0]?.apellidos_odontologo}
-            </li>
-            <li>
-              <strong>Fecha y Hora asignada: </strong>
-              {new Date(infoAgenda[0]?.fechainicio_agenda).toLocaleDateString()}{" "}
-              {infoAgenda[0]?.hora_agenda}
-            </li>
-          </ul>
+          </div>
         </div>
-        <div>
-          <h4>Datos Ingresados</h4>
-          <div>
-            <label htmlFor="sintomas">Motivo de Consulta</label>
-            <input
-              type="text"
-              value={infoCita.sintomas}
-              onChange={(e) => setInfoCita({ ...infoCita, sintomas: e.target.value })}
-            />
+        <div className="container">
+          <div className="item-1 vista__1 receta ">
+            {infoAgenda.length > 0 ? (
+              <table className="paleBlueRows venta">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Producto o Medicamento</th>
+                    <th>Descripción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recetas.length > 0
+                    ? recetas.map((item, index) => {
+                        return (
+                          <tr key={index} className="rowData">
+                            <td>{index + 1}</td>
+                            <td>{item.nombre}</td>
+                            <td>{item.descripcion}</td>
+                          </tr>
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
+            ) : (
+              <h1 className="title__info">Ingrese un RUC para visualizar</h1>
+            )}
           </div>
-          <div>
+          <div className="item-1 vista__1 ingreso ">
             <div>
-              <div>
-                <label htmlFor="sintomas">Producto o Medicamento</label>
-                <input
+              {/* <h4>Seguimiento de Cita</h4> */}
+              <Formulario>
+                <ComponentInput
+                  state={asistencia} //value
+                  setState={setAsistencia} //onChange
+                  title="Asistencia"
                   type="text"
-                  value={infoCita.nombre_receta}
-                  onChange={(e) => setInfoCita({ ...infoCita, nombre_receta: e.target.value })}
+                  name="asistencia"
+                  placeholder="Asistencia"
+                  error="El campo es Requerible"
+                  expresion={expresiones.direccion}
                 />
-                <label htmlFor="sintomas">Descripción</label>
-                <input
+                <ComponentInput
+                  state={motivo} //value
+                  setState={setMotivo} //onChange
+                  title="Motivo Consulta"
                   type="text"
-                  value={infoCita.descripcion_receta}
-                  onChange={(e) => setInfoCita({ ...infoCita, descripcion_receta: e.target.value })}
+                  name="motivo"
+                  placeholder="Motivo Consulta"
+                  error="El campo es Requerible"
+                  expresion={expresiones.direccion}
                 />
+                <ComponentInput
+                  state={Observaciones} //value
+                  setState={setObersvaciones} //onChange
+                  title="Observaciones"
+                  type="text"
+                  name="observaciones"
+                  placeholder="Observaciones"
+                  error="El campo es Requerible"
+                  expresion={expresiones.direccion}
+                />
+                <ComponentInput
+                  state={recetasmed} //value
+                  setState={setRecetasMed} //onChange
+                  title="Producto o Medicamento"
+                  type="text"
+                  name="prodmed"
+                  placeholder="Producto o Medicamento"
+                  error="El campo es Requerible"
+                  expresion={expresiones.direccion}
+                />
+                <ComponentInput
+                  state={descripcion} //value
+                  setState={setDescripcion} //onChange
+                  title="Descripción"
+                  type="text"
+                  name="descripcion"
+                  placeholder="Descripción"
+                  error="El campo es Requerible"
+                  expresion={expresiones.direccion}
+                />
+              </Formulario>
+              <div className="crear-item">
+                <button className="button actualizar" onClick={handleAddReceta}>
+                  <span className="button__icon">
+                    <PostAdd className="icon" />
+                  </span>
+                  <span className="button__text">Agregar Receta</span>
+                </button>
               </div>
-              <button onClick={handleAddReceta}>Añadir</button>
-              {recetas
-                ? recetas.map((item) => {
-                    return (
-                      <ul key={item.id}>
-                        <li>
-                          <strong>Producto o Medicamento: </strong>
-                          {item.nombre}
-                        </li>
-                        <li>
-                          <strong>Descripcion: </strong>
-                          {item.descripcion}
-                        </li>
-                      </ul>
-                    );
-                  })
-                : null}
             </div>
           </div>
-          <div>
-            <label htmlFor="sintomas">Asistencia</label>
-            <input
-              type="text"
-              value={infoCita.asistencia}
-              onChange={(e) => setInfoCita({ ...infoCita, asistencia: e.target.value })}
-            />
+        </div>
+        {switchPermiso ? (
+          <div className="container permed">
+            <div className="item-1 vista__1 permisoMedico ">
+              <Formulario>
+                <ComponentInput
+                  state={motivoPermiso} //value
+                  setState={setMotivoPermiso} //onChange
+                  title="Motivo Permiso"
+                  type="text"
+                  name="motivopermiso"
+                  placeholder="Motivo Permiso"
+                  error="El campo es Requerible"
+                  expresion={expresiones.direccion}
+                />
+                <ComponentInput
+                  state={diasReposo} //value
+                  setState={setDiasReposo} //onChange
+                  title="Días Reposo"
+                  type="text"
+                  name="diasreposo"
+                  placeholder="Días Reposo"
+                  error="El campo es Requerible"
+                  expresion={expresiones.numero}
+                />
+              </Formulario>
+              <div className="venta__btns motpermiso">
+                <button className="button limpiar crear_venta" onClick={switchPermisos}>
+                  <span className="button__icon">
+                    <Cancel className="icon" />
+                  </span>
+                  <span className="button__text">Cancelar</span>
+                </button>
+                <button className="button permiso crear_venta" onClick={handleGenerarPermisos}>
+                  <span className="button__icon">
+                    <EventAvailable className="icon" />
+                  </span>
+                  <span className="button__text">Generar Permiso</span>
+                </button>
+              </div>
+            </div>
           </div>
-          <div>
-            <label htmlFor="sintomas">Observaciones</label>
-            <input
-              type="text"
-              value={infoCita.observaciones}
-              onChange={(e) => setInfoCita({ ...infoCita, observaciones: e.target.value })}
-            />
-          </div>
-          <button onClick={handleSeguimiento}>Guardar</button>
-          <button onClick={handleSeguimientoFinal}>Finalizar</button>
+        ) : null}
+
+        <div className="venta__btns">
+          <button className="button permiso crear_venta" onClick={switchPermisos}>
+            <span className="button__icon">
+              <EventAvailable className="icon" />
+            </span>
+            <span className="button__text">Permiso Médico</span>
+          </button>
+          <button className="button crear crear_venta" onClick={handleSeguimiento}>
+            <span className="button__icon">
+              <EventAvailable className="icon" />
+            </span>
+            <span className="button__text">Guardar</span>
+          </button>
+          <button className="button cancel crear_venta" onClick={handleSeguimientoFinal}>
+            <span className="button__icon">
+              <EventAvailable className="icon" />
+            </span>
+            <span className="button__text">Finalizar</span>
+          </button>
         </div>
       </div>
     </>

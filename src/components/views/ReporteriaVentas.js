@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import services from "../../services/venta";
-import clienteServices from "../../services/cliente";
 import { useHistory } from "react-router";
 import { Loader } from "../../elements/Loader";
 import { FilterList, Visibility } from "@material-ui/icons";
-
+import { Formulario } from "../../elements/Formularios";
+import ComponentInput from "../layouts/forms/ComponentInput";
 const ReporteriaVentas = () => {
   const [ventas, setVentas] = useState([]);
-  const [clientes, setClientes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFilter, setIsFilter] = useState(false);
-  const [filtroValues, setFiltroValues] = useState({ cliente: "", fecha: "", factura: "" });
+  const [filtroCliente, setFiltroCliente] = useState({ campo: "", valido: null });
+  const [filtroFactura, setFiltroFactura] = useState({ campo: "", valido: null });
   const [ventasByClienteFiltro, setVentasByClienteFiltro] = useState([]);
   const [ventasByFactFiltro, setVentasByFactFiltro] = useState([]);
   const history = useHistory();
@@ -45,31 +45,36 @@ const ReporteriaVentas = () => {
   };
   const switchFilter = () => {
     setIsFilter(!isFilter);
-    if (!isFilter) {
-      getClientes();
-    } else {
-      setClientes(null);
-      setFiltroValues({ cliente: "", fecha: "", factura: "" });
-    }
+    setFiltroCliente({ campo: "", valido: null });
+    setFiltroFactura({ campo: "", valido: null });
   };
-  const getClientes = async () => {
-    const clientes = await clienteServices.listClientes();
-    setClientes(clientes);
-  };
-
   useEffect(() => {
     const filtro_cliente = ventas.filter((item) => {
-      return item.ruc === filtroValues.cliente;
+      return (
+        item.nombres
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .trim()
+          .includes(filtroCliente.campo.toLowerCase().trim()) ||
+        item.apellidos
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .trim()
+          .includes(filtroCliente.campo.toLowerCase().trim()) ||
+        item.ruc === filtroCliente.campo
+      );
     });
     if (filtro_cliente.length > 0) {
       setVentasByClienteFiltro(filtro_cliente);
     } else {
       setVentasByClienteFiltro(ventas);
     }
-  }, [filtroValues.cliente, ventas]);
+  }, [ventas, filtroCliente.campo]);
   useEffect(() => {
     const filtro_factura = ventasByClienteFiltro.filter((item) => {
-      return item.num_recibo === parseInt(filtroValues.factura);
+      return item.num_recibo === parseInt(filtroFactura.campo);
     });
     if (isFilter) {
       if (filtro_factura.length > 0) {
@@ -83,10 +88,9 @@ const ReporteriaVentas = () => {
     } else {
       setVentasByFactFiltro(ventasByClienteFiltro);
     }
-  }, [ventasByClienteFiltro, filtroValues.factura, isFilter]);
+  }, [ventasByClienteFiltro, isFilter, filtroFactura.campo]);
   return (
     <div>
-      {/* <h3 className="titulo">Ventas</h3> */}
       <div className="crear-item">
         <button className="button crear" onClick={switchFilter}>
           <span className="button__icon">
@@ -96,57 +100,38 @@ const ReporteriaVentas = () => {
         </button>
       </div>
       {isFilter ? (
-        <div>
-          {/* Filtrar por Cliente */}
-          <div>
-            <label htmlFor="">Cliente</label>
-            <select
+        <div className="ingresar__productos filtro__busqueda">
+          <Formulario>
+            <ComponentInput
+              state={filtroCliente} //value
+              setState={setFiltroCliente} //onChange
+              title="Cliente"
               type="text"
-              value={filtroValues.cliente}
-              onChange={(e) => setFiltroValues({ ...filtroValues, cliente: e.target.value })}
-            >
-              <option value="0"></option>
-              {clientes
-                ? clientes.map((item) => {
-                    return (
-                      <option value={item.ruc} key={item.id}>
-                        {item.nombres} {item.apellidos}
-                      </option>
-                    );
-                  })
-                : null}
-            </select>
-          </div>
-          {/* Filtrar por Fecha */}
-          <div>
-            <label htmlFor="">Fecha</label>
-            <input
-              type="text"
-              value={filtroValues.fecha}
-              onChange={(e) => setFiltroValues({ ...filtroValues, fecha: e.target.value })}
+              name="descripcion"
+              placeholder="Cliente"
             />
-          </div>
-          {/* Filtrar por Factura */}
-          <div>
-            <label htmlFor="">Factura No.</label>
-            <input
+            <ComponentInput
+              state={filtroFactura} //value
+              setState={setFiltroFactura} //onChange
+              title="Factura #"
               type="text"
-              value={filtroValues.factura}
-              onChange={(e) => setFiltroValues({ ...filtroValues, factura: e.target.value })}
+              name="descripcion"
+              placeholder="#"
             />
-          </div>
+          </Formulario>
         </div>
       ) : null}
+
       <table className="paleBlueRows">
         <thead>
           <tr>
             <th>#</th>
-            <th>No. Venta</th>
+            {/* <th>No. Venta</th> */}
             <th>No. Factura</th>
-            <th>Fecha</th>
+            <th>Fecha Emisión</th>
             <th>Cliente</th>
-            <th>Cantidad de Productos</th>
-            <th>Total de Venta</th>
+            <th>Cantidad</th>
+            <th>Total</th>
             <th>Realizado Por</th>
             <th>Acciones</th>
           </tr>
@@ -159,7 +144,7 @@ const ReporteriaVentas = () => {
               return (
                 <tr key={item.idVenta} className="rowData">
                   <td>{index + 1}</td>
-                  <td>{item.num_venta}</td>
+                  {/* <td>{item.num_venta}</td> */}
                   <td>{item.num_recibo}</td>
                   <td>{new Date(item.fecha).toLocaleString()}</td>
                   <td>

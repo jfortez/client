@@ -1,5 +1,5 @@
 import {
-  // Dashboard,
+  Home,
   AccountBox,
   Person,
   SentimentSatisfiedAlt,
@@ -18,15 +18,15 @@ import {
   AddShoppingCart,
 } from "@material-ui/icons";
 export const SidebarData = [
-  // {
-  //   title: "Dashboard",
-  //   class: "slidebar-nav-item",
-  //   url: "/dashboard",
-  //   urlClass: "slidebar-nav-link",
-  //   icon: Dashboard,
-  //   iconClass: "slide-icon",
-  //   exact: true,
-  // },
+  {
+    title: "Inicio",
+    class: "slidebar-nav-item",
+    url: "/dashboard",
+    urlClass: "slidebar-nav-link",
+    icon: Home,
+    iconClass: "slide-icon",
+    exact: true,
+  },
   {
     title: "Ventas",
     class: "slidebar-nav-item",

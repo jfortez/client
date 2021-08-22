@@ -129,6 +129,10 @@ const ReporteriaVentasReporte = () => {
   const handleCreatePdf = () => {
     jsPDFInvoiceTemplate(props);
   };
+  const cantidadTotal = reporteDetalleVentas.reduce((a, b) => {
+    return a + b.cantidad;
+  }, 0);
+  const individualData = [reporteDetalleVentas[0]];
   return (
     <>
       <Topbar />
@@ -139,7 +143,7 @@ const ReporteriaVentasReporte = () => {
             <ul>
               <li>
                 <Link to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </Link>
               </li>
               <li> / </li>
@@ -156,35 +160,94 @@ const ReporteriaVentasReporte = () => {
             </ul>
           </nav>
         </div>
-        <div>
-          <h3>Fecha de Emisión: {fecha.toLocaleString()}</h3>
-          <h4>Datos del Recibo</h4>
-          <ul>
-            <li>
-              <strong>Facturacion No.: </strong>
-              {reporteDetalleVentas[0]?.num_recibo}
-            </li>
-            <li>
-              <strong>RUC Cliente: </strong>
-              {reporteDetalleVentas[0]?.ruc}
-            </li>
-            <li>
-              <strong>Datos del Cliente: </strong>
-              {reporteDetalleVentas[0]?.nombres} {reporteDetalleVentas[0]?.apellidos}
-            </li>
-            <li>
-              <strong>Importe: </strong>
-              {reporteDetalleVentas[0]?.importe}
-            </li>
-            <li>
-              <strong>Devolución: </strong>
-              {reporteDetalleVentas[0]?.devolucion}
-            </li>
-          </ul>
-
-          <p>
-            <strong>Responsable:</strong> {reporteDetalleVentas[0]?.usuario}
-          </p>
+        <div className="row__ventaActual">
+          <div>
+            <span className="venta__title">
+              Fecha Emisión: <span className="venta__dato">{fecha.toLocaleString()}</span>
+            </span>
+          </div>
+          <div>
+            <span className="venta__title">
+              FACTURA No.:{" "}
+              <span className="venta__dato">{reporteDetalleVentas[0]?.num_recibo}</span>
+            </span>
+          </div>
+        </div>
+        <div className="container">
+          <div className="item-1 vista__1 reporteventa ">
+            <span>Información Cliente</span>
+            {reporteDetalleVentas.length > 0 ? (
+              <table className="paleBlueRows venta">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>RUC</th>
+                    <th>Nombres</th>
+                    <th>Telefono</th>
+                    <th>Dirección</th>
+                    <th>Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reporteDetalleVentas.length > 0
+                    ? individualData.map((item, index) => {
+                        return (
+                          <tr key={index} className="rowData">
+                            <td>{index + 1}</td>
+                            <td>{item.ruc}</td>
+                            <td>
+                              {item.nombres} {item.apellidos}
+                            </td>
+                            <td>{item.telefono}</td>
+                            <td>{item.direccion}</td>
+                            <td>{item.email}</td>
+                          </tr>
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
+            ) : (
+              <h1 className="title__info">Ingrese un RUC para visualizar</h1>
+            )}
+          </div>
+          <div className="item-2 vista__2 reporteventa ">
+            <span>Detalle Venta</span>
+            {reporteDetalleVentas.length > 0 ? (
+              <table className="paleBlueRows venta">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Factura No.</th>
+                    <th># Productos</th>
+                    <th>Total</th>
+                    <th>Importe</th>
+                    <th>Cambio</th>
+                    <th>Vendedor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reporteDetalleVentas.length > 0
+                    ? individualData.map((item, index) => {
+                        return (
+                          <tr key={index} className="rowData">
+                            <td>{index + 1}</td>
+                            <td>{item.ruc}</td>
+                            <td>{cantidadTotal}</td>
+                            <td>${Number(item.total_venta).toFixed(2)}</td>
+                            <td>${Number(item.importe).toFixed(2)}</td>
+                            <td>${Number(item.devolucion).toFixed(2)}</td>
+                            <td>{item.usuario}</td>
+                          </tr>
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
+            ) : (
+              <h1 className="title__info">Ingrese un RUC para visualizar</h1>
+            )}
+          </div>
         </div>
         <div className="crear-item">
           <button className="button crear" onClick={handleCreatePdf}>

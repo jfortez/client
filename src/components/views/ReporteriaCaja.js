@@ -4,11 +4,15 @@ import services from "../../services/caja";
 import { Loader } from "../../elements/Loader";
 import { useHistory } from "react-router";
 import { FilterList, Visibility } from "@material-ui/icons";
+import { Formulario } from "../../elements/Formularios";
+import ComponentInput from "../layouts/forms/ComponentInput";
 
 const ReporteriaCaja = () => {
   const [caja, setCaja] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFilter, setIsFilter] = useState(false);
+  const [filtroInicio, setFiltroInicio] = useState({ campo: "", valido: null });
+  const [filtroFin, setFiltroFin] = useState({ campo: "", valido: null });
   const history = useHistory();
   useEffect(() => {
     let source = services.Axios.CancelToken.source();
@@ -53,6 +57,28 @@ const ReporteriaCaja = () => {
           <span className="button__text">Filtrar</span>
         </button>
       </div>
+      {isFilter ? (
+        <div className="ingresar__productos filtro__busqueda">
+          <Formulario>
+            <ComponentInput
+              state={filtroInicio} //value
+              setState={setFiltroInicio} //onChange
+              title="Fecha Inicio"
+              type="date"
+              name="descripcion"
+              placeholder="Cliente"
+            />
+            <ComponentInput
+              state={filtroFin} //value
+              setState={setFiltroFin} //onChange
+              title="Fecha Cierre"
+              type="date"
+              name="descripcion"
+              placeholder="#"
+            />
+          </Formulario>
+        </div>
+      ) : null}
       <table className="paleBlueRows">
         <thead>
           <tr>
@@ -72,16 +98,16 @@ const ReporteriaCaja = () => {
           ) : caja ? (
             caja.map((item, index) => {
               return (
-                <tr key={item.id} className="rowData">
+                <tr key={item.id_caja} className="rowData">
                   <td>{index + 1}</td>
                   <td>{new Date(item.fecha).toLocaleString()}</td>
                   <td>${item.caja_inicio}</td>
                   <td>{new Date(item.fecha_cierre).toLocaleString()}</td>
                   <td>${item.caja_inicio}</td>
                   <td>{item.estado_caja}</td>
-                  <td>{item.id_Usuario}</td>
+                  <td>{item.usuario}</td>
                   <td className="botones">
-                    <button onClick={() => showCaja(item.id)} className="button show">
+                    <button onClick={() => showCaja(item.id_caja)} className="button show">
                       <Visibility />
                     </button>
                   </td>

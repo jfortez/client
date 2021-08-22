@@ -61,7 +61,11 @@ const ProveedoresCreate = () => {
         await services.updateProveedor(newItem, nuevo.rucExiste[0].id);
       }
       if (nuevo.message === "el ruc ya existe" && nuevo.rucExiste[0].active === 1) {
-        return console.log("ruc ya existe"); //codigo para la alerta
+        return notificacion(
+          "Error, Item Duplicado",
+          "El Item que intenta crear ya existe, no es posiblie duplicar",
+          "danger"
+        );
       }
       notificacion("Añadir Proveedor", "Se ha creado Proveedor satisfatoriamente", "success");
       setRuc({ campo: "", valido: null });
@@ -104,7 +108,7 @@ const ProveedoresCreate = () => {
             <ul>
               <li>
                 <Link to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </Link>
               </li>
               <li> / </li>

@@ -20,7 +20,7 @@ const ReportView = () => {
             <ul>
               <li>
                 <NavLink exact={true} to="/dashboard" className="navegacion__redirect">
-                  Home
+                  Inicio
                 </NavLink>
               </li>
               <li> / </li>
