@@ -10,13 +10,13 @@ import {
   EmojiPeople,
   Today,
   Shop,
-  // SettingsApplications,
   ListAlt,
   // ViewList,
   PeopleAlt,
   LocalShipping,
   AddShoppingCart,
 } from "@material-ui/icons";
+
 export const SidebarData = [
   {
     title: "Inicio",
@@ -146,7 +146,7 @@ export const SidebarData = [
   {
     title: "Reportería",
     class: "slidebar-nav-item",
-    url: "/dashboard/reporteria/ventas",
+    url: "/dashboard/reporteria/",
     urlClass: "slidebar-nav-link",
     icon: ListAlt,
     iconClass: "slide-icon",

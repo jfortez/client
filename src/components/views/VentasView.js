@@ -249,7 +249,7 @@ const VentasView = () => {
             </span>
             /{" "}
             <span className="venta__title">
-              FACTURA No.: <span className="venta__dato">{values?.num_venta}</span>
+              FACTURA No.: <span className="venta__dato">{values?.num_recibo}</span>
             </span>
           </div>
           <div>

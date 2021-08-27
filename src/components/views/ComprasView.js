@@ -4,7 +4,7 @@ import useValues from "../../provider/useValues";
 import { useHistory, Link } from "react-router-dom";
 import services from "../../services/compras";
 import { Loader } from "../../elements/Loader";
-import { Delete, Update, Add } from "@material-ui/icons";
+import { Delete, Visibility, Add } from "@material-ui/icons";
 import swal from "sweetalert";
 
 const ComprasView = () => {
@@ -128,8 +128,8 @@ const ComprasView = () => {
                         <button onClick={() => handleBaja(item.id)} className="button borrar">
                           <Delete />
                         </button>
-                        <button onClick={() => handleShow(item.id)} className="button actualizar">
-                          <Update />
+                        <button onClick={() => handleShow(item.id)} className="button show">
+                          <Visibility />
                         </button>
                       </td>
                     </tr>

@@ -45,7 +45,7 @@ const Topbar = () => {
               />
               <ul className={`dropdown-menu ${isDropDown ? "dropdown-expand" : null}`}>
                 <li className="dropdown-menu-item">
-                  <Link to="/dashboard/settings/empresa" className="dropdown-menu-link">
+                  <Link to="/dashboard/settings" className="dropdown-menu-link">
                     <div>
                       <Settings className="dropdown-icon" />
                     </div>

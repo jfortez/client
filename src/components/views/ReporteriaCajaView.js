@@ -85,9 +85,17 @@ const ReporteriaCajaView = () => {
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{new Date(item.fechaMovimiento).toLocaleString()}</td>
-                    <td>{item.ingreso ? <b>ingreso</b> : <b>Egreso</b>}</td>
                     <td>
-                      {item.ingreso ? <span>${item.ingreso}</span> : <span>${item.egreso}</span>}
+                      {item.ingreso ? <b>INGRESO</b> : item.egreso ? <b>EGRESO</b> : <b>CIERRE</b>}
+                    </td>
+                    <td>
+                      {item.ingreso ? (
+                        <span>${item.ingreso}</span>
+                      ) : item.egreso ? (
+                        <span>${item.egreso}</span>
+                      ) : (
+                        "$0.00"
+                      )}
                     </td>
                     <td>{item.descripcion}</td>
                     <td>${item.caja_actual}</td>

@@ -101,6 +101,13 @@ const CajaView = () => {
       caja_cierre: cajaActual.caja_cierre,
     };
     await services.cierreCaja(cierre);
+    const cierreCaja = {
+      id_caja: caja[0].id,
+      descripcion: "CIERRE DE CAJA",
+      caja_actual: caja[0].caja_actual,
+      id_Usuario: user.id,
+    };
+    await services.nuevoMovimiento(cierreCaja);
     swal("Se ha Cerrado al Caja con Exito", {
       icon: "success",
     });
@@ -121,6 +128,14 @@ const CajaView = () => {
       id_Usuario: user.id,
     };
     await services.createCaja(nuevo);
+    const apertura = {
+      id_caja: caja[0].id + 1,
+      ingreso: cajaActual.caja_inicio,
+      descripcion: "APERTURA DE CAJA",
+      caja_actual: cajaActual.caja_inicio,
+      id_Usuario: user.id,
+    };
+    await services.nuevoMovimiento(apertura);
     notificacion("Caja", "Se ha Aperturado Caja satisfatoriamente", "success");
     limpiar();
     setIsListed(!isListed);
@@ -150,13 +165,9 @@ const CajaView = () => {
     if (movimientos.egreso === 0) {
       return notificacion("Error", "Debe Ingresar un valor en los campos", "danger");
     }
-    const invalid = Number(movimientos.egreso).toFixed(2) > caja[0].caja_inicio;
+    const invalid = Number(movimientos.egreso).toFixed(2) > caja[0].caja_actual;
     if (invalid) {
-      return notificacion(
-        "Error",
-        `el valor ingresado supera a la caja Actual, Caja Actual`,
-        "danger"
-      );
+      return notificacion("Error", `el valor ingresado supera a la caja Actual`, "danger");
     }
     const egreso = {
       id_caja: caja[0].id,
@@ -368,7 +379,7 @@ const CajaView = () => {
                     <tr key={index} className="rowData">
                       <td>{index + 1}</td>
                       <td>{new Date(item.fechaMovimiento).toLocaleString()}</td>
-                      <td>{item.ingreso ? <b>ingreso</b> : <b>Egreso</b>}</td>
+                      <td>{item.ingreso ? <b>INGRESO</b> : <b>EGRESO</b>}</td>
                       <td>
                         {item.ingreso ? <span>${item.ingreso}</span> : <span>${item.egreso}</span>}
                       </td>

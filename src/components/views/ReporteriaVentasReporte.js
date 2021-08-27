@@ -232,7 +232,7 @@ const ReporteriaVentasReporte = () => {
                         return (
                           <tr key={index} className="rowData">
                             <td>{index + 1}</td>
-                            <td>{item.ruc}</td>
+                            <td>{item.num_recibo}</td>
                             <td>{cantidadTotal}</td>
                             <td>${Number(item.total_venta).toFixed(2)}</td>
                             <td>${Number(item.importe).toFixed(2)}</td>
@@ -258,7 +258,7 @@ const ReporteriaVentasReporte = () => {
           </button>
         </div>
         <div>
-          <table className="paleBlueRows">
+          <table className="paleBlueRows venta">
             <thead>
               <tr>
                 <th>#</th>

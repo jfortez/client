@@ -102,7 +102,11 @@ const Routes = () => {
         <PrivateRoute exact path="/dashboard/cita" component={CitasView} />
         <PrivateRoute exact path="/dashboard/cita/seguimiento/:id" component={CitaSeguimiento} />
         <PrivateRoute exact path="/dashboard/calendario" component={CalendarioView} />
-        <PrivateRoute exact path="/dashboard/reporteria" component={ReportView} />
+        <PrivateRoute
+          exact
+          path="/dashboard/reporteria"
+          component={() => <Redirect to="/dashboard/reporteria/ventas" />}
+        />
         <PrivateRoute exact path="/dashboard/reporteria/ventas" component={ReportView} />
         <PrivateRoute
           exact
@@ -121,8 +125,13 @@ const Routes = () => {
           path="/dashboard/reporteria/historialpaciente/:id/view"
           component={ReporteriaHistorialPacienteView}
         />
-        <PrivateRoute exact path="/dashboard/settings" component={ConfigView} />
+        <PrivateRoute
+          exact
+          path="/dashboard/settings"
+          component={() => <Redirect to="/dashboard/settings/empresa" />}
+        />
         <PrivateRoute exact path="/dashboard/settings/empresa" component={ConfigView} />
+        <PrivateRoute exact path="/dashboard/settings/preferencias" component={ConfigView} />
         <PrivateRoute exact path="/dashboard/settings/account" component={ConfigView} />
         <PrivateRoute exact path="/dashboard/settings/backup" component={ConfigView} />
         <Route exact path="/*" component={ErrorPage} />

@@ -74,10 +74,6 @@ const AgendaServicioVenta = () => {
     }
     const ventaserv = await services.createVentaServicios(venta_servicio);
     if (ventaserv) {
-      history.push("/dashboard/agenda");
-      swal("Venta generada satisfatoriamente", {
-        icon: "success",
-      });
       handleCreatePdf();
       ingresoACaja(caja, total, venta_servicio.num_recibo, ventaserv);
       const fact_serv = {
@@ -87,9 +83,13 @@ const AgendaServicioVenta = () => {
         total,
       };
       await services.createFactServicios(fact_serv);
+      updateValues();
+      clean();
+      history.push("/dashboard/agenda");
+      swal("Venta generada satisfatoriamente", {
+        icon: "success",
+      });
     }
-    updateValues();
-    clean();
   };
   const ingresoACaja = async (caja, totalVenta, recibo, idvservicio) => {
     const ingreso = {
@@ -107,6 +107,7 @@ const AgendaServicioVenta = () => {
     setAgendaInfo([]);
     setEntradasVenta({ ruc: "", importe: 0 });
     setCliente([]);
+    setEmpresa([]);
     setId_agenda(0);
   };
   const updateValues = async () => {
@@ -227,7 +228,7 @@ const AgendaServicioVenta = () => {
             </span>
             /{" "}
             <span className="venta__title">
-              FACTURA No.: <span className="venta__dato">{values?.num_venta}</span>
+              FACTURA No.: <span className="venta__dato">{values?.num_recibo}</span>
             </span>
           </div>
           <div>
@@ -291,8 +292,8 @@ const AgendaServicioVenta = () => {
             </div>
           </div>
         </form>
-        <div className="container">
-          <div className="item-1 vista__1">
+        <div className="container vtaservicio">
+          <div className="item-1 vista__1 info__cliente">
             <span>Datos del Paciente</span>
             {agendaInfo.length > 0 ? (
               <table className="paleBlueRows venta">
@@ -326,7 +327,7 @@ const AgendaServicioVenta = () => {
             )}
           </div>
 
-          <div className="item-2 vista__2">
+          <div className="item-2 vista__2 info__cliente">
             <span>Datos del Servicio</span>
             {agendaInfo.length > 0 ? (
               <table className="paleBlueRows venta">

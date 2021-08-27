@@ -386,7 +386,7 @@ table.venta td {
   box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
 }
 .contenido {
-  padding: 15px 30px 0 30px;
+  padding: 15px 30px;
 }
 .row__ventaActual {
   width: 100%;
@@ -455,12 +455,6 @@ table.venta td {
   font-size: 1.5em !important;
   padding: 0;
   margin: 0;
-}
-.info__cliente {
-  background: #f8f9f9;
-  width: 100%;
-  height: 100px;
-  box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
 }
 
 .title__info {
@@ -541,6 +535,15 @@ table.venta td {
 }
 .cant__producto {
   padding-left: 10px;
+}
+.info__cliente {
+  background: #f8f9f9;
+  width: 100%;
+  height: auto;
+  box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
+}
+.vtaservicio {
+  margin-top: 15px;
 }
 .cant__producto input[type="number"] {
   padding: 5px;
@@ -669,6 +672,7 @@ table.venta td {
   width: 100%;
   margin-top: 25px;
   margin-bottom: 25px;
+  height: auto;
 }
 .btnprod {
   margin: 25px 0;

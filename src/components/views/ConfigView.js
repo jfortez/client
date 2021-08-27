@@ -1,7 +1,7 @@
 import "./DashboardView.css";
 import Topbar from "../layouts/topbar/Topbar";
 import useValues from "../../provider/useValues";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import EmpresaView from "./EmpresaView";
 import AccountView from "./AccountView";
 import BackUpView from "./BackUpView";
@@ -9,10 +9,12 @@ import {
   // AccountBox,
   Business,
   // Storage
+  Tune,
 } from "@material-ui/icons";
+import PreferenciasView from "./PreferenciasView";
 
 const ConfigView = (props) => {
-  const { pathname } = props.location;
+  const { pathname } = useLocation();
   const { isCollapsed } = useValues();
 
   return (
@@ -50,6 +52,12 @@ const ConfigView = (props) => {
                 </span>
                 <span className="navlink__title">Empresa</span>
               </NavLink>
+              <NavLink to="/dashboard/settings/preferencias" className="link">
+                <span className="navlink__icon">
+                  <Tune className="navlink__icon__icon" />
+                </span>
+                <span className="navlink__title">Preferencias</span>
+              </NavLink>
               {/* <NavLink to="/dashboard/settings/backup" className="link">
                 <span className="navlink__icon">
                   <Storage className="navlink__icon__icon" />
@@ -68,6 +76,8 @@ const ConfigView = (props) => {
                 <AccountView />
               ) : pathname === "/dashboard/settings/backup" ? (
                 <BackUpView />
+              ) : pathname === "/dashboard/settings/preferencias" ? (
+                <PreferenciasView />
               ) : (
                 <h1>nada</h1>
               )}{" "}

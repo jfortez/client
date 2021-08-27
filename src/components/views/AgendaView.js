@@ -14,7 +14,7 @@ import ComponentInput from "../layouts/forms/ComponentInput";
 import expresiones from "../../utils/Expresiones";
 import notificaciones from "../../utils/Notificaciones";
 const AgendaView = () => {
-  const { isCollapsed, setId_agenda } = useValues();
+  const { isCollapsed, setId_agenda, id_agenda } = useValues();
   const history = useHistory();
   const [descripcion, setDescripcion] = useState({ campo: "", valido: null });
   const [fecha_inicio, setFecha_inicio] = useState({ campo: "", valido: null });
@@ -146,6 +146,16 @@ const AgendaView = () => {
               <li>
                 <b>Agenda</b>
               </li>
+              {id_agenda > 0 ? (
+                <>
+                  <li> / </li>
+                  <li>
+                    <Link to="/dashboard/agenda/ventaservicio" className="navegacion__redirect">
+                      Venta Servicio
+                    </Link>
+                  </li>
+                </>
+              ) : null}
             </ul>
           </nav>
         </div>
@@ -247,7 +257,6 @@ const AgendaView = () => {
                         <th>Nombres</th>
                         <th>Dirección</th>
                         <th>Telefono</th>
-                        <th>Edad</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -261,7 +270,6 @@ const AgendaView = () => {
                                 </td>
                                 <td>{item.direccion}</td>
                                 <td>{item.telefono}</td>
-                                <td>{item.edad}</td>
                               </tr>
                             );
                           })
