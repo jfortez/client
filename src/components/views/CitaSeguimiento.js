@@ -170,24 +170,24 @@ const CitaSeguimiento = () => {
     var img = new Image();
     img.src = "/img/logo.png";
     let pageWidth = doc.internal.pageSize.getWidth();
-    doc.addImage(img, 12, 15, 40, 25);
+    doc.addImage(img, 12, 25, 40, 25);
     doc.setFontSize(20);
-    doc.text("Centro Odontológico VitaSmile", pageWidth / 2, 25, "center");
-    doc.text("CERTIFICADO MÉDICO", pageWidth / 2, 85, "center");
+    doc.text(empresa[0]?.nombre.toUpperCase(), pageWidth / 2, 25, "center");
+    doc.text("CERTIFICADO MÉDICO", pageWidth / 2, 92, "center");
     doc.setFontSize(13);
     doc.text(empresa[0]?.direccion, pageWidth / 2, 30, "center");
     doc.text(empresa[0]?.telefono, pageWidth / 2, 35, "center");
 
     doc.setFontSize(11);
-    doc.text(15, 55, `Guayaquil, ${fecha.toLocaleDateString("es-ES", options)}`);
-    const reportTitle = `Por medio de la presente yo ${infoAgenda[0].nombres_odontologo.toUpperCase()} ${infoAgenda[0].apellidos_odontologo.toUpperCase()}, Doctor del Centro Odontológico VitaSmile ortoga permiso medico para el/la Sr.(a) ${infoAgenda[0].nombres_paciente.toUpperCase()} ${infoAgenda[0].apellidos_paciente.toUpperCase()} con CI: ${
+    doc.text(15, 62, `Guayaquil, ${fecha.toLocaleDateString("es-ES", options)}`);
+    const reportTitle = `Por medio de la presente yo ${infoAgenda[0].nombres_odontologo.toUpperCase()} ${infoAgenda[0].apellidos_odontologo.toUpperCase()}, Doctor del ${empresa[0]?.nombre.toUpperCase()} ortoga permiso medico para el/la Sr.(a) ${infoAgenda[0].nombres_paciente.toUpperCase()} ${infoAgenda[0].apellidos_paciente.toUpperCase()} con CI: ${
       infoAgenda[0].cedula_paciente
     } por el motivo de ${motivoPermiso.campo} donde certifico que dicho procedimiento requiere de ${
       diasReposo.campo
     } días de descanso a partir de la fecha de hoy`;
     var splitTitle = doc.splitTextToSize(reportTitle, 180);
-    doc.text(15, 105, splitTitle);
-    doc.save("Test.pdf");
+    doc.text(15, 120, splitTitle);
+    doc.save("certificado_medico.pdf");
   };
   return (
     <>

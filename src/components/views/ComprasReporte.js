@@ -41,7 +41,6 @@ const ComprasReporte = () => {
   const cantidadTotal = reporteDetalleCompras?.reduce((a, b) => {
     return a + b.cantidad;
   }, 0);
-  console.log(reporteDetalleCompras);
   return (
     <>
       <Topbar />
