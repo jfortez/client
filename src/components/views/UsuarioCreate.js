@@ -54,6 +54,13 @@ const UsuarioCreate = () => {
       contraseña.valido === "true" &&
       previlegios.campo > 0
     ) {
+      if (dataByCedula[0].id_Usuario) {
+        return notificacion(
+          "Error",
+          "No se puede crear un nuevo usuario porque ya se tiene creado usuario para dicho empleado",
+          "danger"
+        );
+      }
       const newUsuario = {
         cedula: ci.campo,
         usuario: usuario.campo,
@@ -94,7 +101,7 @@ const UsuarioCreate = () => {
       if (ci.campo.length > 0) {
         const personalBusqueda = await personas.getCedulas();
         const cedula = personalBusqueda.filter((ced) => ced.cedula === ci.campo);
-        if (cedula[0]) {
+        if (cedula.length > 0) {
           if (cedula[0].id_Personal) {
             const cedulaBuscado = await personas.getPersonalByCedula({ cedula: ci.campo }); //retorna solametne 1 objeto
             setDataByCedula(cedulaBuscado);
@@ -102,13 +109,16 @@ const UsuarioCreate = () => {
             const cedulaBuscado = await personas.getOdontologosByCedula({ cedula: ci.campo }); //retorna solametne 1 objeto
             setDataByCedula(cedulaBuscado);
           }
+        } else {
+          setDataByCedula([]);
         }
       } else {
-        setDataByCedula(null);
+        setDataByCedula([]);
       }
     };
     getDataByCedula();
   }, [ci.campo]);
+  console.log(dataByCedula);
   return (
     <>
       <Topbar />
@@ -143,26 +153,44 @@ const UsuarioCreate = () => {
             <span className="button__text">{isEditing ? "Actualizar" : "Guardar"}</span>
           </button>
         </div>
-
         <div>
-          {dataByCedula ? <h3>Información Personal</h3> : null}
-          {dataByCedula ? (
-            dataByCedula.map((data) => {
-              return (
-                <ul key={data.id}>
-                  <li>
-                    <b>Nombres Completos:</b> {data.nombres} {data.apellidos}
-                  </li>
-                  <li>
-                    <b>Cedula:</b> {data.cedula}
-                  </li>
-                  <li>
-                    <b>¿Tiene Usuario?</b> {data.id_Usuario ? "si" : "no"}
-                  </li>
-                </ul>
-              );
-            })
-          ) : ci.campo.length > 9 ? (
+          {dataByCedula?.length > 0 ? (
+            <div className="container">
+              <div className="item-1 vista__1 reporteventa ">
+                <span>Información Usuario</span>
+                {dataByCedula?.length > 0 ? (
+                  <table className="paleBlueRows venta">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Cédula</th>
+                        <th>Nombres</th>
+                        <th>¿Usuario?</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dataByCedula?.length > 0
+                        ? dataByCedula.map((item, index) => {
+                            return (
+                              <tr key={index} className="rowData">
+                                <td>{index + 1}</td>
+                                <td>{item.cedula}</td>
+                                <td>
+                                  {item.nombres} {item.apellidos}
+                                </td>
+                                <td>{item.id_Usuario ? <b>SI</b> : <b>NO</b>}</td>
+                              </tr>
+                            );
+                          })
+                        : null}
+                    </tbody>
+                  </table>
+                ) : (
+                  <h1 className="title__info">Ingrese un Numero de Cedula para visualizar</h1>
+                )}
+              </div>
+            </div>
+          ) : ci.campo.length > 9 && !dataByCedula?.length > 0 ? (
             <h5>
               No existe un elemento bajo el Ruc ingresado, ¿Desea Crear uno?,{" "}
               <Link to="/dashboard/personal/create">Crear Personal</Link> ó{" "}
