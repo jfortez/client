@@ -1,6 +1,16 @@
 import { useEffect } from "react";
 
 const VentaDetalle = ({ productosVenta, detalleVenta, setDetalleVenta }) => {
+  // useEffect(() => {
+  //   if (detalleVenta.length > 0 && datosVentas.producto.length > 0) {
+  //     const igual = detalleVenta.filter(
+  //       (item) => item.cod_producto === datosVentas.producto[0].cod_producto
+  //     );
+  //     if (igual[0].cantidad > datosVentas.producto[0].cantidad) {
+  //       return console.log("ya superó la cantidad");
+  //     }
+  //   }
+  // }, [detalleVenta, datosVentas.producto]);
   useEffect(() => {
     const notaVenta = productosVenta.reduce((acc, acv) => {
       const elementoYaExiste = acc.find((elemento) => elemento.cod_producto === acv.cod_producto);

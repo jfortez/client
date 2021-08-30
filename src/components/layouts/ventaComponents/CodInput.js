@@ -28,7 +28,6 @@ const CodInput = ({
     let cantidad = parseInt(types.cantidad);
     //obtenemos el producto que añadimos
     const productoAñadido = datosVentas.producto.find((producto) => producto.cod === types.cod);
-    // setTypes({ ...types, lastProd: "taco" });
     if (datosVentas.producto.length > 0) {
       //verificamos que la cantidad no exceda al stock del producto
       if (cantidad > productoAñadido.cantidad) {

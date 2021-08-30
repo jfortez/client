@@ -677,3 +677,11 @@ table.venta td {
 .btnprod {
   margin: 25px 0;
 }
+.citainfo {
+  width: 70%;
+  margin-top: 0;
+}
+.recetainfo {
+  width: 30%;
+  margin-top: 0;
+}

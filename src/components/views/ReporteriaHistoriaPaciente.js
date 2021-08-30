@@ -23,6 +23,12 @@ const ReporteriaHistoriaPaciente = () => {
     const getCaja = async () => {
       try {
         const listAgenda = await services.getAgenda(source);
+        listAgenda.sort((obj1) => {
+          if (obj1.estado === "FINALIZADO") {
+            return -1;
+          }
+          return 0; //iguales
+        });
         if (!unmounted) {
           sethistorial(listAgenda);
           setIsLoading(false);
@@ -171,9 +177,11 @@ const ReporteriaHistoriaPaciente = () => {
                     {new Date(item.fechainicio_agenda).toLocaleDateString()} {item.hora_agenda}
                   </td>
                   <td className="botones">
-                    <button onClick={() => showDetalles(item.id)} className="button show">
-                      <Visibility />
-                    </button>
+                    {item.estado === "FINALIZADO" ? (
+                      <button onClick={() => showDetalles(item.id)} className="button show">
+                        <Visibility />
+                      </button>
+                    ) : null}
                   </td>
                 </tr>
               );

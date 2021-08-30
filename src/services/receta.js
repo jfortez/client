@@ -12,8 +12,10 @@ const listReceta = async () => {
   const { data } = await Axios.get(baseUrl);
   return data;
 };
-const listRecetaById = async (id) => {
-  const { data } = await Axios.get(`${baseUrl}/${id}`);
+const listRecetaById = async (src, id) => {
+  const { data } = await Axios.get(`${baseUrl}/${id}`, {
+    cancelToken: src.token,
+  });
   return data;
 };
 const createReceta = async (newData) => {
