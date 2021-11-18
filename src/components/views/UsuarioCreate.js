@@ -100,17 +100,19 @@ const UsuarioCreate = () => {
     const getDataByCedula = async () => {
       if (ci.campo.length > 0) {
         const personalBusqueda = await personas.getCedulas();
-        const cedula = personalBusqueda.filter((ced) => ced.cedula === ci.campo);
-        if (cedula.length > 0) {
-          if (cedula[0].id_Personal) {
-            const cedulaBuscado = await personas.getPersonalByCedula({ cedula: ci.campo }); //retorna solametne 1 objeto
-            setDataByCedula(cedulaBuscado);
+        if (personalBusqueda.length > 0) {
+          const cedula = personalBusqueda.filter((ced) => ced.cedula === ci.campo);
+          if (cedula.length > 0) {
+            if (cedula[0].id_Personal) {
+              const cedulaBuscado = await personas.getPersonalByCedula({ cedula: ci.campo }); //retorna solametne 1 objeto
+              setDataByCedula(cedulaBuscado);
+            } else {
+              const cedulaBuscado = await personas.getOdontologosByCedula({ cedula: ci.campo }); //retorna solametne 1 objeto
+              setDataByCedula(cedulaBuscado);
+            }
           } else {
-            const cedulaBuscado = await personas.getOdontologosByCedula({ cedula: ci.campo }); //retorna solametne 1 objeto
-            setDataByCedula(cedulaBuscado);
+            setDataByCedula([]);
           }
-        } else {
-          setDataByCedula([]);
         }
       } else {
         setDataByCedula([]);

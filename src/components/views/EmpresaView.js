@@ -32,14 +32,16 @@ const EmpresaView = () => {
   };
   const getEmpresa = async () => {
     const empresa = await services.optionEmpresa();
-    const { id, ruc, nombre, direccion, direccion2, ciudad, telefono } = empresa[0];
-    setId(id);
-    setRuc({ campo: ruc, valido: null });
-    setNombre({ campo: nombre, valido: null });
-    setDireccion({ campo: direccion, valido: null });
-    setDireccion2({ campo: direccion2 ? direccion2 : "", valido: null });
-    setCiudad({ campo: ciudad, valido: null });
-    setTelefono({ campo: telefono, valido: null });
+    if (empresa.length > 0) {
+      const { id, ruc, nombre, direccion, direccion2, ciudad, telefono } = empresa[0];
+      setId(id);
+      setRuc({ campo: ruc, valido: null });
+      setNombre({ campo: nombre, valido: null });
+      setDireccion({ campo: direccion, valido: null });
+      setDireccion2({ campo: direccion2 ? direccion2 : "", valido: null });
+      setCiudad({ campo: ciudad, valido: null });
+      setTelefono({ campo: telefono, valido: null });
+    }
   };
   useEffect(() => {
     getEmpresa();

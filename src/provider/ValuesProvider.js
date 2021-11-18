@@ -51,7 +51,9 @@ export default function ValuesProvider({ children }) {
   useEffect(() => {
     const getValues = async () => {
       const numValues = await valuesServices.getValues();
-      setValues(numValues[0]);
+      if (numValues.length > 0) {
+        setValues(numValues[0]);
+      }
     };
     getValues();
   }, []);

@@ -49,27 +49,29 @@ const ReporteriaVentas = () => {
     setFiltroFactura({ campo: "", valido: null });
   };
   useEffect(() => {
-    const filtro_cliente = ventas.filter((item) => {
-      return (
-        item.nombres
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase()
-          .trim()
-          .includes(filtroCliente.campo.toLowerCase().trim()) ||
-        item.apellidos
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase()
-          .trim()
-          .includes(filtroCliente.campo.toLowerCase().trim()) ||
-        item.ruc === filtroCliente.campo
-      );
-    });
-    if (filtro_cliente.length > 0) {
-      setVentasByClienteFiltro(filtro_cliente);
-    } else {
-      setVentasByClienteFiltro(ventas);
+    if (ventas.length > 0) {
+      const filtro_cliente = ventas?.filter((item) => {
+        return (
+          item.nombres
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .trim()
+            .includes(filtroCliente.campo.toLowerCase().trim()) ||
+          item.apellidos
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .trim()
+            .includes(filtroCliente.campo.toLowerCase().trim()) ||
+          item.ruc === filtroCliente.campo
+        );
+      });
+      if (filtro_cliente.length > 0) {
+        setVentasByClienteFiltro(filtro_cliente);
+      } else {
+        setVentasByClienteFiltro(ventas);
+      }
     }
   }, [ventas, filtroCliente.campo]);
   useEffect(() => {
